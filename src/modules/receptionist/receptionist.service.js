@@ -1,7 +1,7 @@
 const User = require('../../models/user.model.js');
 const PatientProfile = require('../../models/patientProfile.model.js');
 const Appointment = require('../../models/appointment.model.js');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const createPatient = async (data, receptionistId) => {
     const hashedPassword = await bcrypt.hash(data.password || 'defaultPassword123', 10);
@@ -35,11 +35,11 @@ const getPatients = async (query) => {
     const skip = (page - 1) * limit;
 
     const filter = { role: 'patient' };
-    
-    // If search is provided, we can search by name or phone number
+
+    // If search is provided, we can search by fullName or phone number
     if (query.search) {
         filter.$or = [
-            { name: { $regex: query.search, $options: 'i' } },
+            { fullName: { $regex: query.search, $options: 'i' } },
             { phoneNumber: { $regex: query.search, $options: 'i' } }
         ];
     }
@@ -48,13 +48,13 @@ const getPatients = async (query) => {
         .skip(skip)
         .limit(limit)
         .lean();
-        
+
     // Fetch primary profiles for these users
     const userIds = users.map(u => u._id);
-    const profiles = await PatientProfile.find({ user: { $in: userIds }, isPrimary: true }).lean();
-    
+    const profiles = await PatientProfile.find({ userId: { $in: userIds }, isPrimary: true }).lean();
+
     const profileMap = profiles.reduce((acc, profile) => {
-        acc[profile.user.toString()] = profile;
+        acc[profile.userId.toString()] = profile;
         return acc;
     }, {});
 
@@ -82,8 +82,8 @@ const getPatientById = async (userId) => {
         throw new Error('Patient not found');
     }
 
-    const profiles = await PatientProfile.find({ user: userId }).lean();
-    
+    const profiles = await PatientProfile.find({ userId }).lean();
+
     return { user, profiles };
 };
 
