@@ -95,7 +95,7 @@ const createPatientProfile = async (userId, data) => {
 
     const newProfile = new PatientProfile({
         ...data,
-        user: userId,
+        userId: userId,
         isPrimary: false, // Ensure isPrimary is false
     });
 
@@ -155,8 +155,8 @@ const getAppointments = async (query) => {
     }
 
     const appointments = await Appointment.find(filter)
-        .populate({ path: 'patientProfileId', select: 'name' })
-        .populate({ path: 'doctorUserId', select: 'name' })
+        .populate({ path: 'patientProfileId', select: 'fullName' })
+        .populate({ path: 'doctorUserId', select: 'fullName' })
         .skip(skip)
         .limit(limit)
         .lean();
