@@ -340,10 +340,6 @@ const getMyResultForDownload = async (userId, resultId) => {
     throw createError("Result not found", 404);
   }
 
-  if (!appointment.patientProfileId.equals(result.patientProfileId)) {
-    throw createError("Result not found or access denied", 404);
-  }
-
   const ownsProfile = await PatientProfile.findOne({
     _id: appointment.patientProfileId,
     userId,
@@ -358,12 +354,12 @@ const getMyResultForDownload = async (userId, resultId) => {
   try {
     await fs.access(absolutePath);
   } catch {
-    throw createError("Result file is not available on the server", 404);
+    throw createError("File not found", 404);
   }
 
   return {
-    absolutePath,
-    downloadFileName: result.fileName,
+    filePath: absolutePath,
+    fileName: result.fileName,
   };
 };
 
