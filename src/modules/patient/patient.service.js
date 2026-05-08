@@ -264,7 +264,7 @@ const getMyAppointments = async (userId, filters) => {
 
 /**
  * List latest result files (metadata only) for the patient's own appointments.
- * @param {object} filters — optional profileId, appointmentId (from query)
+ * Refactored to remove dependency on patientProfileId in resultFiles queries.
  */
 const getMyResults = async (userId, filters) => {
   const profileId = filters.profileId;
@@ -283,27 +283,32 @@ const getMyResults = async (userId, filters) => {
 
   const query = { isLatest: true };
 
-  if (appointmentId && profileId) {
-    await assertActivePatientProfile(userId, profileId);
-    const appointment = await assertAppointmentOwnedByPatient(
-      userId,
-      appointmentId
-    );
-    if (!appointment.patientProfileId.equals(profileId)) {
-      throw createError(
-        "Appointment does not match the selected profile",
-        400
-      );
-    }
-    query.appointmentId = appointmentId;
-  } else if (appointmentId) {
-    await assertAppointmentOwnedByPatient(userId, appointmentId);
+  if (appointmentId) {
+    const appointment = await assertAppointmentOwnedByPatient(userId, appointmentId);
     query.appointmentId = appointmentId;
   } else if (profileId) {
     await assertActivePatientProfile(userId, profileId);
-    query.patientProfileId = profileId;
+    const appointments = await Appointment.find({
+      patientProfileId: profileId,
+    }).select("_id");
+
+    if (appointments.length === 0) {
+      return [];
+    }
+
+    const appointmentIds = appointments.map((a) => a._id);
+    query.appointmentId = { $in: appointmentIds };
   } else {
-    query.patientProfileId = { $in: activeProfileIds };
+    const appointments = await Appointment.find({
+      patientProfileId: { $in: activeProfileIds },
+    }).select("_id");
+
+    if (appointments.length === 0) {
+      return [];
+    }
+
+    const appointmentIds = appointments.map((a) => a._id);
+    query.appointmentId = { $in: appointmentIds };
   }
 
   return ResultFile.find(query)

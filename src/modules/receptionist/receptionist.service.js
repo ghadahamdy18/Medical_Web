@@ -1,16 +1,15 @@
 const User = require('../../models/user.model.js');
 const PatientProfile = require('../../models/patientProfile.model.js');
 const Appointment = require('../../models/appointment.model.js');
+const bcrypt = require('bcrypt');
 
 const createPatient = async (data, receptionistId) => {
-    // Note: Since mongoose might not have transactions enabled in the current environment
-    // we'll use a basic approach. In a real environment with replica sets, use a session.
-    
-    // Create the User document
+    const hashedPassword = await bcrypt.hash(data.password || 'defaultPassword123', 10);
+
     const newUser = new User({
-        name: data.name,
+        fullName: data.fullName,
         phoneNumber: data.phoneNumber,
-        password: data.password || 'defaultPassword123', // usually hashed in a pre-save hook
+        password: hashedPassword,
         role: 'patient',
         mustChangePassword: true,
         status: 'active',
@@ -18,10 +17,9 @@ const createPatient = async (data, receptionistId) => {
     });
     const savedUser = await newUser.save();
 
-    // Create the primary PatientProfile document
     const newProfile = new PatientProfile({
-        user: savedUser._id,
-        name: data.name, // Profile typically needs the name
+        userId: savedUser._id,
+        fullName: data.fullName,
         isPrimary: true,
         relationshipToPrimary: 'self',
         isActive: true
@@ -117,13 +115,11 @@ const updatePatientProfile = async (profileId, data) => {
 };
 
 const createAppointment = async (data, receptionistId) => {
-    // validate patientProfileId exists and isActive=true
     const profile = await PatientProfile.findOne({ _id: data.patientProfileId, isActive: true });
     if (!profile) {
         throw new Error('Patient profile not found or inactive');
     }
 
-    // validate doctorUserId exists in users with role=doctor
     const doctor = await User.findOne({ _id: data.doctorUserId, role: 'doctor' });
     if (!doctor) {
         throw new Error('Doctor not found');

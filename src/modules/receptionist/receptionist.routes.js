@@ -14,7 +14,7 @@ const authorizeRoles = roleMiddleware.authorizeRoles || roleMiddleware;
 
 // Protect all routes
 router.use(authenticate);
-router.use(authorizeRoles('RECEPTIONIST'));
+router.use(authorizeRoles('receptionist'));
 
 // 1 & 2. Patient endpoints
 router.post('/patients', validation.createPatientValidation, receptionistController.createPatient);

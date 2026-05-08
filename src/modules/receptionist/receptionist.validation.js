@@ -11,7 +11,7 @@ const handleValidationErrors = (req, res, next) => {
 };
 
 const createPatientValidation = [
-    body('name').isString().notEmpty().withMessage('Name is required'),
+    body('fullName').isString().notEmpty().withMessage('Full name is required'),
     body('phoneNumber')
         .isString()
         .notEmpty()
