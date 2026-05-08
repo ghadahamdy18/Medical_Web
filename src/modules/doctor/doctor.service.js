@@ -1,102 +1,195 @@
-import Appointment from "../../models/appointment.model.js";
-import ResultFile from "../../models/resultFile.model.js";
+const Appointment = require('../../models/appointment.model.js');
+const ResultFile = require('../../models/resultFile.model.js');
 
 const createError = (message, statusCode = 400) => {
-  const error = new Error(message);
-  error.statusCode = statusCode;
-  return error;
+    const error = new Error(message);
+    error.statusCode = statusCode;
+    return error;
 };
 
-export const getMyAppointments = async (doctorId) => {
-  return Appointment.find({ doctorUserId: doctorId })
-    .populate("patientProfileId")
-    .populate("doctorUserId", "fullName phoneNumber role")
-    .sort({ appointmentDate: 1, appointmentTime: 1 });
+/**
+ * GET /my-appointments
+ * Returns all appointments assigned to the logged-in doctor, sorted soonest first.
+ */
+const getMyAppointments = async (doctorId, query = {}) => {
+    const page = Math.max(parseInt(query.page, 10) || 1, 1);
+    const limit = Math.min(Math.max(parseInt(query.limit, 10) || 10, 1), 100);
+    const skip = (page - 1) * limit;
+
+    const filter = { doctorUserId: doctorId };
+
+    if (query.appointmentStatus) {
+        filter.appointmentStatus = query.appointmentStatus;
+    }
+
+    if (query.appointmentType) {
+        filter.appointmentType = query.appointmentType;
+    }
+
+    const [appointments, total] = await Promise.all([
+        Appointment.find(filter)
+            .populate('patientProfileId', 'fullName gender dateOfBirth relationshipToPrimary isPrimary')
+            .populate('doctorUserId', 'fullName phoneNumber role')
+            .populate('createdByUserId', 'fullName role')
+            .sort({ appointmentDate: 1, appointmentTime: 1 })
+            .skip(skip)
+            .limit(limit)
+            .lean(),
+        Appointment.countDocuments(filter),
+    ]);
+
+    return {
+        data: appointments,
+        pagination: {
+            total,
+            page,
+            limit,
+            totalPages: Math.ceil(total / limit),
+        },
+    };
 };
 
-export const getAppointmentDetails = async (doctorId, appointmentId) => {
-  const appointment = await Appointment.findOne({
-    _id: appointmentId,
-    doctorUserId: doctorId,
-  })
-    .populate("patientProfileId")
-    .populate("doctorUserId", "fullName phoneNumber role");
+/**
+ * GET /appointments/:appointmentId
+ * Returns a single appointment detail — only if assigned to this doctor.
+ */
+const getAppointmentDetails = async (doctorId, appointmentId) => {
+    const appointment = await Appointment.findOne({
+        _id: appointmentId,
+        doctorUserId: doctorId,
+    })
+        .populate('patientProfileId', 'fullName gender dateOfBirth nationalId address relationshipToPrimary isPrimary')
+        .populate('doctorUserId', 'fullName phoneNumber role')
+        .populate('createdByUserId', 'fullName role')
+        .populate('acceptedByUserId', 'fullName role')
+        .lean();
 
-  if (!appointment) {
-    throw createError("Appointment not found or not assigned to you", 404);
-  }
+    if (!appointment) {
+        throw createError('Appointment not found or not assigned to you', 404);
+    }
 
-  return appointment;
+    return appointment;
 };
 
-export const completeAppointment = async (doctorId, appointmentId) => {
-  const appointment = await Appointment.findOne({
-    _id: appointmentId,
-    doctorUserId: doctorId,
-  });
+/**
+ * PATCH /appointments/:appointmentId/complete
+ * Transitions a confirmed appointment → completed.
+ * Only the assigned doctor can do this.
+ */
+const completeAppointment = async (doctorId, appointmentId) => {
+    const appointment = await Appointment.findOne({
+        _id: appointmentId,
+        doctorUserId: doctorId,
+    });
 
-  if (!appointment) {
-    throw createError("Appointment not found or not assigned to you", 404);
-  }
+    if (!appointment) {
+        throw createError('Appointment not found or not assigned to you', 404);
+    }
 
-  if (appointment.appointmentStatus !== "confirmed") {
-    throw createError("Only confirmed appointments can be completed", 400);
-  }
+    if (appointment.appointmentStatus === 'completed') {
+        throw createError('Appointment is already completed', 400);
+    }
 
-  appointment.appointmentStatus = "completed";
+    if (appointment.appointmentStatus === 'cancelled') {
+        throw createError('Cancelled appointments cannot be completed', 400);
+    }
 
-  await appointment.save();
+    if (appointment.appointmentStatus !== 'confirmed') {
+        throw createError('Only confirmed appointments can be completed', 400);
+    }
 
-  return appointment;
+    appointment.appointmentStatus = 'completed';
+    await appointment.save();
+
+    return appointment;
 };
 
-export const uploadResult = async (doctorId, appointmentId, body, file) => {
-  if (!file) {
-    throw createError("Result PDF file is required", 400);
-  }
+/**
+ * POST /appointments/:appointmentId/results
+ * Uploads a PDF result for a specific appointment + testName.
+ * Implements full versioning: old isLatest → false, new record created with replacedResultFileId.
+ * Uses the static ResultFile.replaceLatestResult() method from the model.
+ */
+const uploadResult = async (doctorId, appointmentId, body, file) => {
+    // --- File validation ---
+    if (!file) {
+        throw createError('Result PDF file is required', 400);
+    }
 
-  if (file.mimetype !== "application/pdf") {
-    throw createError("Only PDF files are allowed", 400);
-  }
+    if (file.mimetype !== 'application/pdf') {
+        throw createError('Only PDF files are allowed', 400);
+    }
 
-  if (!body.testName) {
-    throw createError("testName is required", 400);
-  }
+    // --- testName validation ---
+    if (!body.testName || String(body.testName).trim() === '') {
+        throw createError('testName is required', 400);
+    }
 
-  const appointment = await Appointment.findOne({
-    _id: appointmentId,
-    doctorUserId: doctorId,
-  });
+    const testName = String(body.testName).trim();
 
-  if (!appointment) {
-    throw createError("Appointment not found or not assigned to you", 404);
-  }
+    // --- Appointment existence + ownership ---
+    const appointment = await Appointment.findOne({
+        _id: appointmentId,
+        doctorUserId: doctorId,
+    });
 
-  const result = await ResultFile.create({
-    appointmentId,
-    patientProfileId: appointment.patientProfileId,
-    doctorUserId: doctorId,
-    testName: body.testName,
-    fileName: file.filename,
-    filePath: file.path,
-    mimeType: file.mimetype,
-    fileSize: file.size,
-    isLatest: true,
-    uploadedAt: new Date(),
-  });
+    if (!appointment) {
+        throw createError('Appointment not found or not assigned to you', 404);
+    }
 
-  return result;
+    // --- Appointment status rules ---
+    if (appointment.appointmentStatus === 'cancelled') {
+        throw createError('Cannot upload results for a cancelled appointment', 400);
+    }
+
+    if (appointment.appointmentStatus === 'pending') {
+        throw createError('Cannot upload results for a pending appointment. Appointment must be confirmed first.', 400);
+    }
+
+    // Allow upload on both confirmed and completed appointments.
+
+    // --- Result versioning via model static ---
+    const result = await ResultFile.replaceLatestResult({
+        appointmentId,
+        doctorUserId: doctorId,
+        testName,
+        fileName: file.filename,
+        filePath: file.path,
+        mimeType: file.mimetype,
+        fileSize: file.size,
+    });
+
+    return result;
 };
 
-export const getAppointmentResults = async (doctorId, appointmentId) => {
-  const appointment = await Appointment.findOne({
-    _id: appointmentId,
-    doctorUserId: doctorId,
-  });
+/**
+ * GET /appointments/:appointmentId/results
+ * Returns all result files for an appointment assigned to this doctor.
+ * Sorted newest first. Includes version chain (replacedResultFileId).
+ */
+const getAppointmentResults = async (doctorId, appointmentId) => {
+    const appointment = await Appointment.findOne({
+        _id: appointmentId,
+        doctorUserId: doctorId,
+    }).lean();
 
-  if (!appointment) {
-    throw createError("Appointment not found or not assigned to you", 404);
-  }
+    if (!appointment) {
+        throw createError('Appointment not found or not assigned to you', 404);
+    }
 
-  return ResultFile.find({ appointmentId }).sort({ uploadedAt: -1 });
+    const results = await ResultFile.find({ appointmentId })
+        .populate('doctorUserId', 'fullName phoneNumber role')
+        .populate('replacedResultFileId', 'testName fileName uploadedAt isLatest')
+        .sort({ uploadedAt: -1 })
+        .lean();
+
+    return results;
+};
+
+module.exports = {
+    getMyAppointments,
+    getAppointmentDetails,
+    completeAppointment,
+    uploadResult,
+    getAppointmentResults,
 };

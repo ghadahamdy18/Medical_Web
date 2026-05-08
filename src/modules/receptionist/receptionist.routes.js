@@ -4,17 +4,12 @@ const router = express.Router();
 const receptionistController = require('./receptionist.controller.js');
 const validation = require('./receptionist.validation.js');
 
-// Assuming middlewares exist and export these functions
-// If they are default exports, this might need adjustment, e.g., require('../../middlewares/auth.middleware.js') directly
 const authMiddleware = require('../../middlewares/auth.middleware.js');
 const roleMiddleware = require('../../middlewares/role.middleware.js');
 
-const authenticate = authMiddleware.authenticate || authMiddleware;
-const authorizeRoles = roleMiddleware.authorizeRoles || roleMiddleware;
-
-// Protect all routes
-router.use(authenticate);
-router.use(authorizeRoles('receptionist'));
+// Both middlewares export plain functions — use them directly
+router.use(authMiddleware);
+router.use(roleMiddleware('receptionist'));
 
 // 1 & 2. Patient endpoints
 router.post('/patients', validation.createPatientValidation, receptionistController.createPatient);
