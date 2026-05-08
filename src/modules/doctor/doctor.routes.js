@@ -1,31 +1,68 @@
-import express from "express";
+const express = require('express');
+
 const router = express.Router();
 
-import doctorController from "./doctor.controller.js";
-import auth from "../../middlewares/auth.middleware.js";
-import role from "../../middlewares/role.middleware.js";
-import upload from "../../middlewares/upload.middleware.js";
+const doctorController = require('./doctor.controller.js');
+const doctorValidation = require('./doctor.validation.js');
 
-router.use(auth);
-router.use(role("doctor"));
+const authMiddleware = require('../../middlewares/auth.middleware.js');
+const roleMiddleware = require('../../middlewares/role.middleware.js');
+const upload = require('../../middlewares/upload.middleware.js');
 
-router.get("/appointments", doctorController.getMyAppointments);
-router.get("/appointments/:appointmentId", doctorController.getAppointmentDetails);
+// All doctor routes require a valid JWT + doctor role
+router.use(authMiddleware);
+router.use(roleMiddleware('doctor'));
 
-router.patch(
-  "/appointments/:appointmentId/complete",
-  doctorController.completeAppointment
-);
+/**
+ * GET /doctor/my-appointments
+ * List all appointments assigned to the logged-in doctor.
+ * Supports optional query: ?appointmentStatus=confirmed&appointmentType=in_lab&page=1&limit=10
+ */
+router.get('/my-appointments', doctorController.getMyAppointments);
 
-router.post(
-  "/appointments/:appointmentId/results",
-  upload.single("resultFile"),
-  doctorController.uploadResult
-);
-
+/**
+ * GET /doctor/appointments/:appointmentId
+ * View a single appointment detail (must be assigned to this doctor).
+ */
 router.get(
-  "/appointments/:appointmentId/results",
-  doctorController.getAppointmentResults
+    '/appointments/:appointmentId',
+    doctorValidation.appointmentIdParamValidation,
+    doctorController.getAppointmentDetails
 );
 
-export default router;
+/**
+ * PATCH /doctor/appointments/:appointmentId/complete
+ * Mark a confirmed appointment as completed.
+ */
+router.patch(
+    '/appointments/:appointmentId/complete',
+    doctorValidation.appointmentIdParamValidation,
+    doctorController.completeAppointment
+);
+
+/**
+ * POST /doctor/appointments/:appointmentId/results
+ * Upload a PDF result file for a test.
+ * Field name: resultFile (multipart/form-data)
+ * Body: { testName: string }
+ * Implements versioning — old latest result is replaced, history preserved.
+ */
+router.post(
+    '/appointments/:appointmentId/results',
+    doctorValidation.appointmentIdParamValidation,
+    upload.single('resultFile'),
+    doctorValidation.uploadResultValidation,
+    doctorController.uploadResult
+);
+
+/**
+ * GET /doctor/appointments/:appointmentId/results
+ * Retrieve all result files for an appointment (newest first).
+ */
+router.get(
+    '/appointments/:appointmentId/results',
+    doctorValidation.appointmentIdParamValidation,
+    doctorController.getAppointmentResults
+);
+
+module.exports = router;

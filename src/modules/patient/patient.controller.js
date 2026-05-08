@@ -171,13 +171,13 @@ const getMyResults = async (req, res, next) => {
 
 const downloadMyResult = async (req, res, next) => {
   try {
-    const { absolutePath, downloadFileName } =
+    const { filePath, fileName } =
       await patientService.getMyResultForDownload(
         getPatientUserId(req),
         req.params.resultId
       );
 
-    res.download(absolutePath, downloadFileName, (err) => {
+    res.download(filePath, fileName, (err) => {
       if (err) {
         next(err);
       }
