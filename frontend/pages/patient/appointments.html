@@ -5,15 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Appointments - Medical Lab</title>
     <link rel="stylesheet" href="../../css/dashboard.css">
-    <style>body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#2c7be5;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.back-link{display:inline-block;margin-bottom:20px;color:#2c7be5;text-decoration:none}.page-header{margin-bottom:25px}.page-header h1{font-size:24px;color:#333}.table-container{background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);overflow:hidden}.table-container table{width:100%;border-collapse:collapse}.table-container th,.table-container td{padding:15px 20px;text-align:left;border-bottom:1px solid #eee}.table-container th{background:#f8f9fa;font-weight:600}.table-container tr:hover{background:#f8f9fa}.status-badge{padding:5px 12px;border-radius:20px;font-size:12px}.status-pending{background:#fff3cd;color:#856404}.status-confirmed{background:#d4edda;color:#155724}.status-completed{background:#cce5ff;color:#004085}.status-cancelled{background:#f8d7da;color:#721c24}</style>
+    <style>
+        body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#2c7be5;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.back-link{display:inline-block;margin-bottom:20px;color:#2c7be5;text-decoration:none}.page-header{margin-bottom:25px}.page-header h1{font-size:24px;color:#333}.filters{display:flex;gap:15px;margin-bottom:20px;flex-wrap:wrap}.filter-group{display:flex;flex-direction:column;gap:5px}.filter-group label{font-size:14px;font-weight:600}.filter-group select{padding:8px;border:1px solid #ddd;border-radius:4px;font-size:14px}.table-container{background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);overflow:hidden}.table-container table{width:100%;border-collapse:collapse}.table-container th,.table-container td{padding:15px 20px;text-align:left;border-bottom:1px solid #eee}.table-container th{background:#f8f9fa;font-weight:600}.table-container tr:hover{background:#f8f9fa}.status-badge{padding:5px 12px;border-radius:20px;font-size:12px}.status-pending{background:#fff3cd;color:#856404}.status-confirmed{background:#d4edda;color:#155724}.status-completed{background:#cce5ff;color:#004085}.status-cancelled{background:#f8d7da;color:#721c24}.action-buttons{display:flex;gap:8px}.btn-sm{padding:6px 12px;font-size:12px;border:none;border-radius:4px;cursor:pointer}.btn-reschedule{background:#2c7be5;color:#fff}.btn-reschedule:hover{background:#1a5fbf}.btn-cancel{background:#dc3545;color:#fff}.btn-cancel:hover{background:#c82333}.empty-state{text-align:center;padding:60px 20px;color:#666}.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:1000}.modal-content{background:#fff;margin:10% auto;padding:30px;border-radius:8px;max-width:500px}.modal-header{margin-bottom:20px}.modal-header h3{margin:0}.modal-close{float:right;font-size:24px;cursor:pointer;color:#666}.modal-body{margin-bottom:20px}.modal-footer{display:flex;gap:10px;justify-content:flex-end}.loading{text-align:center;padding:40px;color:#666}
+    </style>
 </head>
 <body>
     <div class="dashboard">
         <div class="dashboard-body">
             <aside class="sidebar">
-                <div class="sidebar-logo"><h2>Medical Lab</h2></div>
+                <div class="sidebar-logo">
+                    <h2>Medical Lab</h2>
+                </div>
                 <ul class="sidebar-menu">
                     <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="select-profile.html">Select Profile</a></li>
                     <li><a href="book-appointment.html">Book Appointment</a></li>
                     <li><a href="appointments.html" class="active">My Appointments</a></li>
                     <li><a href="lab-results.html">Lab Results</a></li>
@@ -25,11 +30,14 @@
             <div class="main-area">
                 <div class="top-bar">
                     <div class="user-info">
-                        <div class="user-avatar">JP</div>
+                        <div class="user-avatar" id="userInitials">JP</div>
                         <div class="user-details">
-                            <span class="user-name">John Patient</span>
+                            <span class="user-name" id="userName">John Patient</span>
                             <span class="user-role">Patient</span>
                         </div>
+                    </div>
+                    <div class="top-bar-right">
+                        <button class="logout-btn" onclick="logoutUser()">Logout</button>
                     </div>
                 </div>
                 <div class="content-area">
@@ -37,39 +45,384 @@
                     <div class="page-header">
                         <h1>My Appointments</h1>
                     </div>
+                    
+                    <div class="filters">
+                        <div class="filter-group">
+                            <label>Profile</label>
+                            <select id="profileFilter" onchange="loadAppointments()">
+                                <option value="">All Profiles</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Status</label>
+                            <select id="statusFilter" onchange="loadAppointments()">
+                                <option value="">All Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="confirmed">Confirmed</option>
+                                <option value="completed">Completed</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Date</label>
+                            <select id="dateFilter" onchange="loadAppointments()">
+                                <option value="">All Dates</option>
+                                <option value="upcoming">Upcoming</option>
+                                <option value="past">Past</option>
+                                <option value="today">Today</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="table-container">
-                        <table>
+                        <div id="appointmentsLoading" class="loading">Loading appointments...</div>
+                        <table id="appointmentsTable" style="display: none;">
                             <thead>
                                 <tr>
                                     <th>Date</th>
                                     <th>Time</th>
                                     <th>Type</th>
-                                    <th>Test</th>
+                                    <th>Profile</th>
+                                    <th>Doctor</th>
+                                    <th>Notes</th>
                                     <th>Status</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>April 7, 2026</td>
-                                    <td>9:00 AM</td>
-                                    <td>In-Lab Visit</td>
-                                    <td>Blood Test - Lipid Panel</td>
-                                    <td><span class="status-badge status-confirmed">Confirmed</span></td>
-                                </tr>
-                                <tr>
-                                    <td>April 10, 2026</td>
-                                    <td>2:00 PM</td>
-                                    <td>Home Visit</td>
-                                    <td>General Checkup</td>
-                                    <td><span class="status-badge status-pending">Pending</span></td>
-                                </tr>
+                            <tbody id="appointmentsBody">
                             </tbody>
                         </table>
+                        <div id="appointmentsEmpty" class="empty-state" style="display: none;">
+                            <h3>No appointments found</h3>
+                            <p>Try adjusting your filters or book a new appointment.</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script src="../../js/auth.js"></script>
+
+    <!-- Reschedule Modal -->
+    <div id="rescheduleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-close" onclick="closeRescheduleModal()">&times;</span>
+                <h3>Reschedule Appointment</h3>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>New Date</label>
+                    <input type="date" id="rescheduleDate" required>
+                    <div id="rescheduleDateError" class="error"></div>
+                </div>
+                <div class="form-group">
+                    <label>New Time</label>
+                    <select id="rescheduleTime" required>
+                        <option value="">Choose time slot</option>
+                        <option value="08:00">8:00 AM</option>
+                        <option value="09:00">9:00 AM</option>
+                        <option value="10:00">10:00 AM</option>
+                        <option value="11:00">11:00 AM</option>
+                        <option value="14:00">2:00 PM</option>
+                        <option value="15:00">3:00 PM</option>
+                        <option value="16:00">4:00 PM</option>
+                    </select>
+                </div>
+                <div class="form-group" id="rescheduleAddressField" style="display: none;">
+                    <label>Home Visit Address</label>
+                    <textarea id="rescheduleAddress" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-sm" onclick="closeRescheduleModal()">Cancel</button>
+                <button type="button" class="btn-sm btn-reschedule" onclick="confirmReschedule()">Reschedule</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/ui.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/guards.js"></script>
+    <script src="../../assets/js/patient.js"></script>
+    <script>
+        // Require patient role
+        requireRole('patient');
+
+        let appointments = [];
+        let profiles = [];
+        let currentRescheduleAppointment = null;
+
+        // Initialize page
+        async function initializePage() {
+            try {
+                const user = getCurrentUser();
+                if (!user) {
+                    window.location.href = '../../index.html';
+                    return;
+                }
+
+                // Update user info in top bar
+                document.getElementById('userName').textContent = user.fullName || user.name || 'Patient';
+                const name = user.fullName || user.name || 'Patient';
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('userInitials').textContent = initials;
+
+                // Load profiles for filter
+                await loadProfiles();
+                
+                // Load appointments
+                await loadAppointments();
+
+            } catch (error) {
+                console.error('Failed to initialize page:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load page', 'error');
+                }
+            }
+        }
+
+        // Load profiles
+        async function loadProfiles() {
+            try {
+                profiles = await getPatientProfiles();
+                const profileFilter = document.getElementById('profileFilter');
+                
+                profileFilter.innerHTML = '<option value="">All Profiles</option>';
+                profiles.forEach(profile => {
+                    profileFilter.innerHTML += `<option value="${profile._id}">${profile.fullName}</option>`;
+                });
+
+                // Set selected profile if available
+                const selectedProfile = getSelectedPatientProfile();
+                if (selectedProfile) {
+                    profileFilter.value = selectedProfile._id;
+                }
+
+            } catch (error) {
+                console.error('Failed to load profiles:', error);
+            }
+        }
+
+        // Load appointments
+        async function loadAppointments() {
+            try {
+                document.getElementById('appointmentsLoading').style.display = 'block';
+                document.getElementById('appointmentsTable').style.display = 'none';
+                document.getElementById('appointmentsEmpty').style.display = 'none';
+
+                // Build filters
+                const filters = {};
+                const profileId = document.getElementById('profileFilter').value;
+                const status = document.getElementById('statusFilter').value;
+                const dateFilter = document.getElementById('dateFilter').value;
+
+                if (profileId) filters.profileId = profileId;
+                if (status) filters.status = status;
+
+                // Get appointments from backend
+                appointments = await getPatientAppointments(filters);
+
+                // Apply date filter if needed
+                let filteredAppointments = appointments;
+                if (dateFilter) {
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    
+                    filteredAppointments = appointments.filter(apt => {
+                        const aptDate = new Date(apt.appointmentDate);
+                        aptDate.setHours(0, 0, 0, 0);
+                        
+                        if (dateFilter === 'upcoming') return aptDate >= today;
+                        if (dateFilter === 'past') return aptDate < today;
+                        if (dateFilter === 'today') return aptDate.getTime() === today.getTime();
+                        return true;
+                    });
+                }
+
+                renderAppointments(filteredAppointments);
+
+            } catch (error) {
+                console.error('Failed to load appointments:', error);
+                document.getElementById('appointmentsLoading').style.display = 'none';
+                document.getElementById('appointmentsEmpty').style.display = 'block';
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load appointments', 'error');
+                }
+            }
+        }
+
+        // Render appointments
+        function renderAppointments(appointmentList) {
+            document.getElementById('appointmentsLoading').style.display = 'none';
+            
+            if (!appointmentList || appointmentList.length === 0) {
+                document.getElementById('appointmentsEmpty').style.display = 'block';
+                document.getElementById('appointmentsTable').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('appointmentsTable').style.display = 'table';
+            document.getElementById('appointmentsEmpty').style.display = 'none';
+
+            const tbody = document.getElementById('appointmentsBody');
+            tbody.innerHTML = appointmentList.map(appointment => {
+                const canReschedule = appointment.status === 'pending' || appointment.status === 'confirmed';
+                const canCancel = appointment.status === 'pending' || appointment.status === 'confirmed';
+                
+                return `
+                    <tr>
+                        <td>${formatDate(appointment.appointmentDate)}</td>
+                        <td>${formatTime(appointment.appointmentTime)}</td>
+                        <td>${appointment.appointmentType === 'in_lab' ? 'In-Lab Visit' : 'Home Visit'}</td>
+                        <td>${appointment.profileName || 'Unknown'}</td>
+                        <td>${appointment.doctorName || 'Doctor'}</td>
+                        <td>${appointment.notes || '-'}</td>
+                        <td><span class="status-badge status-${appointment.status}">${capitalizeFirst(appointment.status)}</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                ${canReschedule ? `<button class="btn-sm btn-reschedule" onclick="openRescheduleModal('${appointment._id}')">Reschedule</button>` : ''}
+                                ${canCancel ? `<button class="btn-sm btn-cancel" onclick="cancelAppointment('${appointment._id}')">Cancel</button>` : ''}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Open reschedule modal
+        function openRescheduleModal(appointmentId) {
+            currentRescheduleAppointment = appointments.find(apt => apt._id === appointmentId);
+            if (!currentRescheduleAppointment) return;
+
+            // Set current values
+            document.getElementById('rescheduleDate').value = currentRescheduleAppointment.appointmentDate;
+            document.getElementById('rescheduleTime').value = currentRescheduleAppointment.appointmentTime;
+
+            // Show address field for home visits
+            const addressField = document.getElementById('rescheduleAddressField');
+            if (currentRescheduleAppointment.appointmentType === 'home_visit') {
+                addressField.style.display = 'block';
+                document.getElementById('rescheduleAddress').value = currentRescheduleAppointment.homeVisitAddress || '';
+            } else {
+                addressField.style.display = 'none';
+            }
+
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('rescheduleDate').setAttribute('min', today);
+
+            // Show modal
+            document.getElementById('rescheduleModal').style.display = 'block';
+        }
+
+        // Close reschedule modal
+        function closeRescheduleModal() {
+            document.getElementById('rescheduleModal').style.display = 'none';
+            currentRescheduleAppointment = null;
+            document.getElementById('rescheduleDateError').textContent = '';
+        }
+
+        // Confirm reschedule
+        async function confirmReschedule() {
+            if (!currentRescheduleAppointment) return;
+
+            const newDate = document.getElementById('rescheduleDate').value;
+            const newTime = document.getElementById('rescheduleTime').value;
+
+            // Validate date
+            const selectedDate = new Date(newDate);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (selectedDate < today) {
+                document.getElementById('rescheduleDateError').textContent = 'Date cannot be in the past';
+                return;
+            } else {
+                document.getElementById('rescheduleDateError').textContent = '';
+            }
+
+            try {
+                const payload = {
+                    appointmentDate: newDate,
+                    appointmentTime: newTime
+                };
+
+                // Add home visit address if applicable
+                if (currentRescheduleAppointment.appointmentType === 'home_visit') {
+                    payload.homeVisitAddress = document.getElementById('rescheduleAddress').value;
+                }
+
+                await reschedulePatientAppointment(currentRescheduleAppointment._id, payload);
+
+                if (typeof showToast === 'function') {
+                    showToast('Appointment rescheduled successfully!', 'success');
+                }
+
+                closeRescheduleModal();
+                await loadAppointments();
+
+            } catch (error) {
+                console.error('Failed to reschedule appointment:', error);
+                if (typeof showToast === 'function') {
+                    showToast(error.message || 'Failed to reschedule appointment', 'error');
+                }
+            }
+        }
+
+        // Cancel appointment
+        async function cancelAppointment(appointmentId) {
+            if (!confirm('Are you sure you want to cancel this appointment?')) {
+                return;
+            }
+
+            try {
+                await cancelPatientAppointment(appointmentId);
+
+                if (typeof showToast === 'function') {
+                    showToast('Appointment cancelled successfully!', 'success');
+                }
+
+                await loadAppointments();
+
+            } catch (error) {
+                console.error('Failed to cancel appointment:', error);
+                if (typeof showToast === 'function') {
+                    showToast(error.message || 'Failed to cancel appointment', 'error');
+                }
+            }
+        }
+
+        // Format date helper
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        // Format time helper
+        function formatTime(timeString) {
+            const [hours, minutes] = timeString.split(':');
+            const hour = parseInt(hours);
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const displayHour = hour > 12 ? hour - 12 : hour;
+            return `${displayHour}:${minutes} ${ampm}`;
+        }
+
+        // Capitalize first letter
+        function capitalizeFirst(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('rescheduleModal');
+            if (event.target === modal) {
+                closeRescheduleModal();
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
 </body>
 </html>

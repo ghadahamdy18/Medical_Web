@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Appointment - Medical Lab</title>
     <link rel="stylesheet" href="../../css/dashboard.css">
-    <style>body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#2c7be5;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.form-card{background:#fff;padding:30px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);max-width:600px}.form-group{margin-bottom:20px}.form-group label{display:block;margin-bottom:8px;font-weight:600}.form-group input,.form-group select{width:100%;padding:12px;border:1px solid #ddd;border-radius:4px;font-size:14px}.form-group input:focus,.form-group select:focus{outline:none;border-color:#2c7be5}.radio-group{display:flex;gap:30px;margin-top:10px}.radio-option{display:flex;align-items:center;gap:8px}.radio-option input{width:auto}.radio-card{background:#f8f9fa;padding:15px 20px;border-radius:8px;cursor:pointer;transition:all .2s;border:2px solid transparent}.radio-card.selected{border-color:#2c7be5;background:#e8f0fe}.radio-card:hover{border-color:#ddd}.radio-card-title{font-weight:600;margin-bottom:5px}.radio-card-desc{font-size:13px;color:#666}.btn-primary{width:100%;padding:14px;background:#2c7be5;color:#fff;border:none;border-radius:4px;font-size:16px;cursor:pointer;margin-top:10px}.btn-primary:hover{background:#1a68d4}.back-link{display:inline-block;margin-bottom:20px;color:#2c7be5;text-decoration:none}</style>
+    <style>
+        body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#2c7be5;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.back-link{display:inline-block;margin-bottom:20px;color:#2c7be5;text-decoration:none}.page-header{margin-bottom:25px}.page-header h1{font-size:24px;color:#333}.form-card{background:#fff;padding:30px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);max-width:600px}.form-group{margin-bottom:20px}.form-group label{display:block;margin-bottom:8px;font-weight:600}.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:4px;font-size:14px}.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#2c7be5}.radio-group{display:flex;gap:30px;margin-top:10px}.radio-option{display:flex;align-items:center;gap:8px}.radio-option input{width:auto}.radio-card{background:#f8f9fa;padding:15px 20px;border-radius:8px;cursor:pointer;transition:all .2s;border:2px solid transparent}.radio-card.selected{border-color:#2c7be5;background:#e8f0fe}.radio-card:hover{border-color:#ddd}.radio-card-title{font-weight:600;margin-bottom:5px}.radio-card-desc{font-size:13px;color:#666}.btn-primary{background:#2c7be5;color:#fff;border:none;padding:12px 24px;border-radius:4px;cursor:pointer;font-weight:600}.btn-primary:hover{background:#1a5fbf}.btn-primary:disabled{background:#ccc;cursor:not-allowed}.warning-card{background:#fff3cd;border:1px solid #ffeaa7;border-radius:8px;padding:20px;margin-bottom:20px}.warning-card h3{color:#856404;margin-bottom:10px}.warning-card p{color:#856404;margin-bottom:15px}.btn-warning{background:#856404;color:#fff;border:none;padding:10px 20px;border-radius:4px;cursor:pointer}.btn-warning:hover{background:#6c5300}.home-address-field{display:none}.loading{display:none;text-align:center;padding:20px;color:#666}.error{color:#dc3545;font-size:12px;margin-top:5px}
+    </style>
 </head>
 <body>
     <div class="dashboard">
@@ -16,6 +18,7 @@
                 </div>
                 <ul class="sidebar-menu">
                     <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="select-profile.html">Select Profile</a></li>
                     <li><a href="book-appointment.html" class="active">Book Appointment</a></li>
                     <li><a href="appointments.html">My Appointments</a></li>
                     <li><a href="lab-results.html">Lab Results</a></li>
@@ -23,85 +26,302 @@
                     <li><a href="profile.html">My Profile</a></li>
                     <li><a href="settings.html">Settings</a></li>
                 </ul>
-                    <li><a href="lab-results.html">Lab Results</a></li>
-                    <li><a href="family-members.html">Family Members</a></li>
-                    <li><a href="profile.html">My Profile</a></li>
-                </ul>
             </aside>
             <div class="main-area">
                 <div class="top-bar">
                     <div class="user-info">
-                        <div class="user-avatar">JP</div>
+                        <div class="user-avatar" id="userInitials">JP</div>
                         <div class="user-details">
-                            <span class="user-name">John Patient</span>
+                            <span class="user-name" id="userName">John Patient</span>
                             <span class="user-role">Patient</span>
                         </div>
+                    </div>
+                    <div class="top-bar-right">
+                        <button class="logout-btn" onclick="logoutUser()">Logout</button>
                     </div>
                 </div>
                 <div class="content-area">
                     <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
                     <h1>Book New Appointment</h1>
-                    <div class="form-card">
-                        <form id="appointmentForm" onsubmit="submitAppointment(event)">
-                            <div class="form-group">
-                                <label>Select Date</label>
-                                <input type="date" id="appointmentDate" required min="2026-04-06">
-                            </div>
-                            <div class="form-group">
-                                <label>Select Time</label>
-                                <select id="appointmentTime" required>
-                                    <option value="">Choose time slot</option>
-                                    <option value="08:00">8:00 AM</option>
-                                    <option value="09:00">9:00 AM</option>
-                                    <option value="10:00">10:00 AM</option>
-                                    <option value="11:00">11:00 AM</option>
-                                    <option value="14:00">2:00 PM</option>
-                                    <option value="15:00">3:00 PM</option>
-                                    <option value="16:00">4:00 PM</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Visit Type</label>
-                                <div class="radio-group">
-                                    <label class="radio-card selected" onclick="selectVisitType('In-Lab')">
-                                        <input type="radio" name="visitType" value="In-Lab" checked style="display:none">
-                                        <div class="radio-card-title">In-Lab Visit</div>
-                                        <div class="radio-card-desc">Visit the lab for sample collection</div>
-                                    </label>
-                                    <label class="radio-card" onclick="selectVisitType('Home Visit')">
-                                        <input type="radio" name="visitType" value="Home Visit" style="display:none">
-                                        <div class="radio-card-title">Home Visit</div>
-                                        <div class="radio-card-desc">Technician comes to your home</div>
-                                    </label>
+                    
+                    <div id="profileWarning" class="warning-card" style="display: none;">
+                        <h3>⚠️ Profile Required</h3>
+                        <p>Please select a patient profile before booking an appointment.</p>
+                        <button class="btn-warning" onclick="window.location.href='select-profile.html'">Select Profile</button>
+                    </div>
+
+                    <div id="appointmentFormContainer" style="display: none;">
+                        <div class="form-card">
+                            <form id="appointmentForm" onsubmit="submitAppointment(event)">
+                                <div class="form-group">
+                                    <label>Selected Profile</label>
+                                    <input type="text" id="selectedProfileName" readonly style="background: #f8f9fa;">
+                                    <input type="hidden" id="selectedProfileId" required>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Test Type / Notes (Optional)</label>
-                                <input type="text" id="testNotes" placeholder="e.g., Blood Test, Lipid Panel">
-                            </div>
-                            <button type="submit" class="btn-primary">Confirm Appointment</button>
-                        </form>
+
+                                <div class="form-group">
+                                    <label>Appointment Type</label>
+                                    <div class="radio-group">
+                                        <label class="radio-card selected" onclick="selectVisitType('in_lab')">
+                                            <input type="radio" name="appointmentType" value="in_lab" checked style="display:none">
+                                            <div class="radio-card-title">In-Lab Visit</div>
+                                            <div class="radio-card-desc">Visit the lab for sample collection</div>
+                                        </label>
+                                        <label class="radio-card" onclick="selectVisitType('home_visit')">
+                                            <input type="radio" name="appointmentType" value="home_visit" style="display:none">
+                                            <div class="radio-card-title">Home Visit</div>
+                                            <div class="radio-card-desc">Technician comes to your home</div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Select Doctor</label>
+                                    <select id="doctorSelect" required disabled>
+                                        <option value="">Loading doctors...</option>
+                                    </select>
+                                    <div id="doctorError" class="error" style="display: none;">
+                                        Doctor list endpoint is not available yet. Please contact support.
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Appointment Date</label>
+                                    <input type="date" id="appointmentDate" required>
+                                    <div id="dateError" class="error"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Appointment Time</label>
+                                    <select id="appointmentTime" required>
+                                        <option value="">Choose time slot</option>
+                                        <option value="08:00">8:00 AM</option>
+                                        <option value="09:00">9:00 AM</option>
+                                        <option value="10:00">10:00 AM</option>
+                                        <option value="11:00">11:00 AM</option>
+                                        <option value="14:00">2:00 PM</option>
+                                        <option value="15:00">3:00 PM</option>
+                                        <option value="16:00">4:00 PM</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group home-address-field" id="homeAddressField">
+                                    <label>Home Visit Address *</label>
+                                    <textarea id="homeVisitAddress" rows="3" placeholder="Enter your complete address for home visit"></textarea>
+                                    <div id="addressError" class="error"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Notes (Optional)</label>
+                                    <textarea id="notes" rows="3" placeholder="Any specific requirements or test types"></textarea>
+                                </div>
+
+                                <button type="submit" class="btn-primary" id="submitBtn">Book Appointment</button>
+                                <div class="loading" id="loading">Booking appointment...</div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script src="../../js/auth.js"></script>
+
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/ui.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/guards.js"></script>
+    <script src="../../assets/js/patient.js"></script>
     <script>
+        // Require patient role
+        requireRole('patient');
+
+        let selectedProfile = null;
+        let doctors = [];
+
+        // Initialize page
+        async function initializePage() {
+            try {
+                const user = getCurrentUser();
+                if (!user) {
+                    window.location.href = '../../index.html';
+                    return;
+                }
+
+                // Update user info in top bar
+                document.getElementById('userName').textContent = user.fullName || user.name || 'Patient';
+                const name = user.fullName || user.name || 'Patient';
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('userInitials').textContent = initials;
+
+                // Check if profile is selected
+                selectedProfile = getSelectedPatientProfile();
+                if (!selectedProfile) {
+                    document.getElementById('profileWarning').style.display = 'block';
+                    document.getElementById('appointmentFormContainer').style.display = 'none';
+                    return;
+                }
+
+                // Show form with selected profile
+                document.getElementById('profileWarning').style.display = 'none';
+                document.getElementById('appointmentFormContainer').style.display = 'block';
+                document.getElementById('selectedProfileName').value = selectedProfile.fullName;
+                document.getElementById('selectedProfileId').value = selectedProfile._id;
+
+                // Set minimum date to today
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('appointmentDate').setAttribute('min', today);
+
+                // Load doctors
+                await loadDoctors();
+
+            } catch (error) {
+                console.error('Failed to initialize page:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load page', 'error');
+                }
+            }
+        }
+
+        // Load doctors from backend
+        async function loadDoctors() {
+            try {
+                // TODO: Backend needs to provide a patient-accessible doctor list endpoint
+                // For now, we'll show the error message
+                const doctorSelect = document.getElementById('doctorSelect');
+                const doctorError = document.getElementById('doctorError');
+                
+                doctorSelect.innerHTML = '<option value="">No doctors available</option>';
+                doctorSelect.disabled = true;
+                doctorError.style.display = 'block';
+                
+                // If backend provides doctor list in future, uncomment:
+                // doctors = await apiGet('/public/doctors'); // or appropriate endpoint
+                // doctorSelect.innerHTML = doctors.map(doctor => 
+                //     `<option value="${doctor._id}">Dr. ${doctor.fullName} - ${doctor.phoneNumber || ''}</option>`
+                // ).join('');
+                // doctorSelect.disabled = false;
+
+            } catch (error) {
+                console.error('Failed to load doctors:', error);
+                const doctorSelect = document.getElementById('doctorSelect');
+                const doctorError = document.getElementById('doctorError');
+                
+                doctorSelect.innerHTML = '<option value="">Failed to load doctors</option>';
+                doctorSelect.disabled = true;
+                doctorError.style.display = 'block';
+            }
+        }
+
+        // Select visit type
         function selectVisitType(type) {
             document.querySelectorAll('.radio-card').forEach(card => card.classList.remove('selected'));
             event.currentTarget.classList.add('selected');
             event.currentTarget.querySelector('input').checked = true;
+
+            // Show/hide home address field
+            const homeAddressField = document.getElementById('homeAddressField');
+            if (type === 'home_visit') {
+                homeAddressField.style.display = 'block';
+                document.getElementById('homeVisitAddress').required = true;
+            } else {
+                homeAddressField.style.display = 'none';
+                document.getElementById('homeVisitAddress').required = false;
+                document.getElementById('homeVisitAddress').value = '';
+            }
         }
-        function submitAppointment(e) {
-            e.preventDefault();
-            const date = document.getElementById('appointmentDate').value;
-            const time = document.getElementById('appointmentTime').value;
-            const type = document.querySelector('input[name="visitType"]:checked').value;
-            const notes = document.getElementById('testNotes').value;
-            alert('Appointment booked successfully!\n\nDate: ' + date + '\nTime: ' + time + '\nType: ' + type + (notes ? '\nNotes: ' + notes : ''));
-            window.location.href = 'appointments.html';
+
+        // Validate date
+        function validateDate() {
+            const dateInput = document.getElementById('appointmentDate');
+            const dateError = document.getElementById('dateError');
+            const selectedDate = new Date(dateInput.value);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (selectedDate < today) {
+                dateError.textContent = 'Appointment date cannot be in the past';
+                dateInput.setCustomValidity('Date cannot be in the past');
+                return false;
+            } else {
+                dateError.textContent = '';
+                dateInput.setCustomValidity('');
+                return true;
+            }
         }
+
+        // Submit appointment
+        async function submitAppointment(event) {
+            event.preventDefault();
+
+            if (!validateDate()) {
+                return;
+            }
+
+            const appointmentType = document.querySelector('input[name="appointmentType"]:checked').value;
+            const homeVisitAddress = document.getElementById('homeVisitAddress').value;
+
+            // Validate home visit address if required
+            if (appointmentType === 'home_visit' && !homeVisitAddress.trim()) {
+                document.getElementById('addressError').textContent = 'Home visit address is required';
+                return;
+            } else {
+                document.getElementById('addressError').textContent = '';
+            }
+
+            // Check if doctor is selected (when available)
+            const doctorId = document.getElementById('doctorSelect').value;
+            if (!doctorId && !document.getElementById('doctorSelect').disabled) {
+                if (typeof showToast === 'function') {
+                    showToast('Please select a doctor', 'error');
+                }
+                return;
+            }
+
+            try {
+                document.getElementById('submitBtn').disabled = true;
+                document.getElementById('loading').style.display = 'block';
+
+                const payload = {
+                    profileId: selectedProfile._id,
+                    doctorUserId: doctorId || null, // Will be null if doctor list not available
+                    appointmentDate: document.getElementById('appointmentDate').value,
+                    appointmentTime: document.getElementById('appointmentTime').value,
+                    notes: document.getElementById('notes').value || ''
+                };
+
+                let result;
+                if (appointmentType === 'in_lab') {
+                    result = await bookInLabAppointment(payload);
+                } else {
+                    payload.homeVisitAddress = homeVisitAddress;
+                    result = await bookHomeVisitAppointment(payload);
+                }
+
+                if (typeof showToast === 'function') {
+                    showToast('Appointment booked successfully!', 'success');
+                }
+
+                // Redirect to appointments page
+                setTimeout(() => {
+                    window.location.href = 'appointments.html';
+                }, 1500);
+
+            } catch (error) {
+                console.error('Failed to book appointment:', error);
+                if (typeof showToast === 'function') {
+                    showToast(error.message || 'Failed to book appointment', 'error');
+                }
+            } finally {
+                document.getElementById('submitBtn').disabled = false;
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        // Add date validation listener
+        document.addEventListener('DOMContentLoaded', () => {
+            initializePage();
+            document.getElementById('appointmentDate').addEventListener('change', validateDate);
+        });
     </script>
 </body>
 </html>

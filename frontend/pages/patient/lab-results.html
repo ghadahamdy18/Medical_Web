@@ -5,15 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lab Results - Medical Lab</title>
     <link rel="stylesheet" href="../../css/dashboard.css">
-    <style>body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#2c7be5;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.back-link{display:inline-block;margin-bottom:20px;color:#2c7be5;text-decoration:none}.page-header{margin-bottom:25px}.page-header h1{font-size:24px;color:#333}.results-list{display:flex;flex-direction:column;gap:15px}.result-card{background:#fff;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);display:flex;justify-content:space-between;align-items:center}.result-info{display:flex;align-items:center;gap:15px}.result-icon{width:40px;height:40px;background:#dc3545;color:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px}.result-details h3{font-size:16px;margin-bottom:5px}.result-details p{font-size:13px;color:#666}.result-actions{display:flex;gap:10px}.btn-view{background:#2c7be5;color:#fff;border:none;padding:8px 16px;border-radius:4px;cursor:pointer}.btn-download{background:#28a745;color:#fff;border:none;padding:8px 16px;border-radius:4px;cursor:pointer}.empty-state{text-align:center;padding:60px 20px;color:#999}</style>
+    <style>
+        body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#2c7be5;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.back-link{display:inline-block;margin-bottom:20px;color:#2c7be5;text-decoration:none}.page-header{margin-bottom:25px}.page-header h1{font-size:24px;color:#333}.filters{display:flex;gap:15px;margin-bottom:20px;flex-wrap:wrap}.filter-group{display:flex;flex-direction:column;gap:5px}.filter-group label{font-size:14px;font-weight:600}.filter-group select{padding:8px;border:1px solid #ddd;border-radius:4px;font-size:14px}.results-list{display:flex;flex-direction:column;gap:15px}.result-card{background:#fff;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);display:flex;justify-content:space-between;align-items:center}.result-info{display:flex;align-items:center;gap:15px}.result-icon{width:40px;height:40px;background:#dc3545;color:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px}.result-details h3{font-size:16px;margin-bottom:5px}.result-details p{font-size:13px;color:#666;margin:2px 0}.result-actions{display:flex;gap:10px}.btn-view{background:#2c7be5;color:#fff;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;font-size:12px}.btn-view:hover{background:#1a5fbf}.btn-download{background:#28a745;color:#fff;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;font-size:12px}.btn-download:hover{background:#218838}.empty-state{text-align:center;padding:60px 20px;color:#666}.loading{text-align:center;padding:40px;color:#666}.downloading{opacity:0.6;cursor:not-allowed}
+    </style>
 </head>
 <body>
     <div class="dashboard">
         <div class="dashboard-body">
             <aside class="sidebar">
-                <div class="sidebar-logo"><h2>Medical Lab</h2></div>
+                <div class="sidebar-logo">
+                    <h2>Medical Lab</h2>
+                </div>
                 <ul class="sidebar-menu">
                     <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="select-profile.html">Select Profile</a></li>
                     <li><a href="book-appointment.html">Book Appointment</a></li>
                     <li><a href="appointments.html">My Appointments</a></li>
                     <li><a href="lab-results.html" class="active">Lab Results</a></li>
@@ -25,11 +30,14 @@
             <div class="main-area">
                 <div class="top-bar">
                     <div class="user-info">
-                        <div class="user-avatar">JP</div>
+                        <div class="user-avatar" id="userInitials">JP</div>
                         <div class="user-details">
-                            <span class="user-name">John Patient</span>
+                            <span class="user-name" id="userName">John Patient</span>
                             <span class="user-role">Patient</span>
                         </div>
+                    </div>
+                    <div class="top-bar-right">
+                        <button class="logout-btn" onclick="logoutUser()">Logout</button>
                     </div>
                 </div>
                 <div class="content-area">
@@ -37,41 +45,219 @@
                     <div class="page-header">
                         <h1>My Lab Results</h1>
                     </div>
-                    <div class="results-list">
-                        <div class="result-card">
-                            <div class="result-info">
-                                <div class="result-icon">📄</div>
-                                <div class="result-details">
-                                    <h3>Blood Test Results</h3>
-                                    <p>Uploaded by Dr. Sarah Smith • April 1, 2026</p>
-                                </div>
-                            </div>
-                            <div class="result-actions">
-                                <button class="btn-view" onclick="window.location.href='lab-result-details.html'">View</button>
-                                <button class="btn-download" onclick="window.location.href='pdf-viewer.html'">View PDF</button>
-                            </div>
+                    
+                    <div class="filters">
+                        <div class="filter-group">
+                            <label>Profile</label>
+                            <select id="profileFilter" onchange="loadResults()">
+                                <option value="">All Profiles</option>
+                            </select>
                         </div>
-                        <div class="result-card">
-                            <div class="result-info">
-                                <div class="result-icon">📄</div>
-                                <div class="result-details">
-                                    <h3>Lipid Panel Results</h3>
-                                    <p>Uploaded by Dr. Sarah Smith • March 25, 2026</p>
-                                </div>
-                            </div>
-                            <div class="result-actions">
-                                <button class="btn-view">View</button>
-                                <button class="btn-download">Download PDF</button>
-                            </div>
-                        </div>
+                    </div>
+
+                    <div id="resultsContainer">
+                        <div class="loading">Loading lab results...</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script src="../../js/auth.js"></script>
+
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/ui.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/guards.js"></script>
+    <script src="../../assets/js/patient.js"></script>
     <script>
-        function viewResult() { alert('Opening PDF viewer...'); }
+        // Require patient role
+        requireRole('patient');
+
+        let results = [];
+        let profiles = [];
+
+        // Initialize page
+        async function initializePage() {
+            try {
+                const user = getCurrentUser();
+                if (!user) {
+                    window.location.href = '../../index.html';
+                    return;
+                }
+
+                // Update user info in top bar
+                document.getElementById('userName').textContent = user.fullName || user.name || 'Patient';
+                const name = user.fullName || user.name || 'Patient';
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('userInitials').textContent = initials;
+
+                // Load profiles for filter
+                await loadProfiles();
+                
+                // Load results
+                await loadResults();
+
+            } catch (error) {
+                console.error('Failed to initialize page:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load page', 'error');
+                }
+            }
+        }
+
+        // Load profiles
+        async function loadProfiles() {
+            try {
+                profiles = await getPatientProfiles();
+                const profileFilter = document.getElementById('profileFilter');
+                
+                profileFilter.innerHTML = '<option value="">All Profiles</option>';
+                profiles.forEach(profile => {
+                    profileFilter.innerHTML += `<option value="${profile._id}">${profile.fullName}</option>`;
+                });
+
+                // Set selected profile if available
+                const selectedProfile = getSelectedPatientProfile();
+                if (selectedProfile) {
+                    profileFilter.value = selectedProfile._id;
+                }
+
+            } catch (error) {
+                console.error('Failed to load profiles:', error);
+            }
+        }
+
+        // Load results
+        async function loadResults() {
+            try {
+                const container = document.getElementById('resultsContainer');
+                container.innerHTML = '<div class="loading">Loading lab results...</div>';
+
+                // Build filters
+                const filters = {};
+                const profileId = document.getElementById('profileFilter').value;
+                if (profileId) filters.profileId = profileId;
+
+                // Get results from backend
+                results = await getPatientResults(filters);
+
+                renderResults(results);
+
+            } catch (error) {
+                console.error('Failed to load results:', error);
+                const container = document.getElementById('resultsContainer');
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>Failed to load results</h3>
+                        <p>Please try again later</p>
+                    </div>
+                `;
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load lab results', 'error');
+                }
+            }
+        }
+
+        // Render results
+        function renderResults(resultsList) {
+            const container = document.getElementById('resultsContainer');
+            
+            if (!resultsList || resultsList.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No lab results found</h3>
+                        <p>Results will appear here once your appointments are completed and doctors upload test results.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="results-list">
+                    ${resultsList.map(result => `
+                        <div class="result-card">
+                            <div class="result-info">
+                                <div class="result-icon">📄</div>
+                                <div class="result-details">
+                                    <h3>${result.testName || 'Lab Test Result'}</h3>
+                                    <p>File: ${result.fileName || 'result.pdf'}</p>
+                                    <p>Uploaded: ${formatDate(result.uploadedAt)}</p>
+                                    <p>Appointment: ${formatDate(result.appointmentDate)} • ${formatTime(result.appointmentTime)}</p>
+                                    <p>Type: ${result.appointmentType === 'in_lab' ? 'In-Lab Visit' : 'Home Visit'} • Status: ${capitalizeFirst(result.appointmentStatus || 'completed')}</p>
+                                </div>
+                            </div>
+                            <div class="result-actions">
+                                <button class="btn-download" onclick="downloadResult('${result._id}', '${result.fileName || `result-${result._id}.pdf`}')" id="download-${result._id}">
+                                    Download PDF
+                                </button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // Download result
+        async function downloadResult(resultId, fileName) {
+            try {
+                const downloadBtn = document.getElementById(`download-${resultId}`);
+                if (downloadBtn) {
+                    downloadBtn.classList.add('downloading');
+                    downloadBtn.textContent = 'Downloading...';
+                    downloadBtn.disabled = true;
+                }
+
+                await downloadPatientResult(resultId, fileName);
+
+                if (typeof showToast === 'function') {
+                    showToast('PDF downloaded successfully!', 'success');
+                }
+
+            } catch (error) {
+                console.error('Failed to download result:', error);
+                if (typeof showToast === 'function') {
+                    showToast(error.message || 'Failed to download PDF', 'error');
+                }
+            } finally {
+                const downloadBtn = document.getElementById(`download-${resultId}`);
+                if (downloadBtn) {
+                    downloadBtn.classList.remove('downloading');
+                    downloadBtn.textContent = 'Download PDF';
+                    downloadBtn.disabled = false;
+                }
+            }
+        }
+
+        // Format date helper
+        function formatDate(dateString) {
+            if (!dateString) return 'Unknown';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric', 
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Format time helper
+        function formatTime(timeString) {
+            if (!timeString) return 'Unknown';
+            const [hours, minutes] = timeString.split(':');
+            const hour = parseInt(hours);
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const displayHour = hour > 12 ? hour - 12 : hour;
+            return `${displayHour}:${minutes} ${ampm}`;
+        }
+
+        // Capitalize first letter
+        function capitalizeFirst(str) {
+            if (!str) return '';
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializePage);
     </script>
 </body>
 </html>
