@@ -52,7 +52,12 @@ const getMe = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
     try {
-        return sendSuccess(res, 200, 'Logout successful. Please remove the token from client storage.');
+        const authHeader = req.headers.authorization;
+        const token = authHeader.split(' ')[1];
+
+        const result = await authService.logout(token);
+
+        return sendSuccess(res, 200, result.message);
     } catch (error) {
         next(error);
     }

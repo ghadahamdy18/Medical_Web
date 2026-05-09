@@ -6,6 +6,8 @@ const path = require('path');
 const rateLimit = require('express-rate-limit');
 
 const errorMiddleware = require('./middlewares/error.middleware');
+const authMiddleware = require('./middlewares/auth.middleware');
+const forcePasswordChangeMiddleware = require('./middlewares/forcePasswordChange.middleware');
 const routes = require('./routes');
 
 const app = express();
@@ -76,6 +78,27 @@ app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads'), {
     res.setHeader('X-Content-Type-Options', 'nosniff');
   },
 }));
+
+
+// ─── Force Temporary Password Change ─────────────────────────────────────────
+// Applies only after authentication when a valid token is provided.
+// Public auth routes like login/register still work normally.
+app.use('/api', (req, res, next) => {
+  const publicRoutes = [
+    '/api/auth/login',
+    '/api/auth/register',
+  ];
+
+  if (publicRoutes.includes(req.originalUrl)) {
+    return next();
+  }
+
+  return authMiddleware(req, res, (err) => {
+    if (err) return next(err);
+
+    return forcePasswordChangeMiddleware(req, res, next);
+  });
+});
 
 // ─── API Routes ───────────────────────────────────────────────────────────────
 app.use('/api', routes);

@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user.model');
+const TokenBlacklist = require('../models/tokenBlacklist.model');
 
 const authMiddleware = async (req, res, next) => {
   try {
@@ -13,6 +14,19 @@ const authMiddleware = async (req, res, next) => {
     }
 
     const token = authHeader.split(' ')[1];
+
+
+    const blacklistedToken = await TokenBlacklist.findOne({ token });
+
+    if (blacklistedToken) {
+      return res.status(401).json({
+        success: false,
+        message: 'Token has been logged out. Please login again.',
+      });
+    }
+
+
+
 
     // 2. Verify token
     let decoded;

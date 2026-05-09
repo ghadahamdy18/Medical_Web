@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
+const TokenBlacklist = require('../../models/tokenBlacklist.model.js');
 
 const User = require('../../models/user.model.js');
 const PatientProfile = require('../../models/patientProfile.model.js');
@@ -187,9 +188,29 @@ const getMe = async (userId) => {
     return sanitizeUser(user);
 };
 
+const logout = async (token) => {
+    const decoded = jwt.decode(token);
+
+    if (!decoded || !decoded.exp) {
+        throw createError('Invalid token', 400);
+    }
+
+    const expiresAt = new Date(decoded.exp * 1000);
+
+    await TokenBlacklist.create({
+        token,
+        expiresAt,
+    });
+
+    return {
+        message: 'Logout successful. Token has been invalidated.',
+    };
+};
+
 module.exports = {
     registerPatient,
     login,
     changePassword,
     getMe,
+    logout,
 };
