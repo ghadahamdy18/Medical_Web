@@ -89,10 +89,228 @@
             </div>
         </div>
     </div>
-    <script src="../../js/auth.js"></script>
+    <!-- Phase 2 — load strictly in this order -->
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/ui.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/guards.js"></script>
+    <script src="../../assets/js/doctor.js"></script>
     <script>
-        function showFileName(){const f=document.getElementById('fileInput').files[0];if(f){alert('Selected file: '+f.name)}}
-        function uploadResult(e){e.preventDefault();alert('Lab results uploaded successfully!');window.location.href='dashboard.html'}
+        let appointmentId = null;
+        let existingResults = [];
+
+        // Initialize page
+        async function initializePage() {
+            try {
+                // Get appointment ID from URL
+                const urlParams = new URLSearchParams(window.location.search);
+                appointmentId = urlParams.get('id');
+                
+                if (!appointmentId) {
+                    throw new Error('No appointment ID provided');
+                }
+
+                // Load appointment details and existing results
+                await loadAppointmentDetails();
+                await loadExistingResults();
+
+                document.getElementById('uploadLoading').style.display = 'none';
+                document.getElementById('uploadForm').style.display = 'block';
+
+            } catch (error) {
+                console.error('Failed to initialize page:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load appointment details', 'error');
+                }
+                document.getElementById('uploadLoading').style.display = 'none';
+            }
+        }
+
+        // Load appointment details
+        async function loadAppointmentDetails() {
+            try {
+                const response = await getDoctorAppointmentDetails(appointmentId);
+                if (response.success) {
+                    const appointment = response.data;
+                    document.getElementById('appointmentInfo').innerHTML = `
+                        <div class="appointment-details">
+                            <h3>${appointment.patientProfileId?.fullName || 'Unknown Patient'}</h3>
+                            <p>Appointment: ${formatDate(appointment.appointmentDate)} at ${formatTime(appointment.appointmentTime)}</p>
+                            <p>Type: ${formatAppointmentType(appointment.appointmentType)}</p>
+                        </div>
+                    `;
+                } else {
+                    throw new Error(response.message || 'Failed to load appointment');
+                }
+            } catch (error) {
+                console.error('Failed to load appointment details:', error);
+                throw error;
+            }
+        }
+
+        // Load existing results
+        async function loadExistingResults() {
+            try {
+                const response = await getDoctorAppointmentResults(appointmentId);
+                if (response.success) {
+                    existingResults = response.data || [];
+                    
+                    if (existingResults.length > 0) {
+                        document.getElementById('replaceWarning').style.display = 'block';
+                        document.getElementById('existingResults').innerHTML = `
+                            <h4>Existing Results:</h4>
+                            ${existingResults.map(result => `
+                                <div class="existing-result">
+                                    <strong>${result.testName}</strong> - 
+                                    Uploaded: ${formatDate(result.uploadedAt)}
+                                    ${result.isLatest ? '<span class="badge">Latest</span>' : ''}
+                                </div>
+                            `).join('')}
+                        `;
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to load existing results:', error);
+                // Don't fail the page load for this
+            }
+        }
+
+        // Handle file selection
+        function showFileName() {
+            const fileInput = document.getElementById('fileInput');
+            const fileName = document.getElementById('fileName');
+            
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                
+                // Validate file type
+                if (file.type !== 'application/pdf') {
+                    if (typeof showToast === 'function') {
+                        showToast('Only PDF files are allowed', 'error');
+                    }
+                    fileInput.value = '';
+                    fileName.textContent = '';
+                    return;
+                }
+                
+                // Validate file size (10MB max)
+                const maxSize = 10 * 1024 * 1024; // 10MB
+                if (file.size > maxSize) {
+                    if (typeof showToast === 'function') {
+                        showToast('File size must be less than 10MB', 'error');
+                    }
+                    fileInput.value = '';
+                    fileName.textContent = '';
+                    return;
+                }
+                
+                fileName.textContent = `Selected: ${file.name}`;
+            } else {
+                fileName.textContent = '';
+            }
+        }
+
+        // Upload result
+        async function uploadResult(event) {
+            event.preventDefault();
+            
+            const fileInput = document.getElementById('fileInput');
+            const testName = document.getElementById('testName').value.trim();
+            const file = fileInput.files[0];
+            
+            // Validation
+            if (!file) {
+                if (typeof showToast === 'function') {
+                    showToast('Please select a PDF file', 'error');
+                }
+                return;
+            }
+            
+            if (!testName) {
+                if (typeof showToast === 'function') {
+                    showToast('Please enter a test name', 'error');
+                }
+                return;
+            }
+            
+            // Check if replacing existing result
+            const existingResult = existingResults.find(r => r.testName.toLowerCase() === testName.toLowerCase());
+            if (existingResult && existingResult.isLatest) {
+                const confirmReplace = confirm(`A result for "${testName}" already exists. Do you want to replace it?`);
+                if (!confirmReplace) {
+                    return;
+                }
+            }
+            
+            try {
+                // Show loading state
+                const submitBtn = document.querySelector('.btn-upload');
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Uploading...';
+                
+                // Create FormData
+                const formData = new FormData();
+                formData.append('resultFile', file);
+                formData.append('testName', testName);
+                
+                // Upload result
+                const response = await uploadDoctorResult(appointmentId, formData);
+                
+                if (response.success) {
+                    if (typeof showToast === 'function') {
+                        showToast('Lab result uploaded successfully!', 'success');
+                    }
+                    
+                    // Redirect back to dashboard
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                } else {
+                    throw new Error(response.message || 'Failed to upload result');
+                }
+                
+            } catch (error) {
+                console.error('Failed to upload result:', error);
+                if (typeof showToast === 'function') {
+                    showToast(error.message || 'Failed to upload result', 'error');
+                }
+            } finally {
+                // Reset button state
+                const submitBtn = document.querySelector('.btn-upload');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Upload Results';
+            }
+        }
+
+        // Format date helper
+        function formatDate(dateString) {
+            if (!dateString) return 'Unknown';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric', 
+                year: 'numeric'
+            });
+        }
+
+        // Format time helper
+        function formatTime(timeString) {
+            if (!timeString) return 'Unknown';
+            const [hours, minutes] = timeString.split(':');
+            const hour = parseInt(hours);
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const displayHour = hour > 12 ? hour - 12 : hour;
+            return `${displayHour}:${minutes} ${ampm}`;
+        }
+
+        // Format appointment type
+        function formatAppointmentType(type) {
+            if (!type) return 'Unknown';
+            return type === 'in_lab' ? 'In-Lab Visit' : 'Home Visit';
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializePage);
     </script>
 </body>
 </html>

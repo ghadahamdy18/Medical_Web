@@ -11,6 +11,11 @@ const roleMiddleware = require('../../middlewares/role.middleware.js');
 router.use(authMiddleware);
 router.use(roleMiddleware('receptionist'));
 
+/**
+ * Dashboard
+ */
+router.get('/dashboard', receptionistController.getDashboard);
+
 // 1 & 2. Patient endpoints
 router.post('/patients', validation.createPatientValidation, receptionistController.createPatient);
 router.get('/patients', validation.getPatientsValidation, receptionistController.getPatients);

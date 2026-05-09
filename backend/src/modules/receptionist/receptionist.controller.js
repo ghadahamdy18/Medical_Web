@@ -110,15 +110,18 @@ const rescheduleAppointment = async (req, res, next) => {
 
 const cancelAppointment = async (req, res, next) => {
     try {
-        const result = await receptionistService.cancelAppointment(req.params.id);
+        const result = await receptionistService.cancelAppointment(req.params.appointmentId);
         return res.status(200).json(result);
     } catch (error) {
-        if (error.message === 'Appointment not found') {
-            return res.status(404).json({ error: error.message });
-        }
-        if (error.message === 'Invalid status transition') {
-            return res.status(400).json({ error: error.message });
-        }
+        next(error);
+    }
+};
+
+const getDashboard = async (req, res, next) => {
+    try {
+        const result = await receptionistService.getDashboard();
+        return res.status(200).json(result);
+    } catch (error) {
         next(error);
     }
 };
@@ -133,5 +136,6 @@ module.exports = {
     getAppointments,
     confirmAppointment,
     rescheduleAppointment,
-    cancelAppointment
+    cancelAppointment,
+    getDashboard
 };

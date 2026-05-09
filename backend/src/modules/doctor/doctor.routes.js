@@ -14,6 +14,14 @@ router.use(authMiddleware);
 router.use(roleMiddleware('doctor'));
 
 /**
+ * Dashboard
+ */
+router.get(
+    '/dashboard',
+    doctorController.getDashboard
+);
+
+/**
  * GET /doctor/my-appointments
  * List all appointments assigned to the logged-in doctor.
  * Supports optional query: ?appointmentStatus=confirmed&appointmentType=in_lab&page=1&limit=10
