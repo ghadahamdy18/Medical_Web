@@ -15,8 +15,6 @@
                 <ul class="sidebar-menu">
                     <li><a href="dashboard.html" class="active">Dashboard</a></li>
                     <li><a href="walkin-register.html">Walk-in Register</a></li>
-                    <li><a href="queue-management.html">Queue Management</a></li>
-                    <li><a href="print-results.html">Print Results</a></li>
                 </ul>
             </aside>
             <div class="main-area">
@@ -33,7 +31,7 @@
                 <div class="content-area">
                     <div class="page-header">
                         <h1>Reception Dashboard</h1>
-                        <p>Manage patient queue and registrations</p>
+                        <p>Register walk-in patients; appointment confirmation and schedules will integrate with the backend in a later phase.</p>
                     </div>
                     <div class="dashboard-grid">
                         <div class="card stat-card">
@@ -53,8 +51,8 @@
                         <div class="card stat-card">
                             <div class="stat-icon orange">⏳</div>
                             <div class="stat-content">
-                                <div class="stat-value">8</div>
-                                <div class="stat-label">In Queue</div>
+                                <div class="stat-value">6</div>
+                                <div class="stat-label">Awaiting Confirmation</div>
                             </div>
                         </div>
                     </div>
@@ -66,37 +64,29 @@
                             <span>➕</span>
                             <span>Register Walk-in</span>
                         </a>
-                        <a href="queue-management.html" class="quick-action-btn">
-                            <span>📋</span>
-                            <span>Manage Queue</span>
-                        </a>
-                        <a href="print-results.html" class="quick-action-btn">
-                            <span>🖨️</span>
-                            <span>Print Results</span>
-                        </a>
                     </div>
                     <div class="queue-today" style="margin-top:30px">
-                        <h3 style="margin-bottom:20px">Today's Queue</h3>
+                        <h3 style="margin-bottom:20px">Today's visits (sample data)</h3>
                         <div class="queue-item">
                             <div style="display:flex;align-items:center;gap:15px">
-                                <span class="queue-num">#1</span>
-                                <div class="queue-info"><h4>John Patient</h4><p>9:00 AM • Blood Test</p></div>
+                                <span class="queue-num">9:00</span>
+                                <div class="queue-info"><h4>John Patient</h4><p>Blood Test</p></div>
                             </div>
                             <span class="queue-status">Completed</span>
                         </div>
                         <div class="queue-item">
                             <div style="display:flex;align-items:center;gap:15px">
-                                <span class="queue-num">#2</span>
-                                <div class="queue-info"><h4>Jane Patient</h4><p>9:30 AM • Lipid Panel</p></div>
+                                <span class="queue-num">9:30</span>
+                                <div class="queue-info"><h4>Jane Patient</h4><p>Lipid Panel</p></div>
                             </div>
-                            <span class="queue-status">In Progress</span>
+                            <span class="queue-status">Checked in</span>
                         </div>
                         <div class="queue-item">
                             <div style="display:flex;align-items:center;gap:15px">
-                                <span class="queue-num">#3</span>
-                                <div class="queue-info"><h4>Mike Johnson</h4><p>10:00 AM • General Checkup</p></div>
+                                <span class="queue-num">10:00</span>
+                                <div class="queue-info"><h4>Mike Johnson</h4><p>General Checkup</p></div>
                             </div>
-                            <span class="queue-status">Waiting</span>
+                            <span class="queue-status">Scheduled</span>
                         </div>
                     </div>
                 </div>

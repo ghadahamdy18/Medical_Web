@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointments - Medical Lab</title>
+    <link rel="stylesheet" href="../../css/dashboard.css">
+    <style>body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#28a745;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.page-header{margin-bottom:25px}.page-header h1{font-size:24px;color:#333}.page-header p{color:#666;max-width:720px}.table-container{background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);overflow:hidden}.table-container table{width:100%;border-collapse:collapse}.table-container th,.table-container td{padding:15px 20px;text-align:left;border-bottom:1px solid #eee}.table-container th{background:#f8f9fa;font-weight:600}.table-container tr:hover{background:#f8f9fa}.logout-btn{background:transparent;border:1px solid #dc3545;color:#dc3545;padding:8px 16px;border-radius:4px;cursor:pointer}.logout-btn:hover{background:#dc3545;color:#fff}</style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="dashboard-body">
+            <aside class="sidebar">
+                <div class="sidebar-logo"><h2>Medical Lab</h2></div>
+                <ul class="sidebar-menu">
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="patient-list.html">Patient List</a></li>
+                    <li><a href="appointments.html" class="active">Appointments</a></li>
+                    <li><a href="upload-results.html">Upload Results</a></li>
+                    <li><a href="settings.html">Settings</a></li>
+                </ul>
+            </aside>
+            <div class="main-area">
+                <div class="top-bar">
+                    <div class="user-info">
+                        <div class="user-avatar">SS</div>
+                        <div class="user-details">
+                            <span class="user-name">Dr. Sarah Smith</span>
+                            <span class="user-role">Doctor • General Medicine</span>
+                        </div>
+                    </div>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+                <div class="content-area">
+                    <div class="page-header">
+                        <h1>My Appointments</h1>
+                        <p>Assignments for your account only. Static sample rows for Phase 1; filtering and API integration come in a later phase.</p>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Patient</th>
+                                    <th>Type</th>
+                                    <th>Focus</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>April 7, 2026</td>
+                                    <td>9:00 AM</td>
+                                    <td>John Patient</td>
+                                    <td>In-Lab</td>
+                                    <td>Blood Test</td>
+                                    <td>Completed</td>
+                                </tr>
+                                <tr>
+                                    <td>April 7, 2026</td>
+                                    <td>11:00 AM</td>
+                                    <td>Jane Patient</td>
+                                    <td>In-Lab</td>
+                                    <td>Lipid Panel</td>
+                                    <td>In Progress</td>
+                                </tr>
+                                <tr>
+                                    <td>April 7, 2026</td>
+                                    <td>2:00 PM</td>
+                                    <td>Mike Johnson</td>
+                                    <td>Home Visit</td>
+                                    <td>General Checkup</td>
+                                    <td>Scheduled</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../js/auth.js"></script>
+    <script>function logout(){window.location.href='../../index.html'}</script>
+</body>
+</html>
