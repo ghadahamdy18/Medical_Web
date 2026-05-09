@@ -14,86 +14,162 @@
                 <div class="sidebar-logo"><h2>Medical Lab</h2></div>
                 <ul class="sidebar-menu">
                     <li><a href="dashboard.html" class="active">Dashboard</a></li>
-                    <li><a href="walkin-register.html">Walk-in Register</a></li>
+                    <li><a href="patients.html">Patients</a></li>
+                    <li><a href="create-patient.html">Create Patient</a></li>
+                    <li><a href="appointments.html">Appointments</a></li>
+                    <li><a href="create-appointment.html">Create Appointment</a></li>
+                    <li><a href="settings.html">Settings</a></li>
                 </ul>
             </aside>
             <div class="main-area">
                 <div class="top-bar">
                     <div class="user-info">
-                        <div class="user-avatar">R</div>
+                        <div class="user-avatar" id="userInitials">R</div>
                         <div class="user-details">
-                            <span class="user-name">Reception Desk</span>
+                            <span class="user-name" id="userName">Reception Desk</span>
                             <span class="user-role">Receptionist</span>
                         </div>
                     </div>
-                    <button class="logout-btn" onclick="logout()">Logout</button>
+                    <div class="top-bar-right">
+                        <button class="logout-btn" onclick="logoutUser()">Logout</button>
+                    </div>
                 </div>
                 <div class="content-area">
                     <div class="page-header">
-                        <h1>Reception Dashboard</h1>
-                        <p>Register walk-in patients; appointment confirmation and schedules will integrate with the backend in a later phase.</p>
+                        <h1>Receptionist Dashboard</h1>
+                        <p>Manage patients and appointments</p>
                     </div>
                     <div class="dashboard-grid">
                         <div class="card stat-card">
                             <div class="stat-icon blue">👥</div>
                             <div class="stat-content">
-                                <div class="stat-value">23</div>
-                                <div class="stat-label">Today's Patients</div>
+                                <div class="stat-value" id="totalPatients">0</div>
+                                <div class="stat-label">Total Patients</div>
                             </div>
                         </div>
                         <div class="card stat-card">
-                            <div class="stat-icon green">✓</div>
+                            <div class="stat-icon green">📋</div>
                             <div class="stat-content">
-                                <div class="stat-value">15</div>
-                                <div class="stat-label">Completed</div>
+                                <div class="stat-value" id="totalAppointments">0</div>
+                                <div class="stat-label">Total Appointments</div>
                             </div>
                         </div>
                         <div class="card stat-card">
-                            <div class="stat-icon orange">⏳</div>
+                            <div class="stat-icon orange">⏰</div>
                             <div class="stat-content">
-                                <div class="stat-value">6</div>
-                                <div class="stat-label">Awaiting Confirmation</div>
+                                <div class="stat-value" id="pendingAppointments">0</div>
+                                <div class="stat-label">Pending Appointments</div>
+                            </div>
+                        </div>
+                        <div class="card stat-card">
+                            <div class="stat-icon" style="background: #fff3cd; color: #856404;">📅</div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="todayAppointments">0</div>
+                                <div class="stat-label">Today's Appointments</div>
                             </div>
                         </div>
                     </div>
-                    <div class="page-header">
-                        <h1>Quick Actions</h1>
-                    </div>
-                    <div class="quick-actions">
-                        <a href="walkin-register.html" class="quick-action-btn">
-                            <span>➕</span>
-                            <span>Register Walk-in</span>
-                        </a>
-                    </div>
-                    <div class="queue-today" style="margin-top:30px">
-                        <h3 style="margin-bottom:20px">Today's visits (sample data)</h3>
-                        <div class="queue-item">
-                            <div style="display:flex;align-items:center;gap:15px">
-                                <span class="queue-num">9:00</span>
-                                <div class="queue-info"><h4>John Patient</h4><p>Blood Test</p></div>
-                            </div>
-                            <span class="queue-status">Completed</span>
-                        </div>
-                        <div class="queue-item">
-                            <div style="display:flex;align-items:center;gap:15px">
-                                <span class="queue-num">9:30</span>
-                                <div class="queue-info"><h4>Jane Patient</h4><p>Lipid Panel</p></div>
-                            </div>
-                            <span class="queue-status">Checked in</span>
-                        </div>
-                        <div class="queue-item">
-                            <div style="display:flex;align-items:center;gap:15px">
-                                <span class="queue-num">10:00</span>
-                                <div class="queue-info"><h4>Mike Johnson</h4><p>General Checkup</p></div>
-                            </div>
-                            <span class="queue-status">Scheduled</span>
+                    <div class="section">
+                        <div class="section-title">Quick Actions</div>
+                        <div class="quick-actions">
+                            <a href="create-patient.html" class="quick-action-btn">
+                                <span>👤</span>
+                                <span>Create Patient</span>
+                            </a>
+                            <a href="patients.html" class="quick-action-btn">
+                                <span>🔍</span>
+                                <span>Search Patients</span>
+                            </a>
+                            <a href="create-appointment.html" class="quick-action-btn">
+                                <span>📅</span>
+                                <span>Create Appointment</span>
+                            </a>
+                            <a href="appointments.html" class="quick-action-btn">
+                                <span>📋</span>
+                                <span>Manage Appointments</span>
+                            </a>
                         </div>
                     </div>
-                </div>
+                                    </div>
             </div>
         </div>
     </div>
-    <script src="../../js/auth.js"></script>
-    <script>function logout(){window.location.href='../../index.html'}</script>
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/ui.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/guards.js"></script>
+    <script src="../../assets/js/receptionist.js"></script>
+    <script>
+        // Require receptionist role
+        requireRole('receptionist');
+
+        let patients = [];
+        let appointments = [];
+
+        // Initialize page
+        async function initializePage() {
+            try {
+                const user = getCurrentUser();
+                if (!user) {
+                    window.location.href = '../../index.html';
+                    return;
+                }
+
+                // Update user info in top bar
+                document.getElementById('userName').textContent = user.fullName || user.name || 'Receptionist';
+                const name = user.fullName || user.name || 'Receptionist';
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('userInitials').textContent = initials;
+
+                // Load dashboard data
+                await loadDashboardData();
+
+            } catch (error) {
+                console.error('Failed to initialize page:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load dashboard', 'error');
+                }
+            }
+        }
+
+        // Load dashboard data
+        async function loadDashboardData() {
+            try {
+                // Load patients and appointments in parallel
+                const [patientsResponse, appointmentsResponse] = await Promise.all([
+                    getReceptionistPatients({ limit: 100 }),
+                    getReceptionistAppointments({ limit: 100 })
+                ]);
+
+                if (patientsResponse.data !== undefined) {
+                    patients = patientsResponse.data || [];
+                }
+
+                if (appointmentsResponse.data !== undefined) {
+                    appointments = appointmentsResponse.data || [];
+                }
+
+                // Update dashboard stats
+                updateDashboardStats(patients, appointments);
+
+            } catch (error) {
+                console.error('Failed to load dashboard data:', error);
+                handleReceptionistError(error, 'Failed to load dashboard data');
+            }
+        }
+
+        // Update dashboard stats
+        function updateDashboardStats(patientList, appointmentList) {
+            const stats = calculateReceptionistDashboardStats(patientList, appointmentList);
+            
+            document.getElementById('totalPatients').textContent = stats.totalPatients;
+            document.getElementById('totalAppointments').textContent = stats.totalAppointments;
+            document.getElementById('pendingAppointments').textContent = stats.pendingAppointments;
+            document.getElementById('todayAppointments').textContent = stats.todayAppointments;
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
 </body>
 </html>

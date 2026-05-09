@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Family Profile - Medical Lab</title>
+    <link rel="stylesheet" href="../../css/dashboard.css">
+    <style>
+        body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#fd7e14;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.back-link{display:inline-block;margin-bottom:20px;color:#2c7be5;text-decoration:none}.page-header{margin-bottom:25px}.page-header h1{font-size:24px;color:#333}.page-header p{color:#666;max-width:720px}.form-card{background:#fff;padding:30px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);max-width:600px}.form-group{margin-bottom:20px}.form-group label{display:block;margin-bottom:8px;font-weight:600}.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:4px;font-size:14px}.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#2c7be5}.form-group textarea{resize:vertical;min-height:80px}.patient-info{background:#f8f9fa;padding:15px;border-radius:6px;margin-bottom:20px}.btn{padding:12px 24px;border:none;border-radius:4px;cursor:pointer;font-size:16px}.btn-primary{background:#2c7be5;color:#fff}.btn-primary:hover{background:#1a5fbf}.btn-primary:disabled{background:#6c757d;cursor:not-allowed}.error{color:#dc3545;font-size:14px;margin-top:5px}.success{background:#d4edda;border:1px solid #c3e6cb;border-radius:4px;padding:20px;margin-bottom:20px;color:#155724}.success h3{margin-bottom:10px}.loading{text-align:center;padding:40px;color:#666}
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="dashboard-body">
+            <aside class="sidebar">
+                <div class="sidebar-logo">
+                    <h2>Medical Lab</h2>
+                </div>
+                <ul class="sidebar-menu">
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="patients.html">Patients</a></li>
+                    <li><a href="create-patient.html">Create Patient</a></li>
+                    <li><a href="appointments.html">Appointments</a></li>
+                    <li><a href="create-appointment.html">Create Appointment</a></li>
+                    <li><a href="settings.html">Settings</a></li>
+                </ul>
+            </aside>
+            <div class="main-area">
+                <div class="top-bar">
+                    <div class="user-info">
+                        <div class="user-avatar" id="userInitials">R</div>
+                        <div class="user-details">
+                            <span class="user-name" id="userName">Reception Desk</span>
+                            <span class="user-role">Receptionist</span>
+                        </div>
+                    </div>
+                    <div class="top-bar-right">
+                        <button class="logout-btn" onclick="logoutUser()">Logout</button>
+                    </div>
+                </div>
+                <div class="content-area">
+                    <a href="patients.html" class="back-link">← Back to Patients</a>
+                    <div class="page-header">
+                        <h1>Add Family Member Profile</h1>
+                        <p>Add a family member profile to an existing patient account</p>
+                    </div>
+                    
+                    <div id="loading" class="loading">Loading patient information...</div>
+                    
+                    <div id="addProfileForm" class="form-card" style="display: none;">
+                        <div class="patient-info">
+                            <h4>Patient Information</h4>
+                            <div id="patientSummary">
+                                <!-- Patient summary will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <form id="familyProfileForm" onsubmit="handleAddFamilyProfile(event)">
+                            <div class="form-group">
+                                <label for="fullName">Family Member Full Name *</label>
+                                <input type="text" id="fullName" name="fullName" required placeholder="Enter family member's full name">
+                                <div id="fullNameError" class="error"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="gender">Gender</label>
+                                <select id="gender" name="gender">
+                                    <option value="">Select gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="dateOfBirth">Date of Birth</label>
+                                <input type="date" id="dateOfBirth" name="dateOfBirth">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="nationalId">National ID</label>
+                                <input type="text" id="nationalId" name="nationalId" placeholder="Enter national ID (optional)">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="address">Address</label>
+                                <textarea id="address" name="address" placeholder="Enter address (optional)"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" placeholder="Enter email (optional)">
+                                <div id="emailError" class="error"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="relationshipToPrimary">Relationship to Primary Patient *</label>
+                                <select id="relationshipToPrimary" name="relationshipToPrimary" required>
+                                    <option value="">Select relationship</option>
+                                    <option value="father">Father</option>
+                                    <option value="mother">Mother</option>
+                                    <option value="spouse">Spouse</option>
+                                    <option value="child">Child</option>
+                                    <option value="sibling">Sibling</option>
+                                    <option value="grandparent">Grandparent</option>
+                                    <option value="grandchild">Grandchild</option>
+                                    <option value="other">Other</option>
+                                </select>
+                                <div id="relationshipError" class="error"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" id="isActive" name="isActive" checked>
+                                    Active Profile
+                                </label>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary" id="createBtn">
+                                Add Family Profile
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div id="createSuccess" class="success" style="display: none;">
+                        <h3>✅ Family Profile Added Successfully!</h3>
+                        <div id="profileSummary">
+                            <!-- Profile summary will be populated here -->
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <button class="btn btn-primary" onclick="backToPatientDetails()">Back to Patient Details</button>
+                            <button class="btn btn-primary" onclick="addAnotherProfile()">Add Another Profile</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/ui.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/guards.js"></script>
+    <script src="../../assets/js/receptionist.js"></script>
+    <script>
+        // Require receptionist role
+        requireRole('receptionist');
+
+        let patient = null;
+        let createdProfile = null;
+        const userId = getQueryParam('userId');
+
+        // Initialize page
+        async function initializePage() {
+            try {
+                const user = getCurrentUser();
+                if (!user) {
+                    window.location.href = '../../index.html';
+                    return;
+                }
+
+                // Update user info in top bar
+                document.getElementById('userName').textContent = user.fullName || user.name || 'Receptionist';
+                const name = user.fullName || user.name || 'Receptionist';
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('userInitials').textContent = initials;
+
+                // Load patient information
+                await loadPatientInfo();
+
+            } catch (error) {
+                console.error('Failed to initialize page:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load page', 'error');
+                }
+            }
+        }
+
+        // Load patient information
+        async function loadPatientInfo() {
+            if (!userId) {
+                showError('No patient ID provided');
+                return;
+            }
+
+            try {
+                document.getElementById('loading').style.display = 'block';
+                document.getElementById('addProfileForm').style.display = 'none';
+
+                const response = await getReceptionistPatientById(userId);
+                
+                if (response.user) {
+                    patient = response.user;
+                    displayPatientSummary(patient);
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('addProfileForm').style.display = 'block';
+                } else {
+                    throw new Error('Invalid response format');
+                }
+
+            } catch (error) {
+                console.error('Failed to load patient info:', error);
+                showError(error.message || 'Failed to load patient information');
+            }
+        }
+
+        // Display patient summary
+        function displayPatientSummary(patientData) {
+            const summaryElement = document.getElementById('patientSummary');
+            summaryElement.innerHTML = `
+                <div style="display: grid; gap: 5px;">
+                    <div><strong>Name:</strong> ${patientData.fullName}</div>
+                    <div><strong>Phone:</strong> ${patientData.phoneNumber}</div>
+                    <div><strong>Email:</strong> ${patientData.email || 'Not provided'}</div>
+                    <div><strong>Status:</strong> ${patientData.status || 'Active'}</div>
+                </div>
+            `;
+        }
+
+        // Handle add family profile
+        async function handleAddFamilyProfile(event) {
+            event.preventDefault();
+            
+            // Clear previous errors
+            document.getElementById('fullNameError').textContent = '';
+            document.getElementById('emailError').textContent = '';
+            document.getElementById('relationshipError').textContent = '';
+            
+            // Get form values
+            const fullName = document.getElementById('fullName').value.trim();
+            const gender = document.getElementById('gender').value;
+            const dateOfBirth = document.getElementById('dateOfBirth').value;
+            const nationalId = document.getElementById('nationalId').value.trim();
+            const address = document.getElementById('address').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const relationshipToPrimary = document.getElementById('relationshipToPrimary').value;
+            const isActive = document.getElementById('isActive').checked;
+            
+            // Validate
+            let hasError = false;
+            
+            if (!fullName) {
+                document.getElementById('fullNameError').textContent = 'Full name is required';
+                hasError = true;
+            }
+            
+            if (email && !validateEmail(email)) {
+                document.getElementById('emailError').textContent = 'Please enter a valid email address';
+                hasError = true;
+            }
+            
+            if (!relationshipToPrimary) {
+                document.getElementById('relationshipError').textContent = 'Relationship to primary patient is required';
+                hasError = true;
+            }
+            
+            if (hasError) return;
+            
+            try {
+                // Disable create button
+                const createBtn = document.getElementById('createBtn');
+                createBtn.disabled = true;
+                createBtn.textContent = 'Adding...';
+                
+                // Prepare payload
+                const payload = {
+                    fullName,
+                    relationshipToPrimary,
+                    isActive
+                };
+                
+                // Add optional fields if provided
+                if (gender) payload.gender = gender;
+                if (dateOfBirth) payload.dateOfBirth = dateOfBirth;
+                if (nationalId) payload.nationalId = nationalId;
+                if (address) payload.address = address;
+                if (email) payload.email = email;
+                
+                // Create family profile
+                const response = await createReceptionistPatientProfile(userId, payload);
+                
+                if (response._id || response.fullName) {
+                    createdProfile = response;
+                    showSuccess(response);
+                } else {
+                    throw new Error('Invalid response format');
+                }
+                
+            } catch (error) {
+                console.error('Failed to add family profile:', error);
+                handleReceptionistError(error, 'Failed to add family profile');
+            } finally {
+                // Re-enable create button
+                const createBtn = document.getElementById('createBtn');
+                createBtn.disabled = false;
+                createBtn.textContent = 'Add Family Profile';
+            }
+        }
+
+        // Show success message
+        function showSuccess(profile) {
+            document.getElementById('addProfileForm').style.display = 'none';
+            document.getElementById('createSuccess').style.display = 'block';
+            
+            const summaryElement = document.getElementById('profileSummary');
+            summaryElement.innerHTML = `
+                <div style="display: grid; gap: 10px;">
+                    <div><strong>Profile Name:</strong> ${profile.fullName}</div>
+                    <div><strong>Relationship:</strong> ${profile.relationshipToPrimary}</div>
+                    ${profile.gender ? `<div><strong>Gender:</strong> ${profile.gender}</div>` : ''}
+                    ${profile.dateOfBirth ? `<div><strong>Date of Birth:</strong> ${formatDate(profile.dateOfBirth)}</div>` : ''}
+                    ${profile.nationalId ? `<div><strong>National ID:</strong> ${profile.nationalId}</div>` : ''}
+                    ${profile.email ? `<div><strong>Email:</strong> ${profile.email}</div>` : ''}
+                    <div><strong>Status:</strong> ${profile.isActive ? 'Active' : 'Inactive'}</div>
+                </div>
+            `;
+        }
+
+        // Back to patient details
+        function backToPatientDetails() {
+            if (userId) {
+                navigateToPatientDetails(userId);
+            } else {
+                window.location.href = 'patients.html';
+            }
+        }
+
+        // Add another profile
+        function addAnotherProfile() {
+            // Reset form
+            document.getElementById('familyProfileForm').reset();
+            
+            // Clear errors
+            document.getElementById('fullNameError').textContent = '';
+            document.getElementById('emailError').textContent = '';
+            document.getElementById('relationshipError').textContent = '';
+            
+            // Hide success, show form
+            document.getElementById('createSuccess').style.display = 'none';
+            document.getElementById('addProfileForm').style.display = 'block';
+            
+            createdProfile = null;
+        }
+
+        // Show error
+        function showError(message) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('addProfileForm').style.display = 'none';
+            document.getElementById('createSuccess').style.display = 'none';
+            
+            // Create error display
+            const errorHtml = `
+                <div class="form-card" style="background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24;">
+                    <h3>Error</h3>
+                    <p>${message}</p>
+                    <p><a href="patients.html" class="btn btn-primary">Back to Patients</a></p>
+                </div>
+            `;
+            
+            document.getElementById('loading').innerHTML = errorHtml;
+            document.getElementById('loading').style.display = 'block';
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
+</body>
+</html>

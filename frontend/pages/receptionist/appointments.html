@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointments - Medical Lab</title>
+    <link rel="stylesheet" href="../../css/dashboard.css">
+    <style>
+        body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#fd7e14;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.page-header{margin-bottom:25px}.page-header h1{font-size:24px;color:#333}.page-header p{color:#666;max-width:720px}.filters{display:flex;gap:15px;margin-bottom:20px;flex-wrap:wrap}.filter-group{display:flex;flex-direction:column;gap:5px}.filter-group label{font-size:14px;font-weight:600}.filter-group select{padding:8px;border:1px solid #ddd;border-radius:4px;font-size:14px}.table-container{background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);overflow:hidden}.table-container table{width:100%;border-collapse:collapse}.table-container th,.table-container td{padding:15px 20px;text-align:left;border-bottom:1px solid #eee}.table-container th{background:#f8f9fa;font-weight:600}.table-container tr:hover{background:#f8f9fa}.action-buttons{display:flex;gap:8px}.btn-sm{padding:6px 12px;font-size:12px;border:none;border-radius:4px;cursor:pointer}.btn-confirm{background:#28a745;color:#fff}.btn-confirm:hover{background:#218838}.btn-reschedule{background:#ffc107;color:#212529}.btn-reschedule:hover{background:#e0a800}.btn-cancel{background:#dc3545;color:#fff}.btn-cancel:hover{background:#c82333}.btn-view{background:#17a2b8;color:#fff}.btn-view:hover{background:#138496}.status-badge{padding:5px 12px;border-radius:20px;font-size:12px}.status-pending{background:#fff3cd;color:#856404}.status-confirmed{background:#d4edda;color:#155724}.status-completed{background:#cce5ff;color:#004085}.status-cancelled{background:#f8d7da;color:#721c24}.empty-state{text-align:center;padding:60px 20px;color:#666}.loading{text-align:center;padding:40px;color:#666}.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:1000}.modal-content{background:#fff;margin:15% auto;padding:30px;border-radius:8px;max-width:500px}.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.modal-title{font-size:20px;font-weight:600}.modal-close{background:none;border:none;font-size:24px;cursor:pointer}.form-group{margin-bottom:15px}.form-group label{display:block;margin-bottom:5px;font-weight:600}.form-group input{width:100%;padding:10px;border:1px solid #ddd;border-radius:4px}.form-group input:focus{outline:none;border-color:#2c7be5}.modal-buttons{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}.btn{padding:10px 20px;border:none;border-radius:4px;cursor:pointer}.btn-primary{background:#2c7be5;color:#fff}.btn-secondary{background:#6c757d;color:#fff}
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="dashboard-body">
+            <aside class="sidebar">
+                <div class="sidebar-logo">
+                    <h2>Medical Lab</h2>
+                </div>
+                <ul class="sidebar-menu">
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="patients.html">Patients</a></li>
+                    <li><a href="create-patient.html">Create Patient</a></li>
+                    <li><a href="appointments.html" class="active">Appointments</a></li>
+                    <li><a href="create-appointment.html">Create Appointment</a></li>
+                    <li><a href="settings.html">Settings</a></li>
+                </ul>
+            </aside>
+            <div class="main-area">
+                <div class="top-bar">
+                    <div class="user-info">
+                        <div class="user-avatar" id="userInitials">R</div>
+                        <div class="user-details">
+                            <span class="user-name" id="userName">Reception Desk</span>
+                            <span class="user-role">Receptionist</span>
+                        </div>
+                    </div>
+                    <div class="top-bar-right">
+                        <button class="logout-btn" onclick="logoutUser()">Logout</button>
+                    </div>
+                </div>
+                <div class="content-area">
+                    <div class="page-header">
+                        <h1>Appointments</h1>
+                        <p>Manage and schedule patient appointments</p>
+                    </div>
+                    
+                    <div class="filters">
+                        <div class="filter-group">
+                            <label>Status</label>
+                            <select id="statusFilter" onchange="loadAppointments()">
+                                <option value="">All Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="confirmed">Confirmed</option>
+                                <option value="completed">Completed</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Type</label>
+                            <select id="typeFilter" onchange="loadAppointments()">
+                                <option value="">All Types</option>
+                                <option value="in_lab">In-Lab Visit</option>
+                                <option value="home_visit">Home Visit</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Page</label>
+                            <select id="pageFilter" onchange="loadAppointments()">
+                                <option value="1">Page 1</option>
+                                <option value="2">Page 2</option>
+                                <option value="3">Page 3</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <div id="appointmentsLoading" class="loading">Loading appointments...</div>
+                        <table id="appointmentsTable" style="display: none;">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Patient Profile</th>
+                                    <th>Doctor</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Notes</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="appointmentsBody">
+                            </tbody>
+                        </table>
+                        <div id="appointmentsEmpty" class="empty-state" style="display: none;">
+                            <h3>No appointments found</h3>
+                            <p>Try adjusting your filters or create a new appointment.</p>
+                            <button class="btn btn-primary" onclick="navigateToCreateAppointment()">Create New Appointment</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reschedule Modal -->
+    <div id="rescheduleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Reschedule Appointment</h3>
+                <button class="modal-close" onclick="closeRescheduleModal()">&times;</button>
+            </div>
+            <form onsubmit="handleReschedule(event)">
+                <div class="form-group">
+                    <label for="rescheduleDate">New Date *</label>
+                    <input type="date" id="rescheduleDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="rescheduleTime">New Time *</label>
+                    <input type="time" id="rescheduleTime" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="closeRescheduleModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Reschedule</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/ui.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/guards.js"></script>
+    <script src="../../assets/js/receptionist.js"></script>
+    <script>
+        // Require receptionist role
+        requireRole('receptionist');
+
+        let appointments = [];
+        let pagination = null;
+        let currentRescheduleId = null;
+
+        // Initialize page
+        async function initializePage() {
+            try {
+                const user = getCurrentUser();
+                if (!user) {
+                    window.location.href = '../../index.html';
+                    return;
+                }
+
+                // Update user info in top bar
+                document.getElementById('userName').textContent = user.fullName || user.name || 'Receptionist';
+                const name = user.fullName || user.name || 'Receptionist';
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('userInitials').textContent = initials;
+
+                // Load appointments
+                await loadAppointments();
+
+            } catch (error) {
+                console.error('Failed to initialize page:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load page', 'error');
+                }
+            }
+        }
+
+        // Load appointments
+        async function loadAppointments() {
+            try {
+                document.getElementById('appointmentsLoading').style.display = 'block';
+                document.getElementById('appointmentsTable').style.display = 'none';
+                document.getElementById('appointmentsEmpty').style.display = 'none';
+
+                // Build filters
+                const filters = {};
+                const status = document.getElementById('statusFilter').value;
+                const type = document.getElementById('typeFilter').value;
+                const page = document.getElementById('pageFilter').value;
+
+                if (status) filters.status = status;
+                if (type) filters.appointmentType = type;
+                if (page) filters.page = page;
+                filters.limit = 10;
+
+                // Get appointments from backend
+                const response = await getReceptionistAppointments(filters);
+                
+                if (response.data !== undefined) {
+                    appointments = response.data || [];
+                    pagination = response.pagination || null;
+                    renderAppointments(appointments);
+                } else {
+                    throw new Error('Invalid response format');
+                }
+
+            } catch (error) {
+                console.error('Failed to load appointments:', error);
+                document.getElementById('appointmentsLoading').style.display = 'none';
+                document.getElementById('appointmentsEmpty').style.display = 'block';
+                handleReceptionistError(error, 'Failed to load appointments');
+            }
+        }
+
+        // Render appointments
+        function renderAppointments(appointmentList) {
+            document.getElementById('appointmentsLoading').style.display = 'none';
+            
+            if (!appointmentList || appointmentList.length === 0) {
+                document.getElementById('appointmentsEmpty').style.display = 'block';
+                document.getElementById('appointmentsTable').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('appointmentsTable').style.display = 'table';
+            document.getElementById('appointmentsEmpty').style.display = 'none';
+
+            const tbody = document.getElementById('appointmentsBody');
+            tbody.innerHTML = appointmentList.map(appointment => {
+                const canConfirm = canReceptionistConfirm(appointment);
+                const canReschedule = canReceptionistReschedule(appointment);
+                const canCancel = canReceptionistCancel(appointment);
+                
+                return `
+                    <tr>
+                        <td>${formatDate(appointment.appointmentDate)}</td>
+                        <td>${formatTime(appointment.appointmentTime)}</td>
+                        <td>${appointment.profileName || 'Unknown'}</td>
+                        <td>${appointment.doctorName || 'Unknown'}</td>
+                        <td>${formatAppointmentType(appointment.appointmentType)}</td>
+                        <td><span class="status-badge status-${appointment.appointmentStatus}">${formatAppointmentStatus(appointment.appointmentStatus)}</span></td>
+                        <td>${appointment.notes || '-'}</td>
+                        <td>
+                            <div class="action-buttons">
+                                ${canConfirm ? `<button class="btn-sm btn-confirm" onclick="confirmAppointment('${appointment._id}')">Confirm</button>` : ''}
+                                ${canReschedule ? `<button class="btn-sm btn-reschedule" onclick="openRescheduleModal('${appointment._id}')">Reschedule</button>` : ''}
+                                ${canCancel ? `<button class="btn-sm btn-cancel" onclick="cancelAppointment('${appointment._id}')">Cancel</button>` : ''}
+                                <button class="btn-sm btn-view" onclick="viewAppointmentDetails('${appointment._id}')">View</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Confirm appointment
+        async function confirmAppointment(appointmentId) {
+            if (!confirm('Are you sure you want to confirm this appointment?')) {
+                return;
+            }
+
+            try {
+                const response = await confirmReceptionistAppointment(appointmentId);
+                
+                if (response._id) {
+                    handleReceptionistSuccess('Appointment confirmed successfully!');
+                    await loadAppointments(); // Refresh the list
+                } else {
+                    throw new Error('Invalid response format');
+                }
+
+            } catch (error) {
+                console.error('Failed to confirm appointment:', error);
+                handleReceptionistError(error, 'Failed to confirm appointment');
+            }
+        }
+
+        // Open reschedule modal
+        function openRescheduleModal(appointmentId) {
+            currentRescheduleId = appointmentId;
+            document.getElementById('rescheduleModal').style.display = 'block';
+            
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('rescheduleDate').min = today;
+        }
+
+        // Close reschedule modal
+        function closeRescheduleModal() {
+            document.getElementById('rescheduleModal').style.display = 'none';
+            currentRescheduleId = null;
+            
+            // Reset form
+            document.getElementById('rescheduleDate').value = '';
+            document.getElementById('rescheduleTime').value = '';
+        }
+
+        // Handle reschedule
+        async function handleReschedule(event) {
+            event.preventDefault();
+            
+            const newDate = document.getElementById('rescheduleDate').value;
+            const newTime = document.getElementById('rescheduleTime').value;
+            
+            if (!currentRescheduleId || !newDate || !newTime) {
+                handleReceptionistError('Please fill in all required fields');
+                return;
+            }
+
+            try {
+                const payload = {
+                    appointmentDate: newDate,
+                    appointmentTime: newTime
+                };
+
+                const response = await rescheduleReceptionistAppointment(currentRescheduleId, payload);
+                
+                if (response._id) {
+                    handleReceptionistSuccess('Appointment rescheduled successfully!');
+                    closeRescheduleModal();
+                    await loadAppointments(); // Refresh the list
+                } else {
+                    throw new Error('Invalid response format');
+                }
+
+            } catch (error) {
+                console.error('Failed to reschedule appointment:', error);
+                handleReceptionistError(error, 'Failed to reschedule appointment');
+            }
+        }
+
+        // Cancel appointment
+        async function cancelAppointment(appointmentId) {
+            if (!confirm('Are you sure you want to cancel this appointment?')) {
+                return;
+            }
+
+            try {
+                const response = await cancelReceptionistAppointment(appointmentId);
+                
+                if (response._id) {
+                    handleReceptionistSuccess('Appointment cancelled successfully!');
+                    await loadAppointments(); // Refresh the list
+                } else {
+                    throw new Error('Invalid response format');
+                }
+
+            } catch (error) {
+                console.error('Failed to cancel appointment:', error);
+                handleReceptionistError(error, 'Failed to cancel appointment');
+            }
+        }
+
+        // View appointment details (placeholder)
+        function viewAppointmentDetails(appointmentId) {
+            // For now, just show an alert. In a real implementation, this would navigate to a details page
+            if (typeof showToast === 'function') {
+                showToast('Appointment details page not implemented yet', 'info');
+            } else {
+                alert('Appointment details page not implemented yet');
+            }
+        }
+
+        // Update pagination controls if needed
+        function updatePaginationControls() {
+            if (!pagination) return;
+
+            const pageFilter = document.getElementById('pageFilter');
+            pageFilter.innerHTML = '';
+            
+            for (let i = 1; i <= pagination.totalPages; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `Page ${i}`;
+                if (i === pagination.page) {
+                    option.selected = true;
+                }
+                pageFilter.appendChild(option);
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('rescheduleModal');
+            if (event.target === modal) {
+                closeRescheduleModal();
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
+</body>
+</html>

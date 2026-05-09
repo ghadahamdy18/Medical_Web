@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Details - Medical Lab</title>
+    <link rel="stylesheet" href="../../css/dashboard.css">
+    <style>
+        body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#28a745;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.back-link{display:inline-block;margin-bottom:20px;color:#2c7be5;text-decoration:none}.page-header{margin-bottom:25px}.page-header h1{font-size:24px;color:#333}.detail-card{background:#fff;padding:30px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);margin-bottom:20px}.detail-section{margin-bottom:25px}.detail-section:last-child{margin-bottom:0}.detail-section h3{font-size:18px;margin-bottom:15px;color:#333;border-bottom:1px solid #eee;padding-bottom:10px}.detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px}.detail-item{display:flex;flex-direction:column;gap:5px}.detail-label{font-size:12px;color:#666;text-transform:uppercase;font-weight:600}.detail-value{font-size:16px;color:#333}.status-badge{padding:5px 12px;border-radius:20px;font-size:12px}.status-pending{background:#fff3cd;color:#856404}.status-confirmed{background:#d4edda;color:#155724}.status-completed{background:#cce5ff;color:#004085}.status-cancelled{background:#f8d7da;color:#721c24}.action-buttons{display:flex;gap:10px;margin-top:20px}.btn{padding:10px 20px;border:none;border-radius:4px;cursor:pointer;font-size:14px}.btn-primary{background:#2c7be5;color:#fff}.btn-primary:hover{background:#1a5fbf}.btn-success{background:#28a745;color:#fff}.btn-success:hover{background:#218838}.btn-info{background:#17a2b8;color:#fff}.btn-info:hover{background:#138496}.btn-warning{background:#ffc107;color:#212529}.btn-warning:hover{background:#e0a800}.loading{text-align:center;padding:40px;color:#666}.error{text-align:center;padding:40px;color:#dc3545}
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="dashboard-body">
+            <aside class="sidebar">
+                <div class="sidebar-logo">
+                    <h2>Medical Lab</h2>
+                </div>
+                <ul class="sidebar-menu">
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="appointments.html">Appointments</a></li>
+                    <li><a href="upload-results.html">Upload Results</a></li>
+                    <li><a href="settings.html">Settings</a></li>
+                </ul>
+            </aside>
+            <div class="main-area">
+                <div class="top-bar">
+                    <div class="user-info">
+                        <div class="user-avatar" id="userInitials">SS</div>
+                        <div class="user-details">
+                            <span class="user-name" id="userName">Dr. Sarah Smith</span>
+                            <span class="user-role">Doctor</span>
+                        </div>
+                    </div>
+                    <div class="top-bar-right">
+                        <button class="logout-btn" onclick="logoutUser()">Logout</button>
+                    </div>
+                </div>
+                <div class="content-area">
+                    <a href="appointments.html" class="back-link">← Back to Appointments</a>
+                    <div class="page-header">
+                        <h1>Appointment Details</h1>
+                    </div>
+                    
+                    <div id="appointmentLoading" class="loading">Loading appointment details...</div>
+                    
+                    <div id="appointmentContent" style="display: none;">
+                        <div class="detail-card">
+                            <div class="detail-section">
+                                <h3>Appointment Information</h3>
+                                <div class="detail-grid">
+                                    <div class="detail-item">
+                                        <span class="detail-label">Date</span>
+                                        <span class="detail-value" id="appointmentDate">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Time</span>
+                                        <span class="detail-value" id="appointmentTime">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Type</span>
+                                        <span class="detail-value" id="appointmentType">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Status</span>
+                                        <span class="detail-value" id="appointmentStatus">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-section">
+                                <h3>Patient Information</h3>
+                                <div class="detail-grid">
+                                    <div class="detail-item">
+                                        <span class="detail-label">Full Name</span>
+                                        <span class="detail-value" id="patientName">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Gender</span>
+                                        <span class="detail-value" id="patientGender">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Date of Birth</span>
+                                        <span class="detail-value" id="patientDOB">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">National ID</span>
+                                        <span class="detail-value" id="patientNationalId">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Address</span>
+                                        <span class="detail-value" id="patientAddress">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Relationship</span>
+                                        <span class="detail-value" id="patientRelationship">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-section">
+                                <h3>Staff Information</h3>
+                                <div class="detail-grid">
+                                    <div class="detail-item">
+                                        <span class="detail-label">Doctor</span>
+                                        <span class="detail-value" id="doctorName">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Created By</span>
+                                        <span class="detail-value" id="creatorName">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Creator Role</span>
+                                        <span class="detail-value" id="creatorRole">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Accepted By</span>
+                                        <span class="detail-value" id="accepterName">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-section" id="notesSection" style="display: none;">
+                                <h3>Notes</h3>
+                                <p id="appointmentNotes">-</p>
+                            </div>
+                            
+                            <div class="action-buttons" id="actionButtons">
+                                <!-- Action buttons will be populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="appointmentError" class="error" style="display: none;">
+                        <h3>Failed to load appointment</h3>
+                        <p>Please try again later or contact support if the problem persists.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/ui.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/guards.js"></script>
+    <script src="../../assets/js/doctor.js"></script>
+    <script>
+        // Require doctor role
+        requireRole('doctor');
+
+        let appointment = null;
+        const appointmentId = getAppointmentIdFromQuery();
+
+        // Initialize page
+        async function initializePage() {
+            try {
+                const user = getCurrentUser();
+                if (!user) {
+                    window.location.href = '../../index.html';
+                    return;
+                }
+
+                // Update user info in top bar
+                document.getElementById('userName').textContent = user.fullName || user.name || 'Doctor';
+                const name = user.fullName || user.name || 'Doctor';
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('userInitials').textContent = initials;
+
+                // Load appointment details
+                await loadAppointmentDetails();
+
+            } catch (error) {
+                console.error('Failed to initialize page:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load page', 'error');
+                }
+            }
+        }
+
+        // Load appointment details
+        async function loadAppointmentDetails() {
+            if (!appointmentId) {
+                showError('No appointment ID provided');
+                return;
+            }
+
+            try {
+                document.getElementById('appointmentLoading').style.display = 'block';
+                document.getElementById('appointmentContent').style.display = 'none';
+                document.getElementById('appointmentError').style.display = 'none';
+
+                const response = await getDoctorAppointmentDetails(appointmentId);
+                
+                if (response.success) {
+                    appointment = response.appointment;
+                    renderAppointmentDetails(appointment);
+                } else {
+                    throw new Error(response.message || 'Failed to load appointment details');
+                }
+
+            } catch (error) {
+                console.error('Failed to load appointment details:', error);
+                showError(error.message || 'Failed to load appointment details');
+            }
+        }
+
+        // Render appointment details
+        function renderAppointmentDetails(apt) {
+            document.getElementById('appointmentLoading').style.display = 'none';
+            document.getElementById('appointmentContent').style.display = 'block';
+
+            // Appointment Information
+            document.getElementById('appointmentDate').textContent = formatDate(apt.appointmentDate);
+            document.getElementById('appointmentTime').textContent = formatTime(apt.appointmentTime);
+            document.getElementById('appointmentType').textContent = formatAppointmentType(apt.appointmentType);
+            
+            const statusElement = document.getElementById('appointmentStatus');
+            statusElement.innerHTML = `<span class="status-badge status-${apt.appointmentStatus}">${formatAppointmentStatus(apt.appointmentStatus)}</span>`;
+
+            // Patient Information
+            document.getElementById('patientName').textContent = apt.profileName || 'Unknown';
+            document.getElementById('patientGender').textContent = apt.profileGender || '-';
+            document.getElementById('patientDOB').textContent = formatDate(apt.profileDateOfBirth) || '-';
+            document.getElementById('patientNationalId').textContent = apt.profileNationalId || '-';
+            document.getElementById('patientAddress').textContent = apt.profileAddress || '-';
+            document.getElementById('patientRelationship').textContent = apt.profileRelationshipToPrimary || '-';
+
+            // Staff Information
+            document.getElementById('doctorName').textContent = apt.doctorName || '-';
+            document.getElementById('creatorName').textContent = apt.creatorName || '-';
+            document.getElementById('creatorRole').textContent = apt.creatorRole || '-';
+            document.getElementById('accepterName').textContent = apt.accepterName || '-';
+
+            // Notes
+            if (apt.notes) {
+                document.getElementById('notesSection').style.display = 'block';
+                document.getElementById('appointmentNotes').textContent = apt.notes;
+            }
+
+            // Action buttons
+            renderActionButtons(apt);
+        }
+
+        // Render action buttons
+        function renderActionButtons(apt) {
+            const actionButtons = document.getElementById('actionButtons');
+            const canComplete = canDoctorComplete(apt);
+            const canUpload = canDoctorUploadResult(apt);
+
+            let buttonsHTML = '';
+
+            // Complete appointment button
+            if (canComplete) {
+                buttonsHTML += `<button class="btn btn-success" onclick="completeAppointment()">Complete Appointment</button>`;
+            }
+
+            // View results button
+            buttonsHTML += `<button class="btn btn-info" onclick="viewResults()">View Results</button>`;
+
+            // Upload result button
+            if (canUpload) {
+                buttonsHTML += `<button class="btn btn-warning" onclick="uploadResult()">Upload Result</button>`;
+            }
+
+            actionButtons.innerHTML = buttonsHTML;
+        }
+
+        // Complete appointment
+        async function completeAppointment() {
+            if (!confirm('Are you sure you want to mark this appointment as completed?')) {
+                return;
+            }
+
+            try {
+                const response = await completeDoctorAppointment(appointmentId);
+                
+                if (response.success) {
+                    handleDoctorSuccess('Appointment completed successfully!');
+                    // Refresh appointment details
+                    await loadAppointmentDetails();
+                } else {
+                    throw new Error(response.message || 'Failed to complete appointment');
+                }
+
+            } catch (error) {
+                console.error('Failed to complete appointment:', error);
+                handleDoctorError(error, 'Failed to complete appointment');
+            }
+        }
+
+        // View results
+        function viewResults() {
+            navigateToAppointmentResults(appointmentId);
+        }
+
+        // Upload result
+        function uploadResult() {
+            navigateToUploadResults(appointmentId);
+        }
+
+        // Show error
+        function showError(message) {
+            document.getElementById('appointmentLoading').style.display = 'none';
+            document.getElementById('appointmentContent').style.display = 'none';
+            document.getElementById('appointmentError').style.display = 'block';
+            
+            const errorElement = document.getElementById('appointmentError');
+            errorElement.innerHTML = `
+                <h3>Failed to load appointment</h3>
+                <p>${message}</p>
+                <p><a href="appointments.html" class="btn btn-primary">Back to Appointments</a></p>
+            `;
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
+</body>
+</html>
