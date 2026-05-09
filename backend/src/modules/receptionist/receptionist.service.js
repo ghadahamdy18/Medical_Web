@@ -235,5 +235,34 @@ module.exports = {
     getAppointments,
     confirmAppointment,
     rescheduleAppointment,
-    cancelAppointment
+    cancelAppointment,
+    getDashboard
+};
+
+const getDashboard = async () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 1);
+
+    const [
+        totalPatients,
+        todayAppointments,
+        pendingAppointments,
+        confirmedAppointments
+    ] = await Promise.all([
+        User.countDocuments({ role: 'patient' }),
+        Appointment.countDocuments({ 
+            appointmentDate: { $gte: today } 
+        }),
+        Appointment.countDocuments({ appointmentStatus: 'pending' }),
+        Appointment.countDocuments({ appointmentStatus: 'confirmed' })
+    ]);
+
+    return {
+        stats: {
+            totalPatients,
+            todayAppointments,
+            pendingAppointments,
+            confirmedAppointments
+        }
+    };
 };

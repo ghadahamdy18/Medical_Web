@@ -12,6 +12,14 @@ router.use(authMiddleware);
 router.use(roleMiddleware('admin'));
 
 /**
+ * Dashboard
+ */
+router.get(
+    '/dashboard',
+    adminController.getDashboard
+);
+
+/**
  * User management
  */
 router.post(

@@ -657,6 +657,60 @@ const getResultById = async (resultId) => {
     return result;
 };
 
+const getDashboard = async () => {
+    const [
+        totalUsers,
+        totalPatients,
+        totalDoctors,
+        totalReceptionists,
+        appointmentsByStatus,
+        recentAppointments,
+        recentResults
+    ] = await Promise.all([
+        User.countDocuments(),
+        User.countDocuments({ role: 'patient' }),
+        User.countDocuments({ role: 'doctor' }),
+        User.countDocuments({ role: 'receptionist' }),
+        Appointment.aggregate([
+            {
+                $group: {
+                    _id: '$appointmentStatus',
+                    count: { $sum: 1 }
+                }
+            }
+        ]),
+        Appointment.find()
+            .sort({ createdAt: -1 })
+            .limit(5)
+            .populate('patientProfileId', 'fullName')
+            .populate('doctorId', 'fullName')
+            .lean(),
+        ResultFile.find()
+            .sort({ uploadedAt: -1 })
+            .limit(5)
+            .populate('appointmentId', 'appointmentDate appointmentType')
+            .populate('doctorId', 'fullName')
+            .lean()
+    ]);
+
+    const appointmentsStatusMap = {};
+    appointmentsByStatus.forEach(item => {
+        appointmentsStatusMap[item._id] = item.count;
+    });
+
+    return {
+        stats: {
+            totalUsers,
+            totalPatients,
+            totalDoctors,
+            totalReceptionists,
+            appointmentsByStatus: appointmentsStatusMap
+        },
+        recentAppointments,
+        recentResults
+    };
+};
+
 module.exports = {
     createUser,
     getUsers,
@@ -676,4 +730,5 @@ module.exports = {
     cancelAppointment,
     getResults,
     getResultById,
+    getDashboard,
 };

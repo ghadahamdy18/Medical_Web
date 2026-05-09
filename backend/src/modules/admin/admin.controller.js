@@ -221,6 +221,16 @@ const getResultById = async (req, res, next) => {
     }
 };
 
+const getDashboard = async (req, res, next) => {
+    try {
+        const result = await adminService.getDashboard();
+
+        return sendSuccess(res, 200, 'Dashboard data retrieved successfully', result);
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     createUser,
     getUsers,
@@ -240,4 +250,5 @@ module.exports = {
     cancelAppointment,
     getResults,
     getResultById,
+    getDashboard,
 };

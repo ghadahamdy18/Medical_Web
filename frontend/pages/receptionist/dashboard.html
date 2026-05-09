@@ -135,37 +135,29 @@
         // Load dashboard data
         async function loadDashboardData() {
             try {
-                // Load patients and appointments in parallel
-                const [patientsResponse, appointmentsResponse] = await Promise.all([
-                    getReceptionistPatients({ limit: 100 }),
-                    getReceptionistAppointments({ limit: 100 })
-                ]);
-
-                if (patientsResponse.data !== undefined) {
-                    patients = patientsResponse.data || [];
+                // Use the new dashboard endpoint
+                const response = await getReceptionistDashboard();
+                
+                if (response.success) {
+                    updateDashboardStats(response.data.stats);
+                } else {
+                    throw new Error(response.message || 'Failed to load dashboard data');
                 }
-
-                if (appointmentsResponse.data !== undefined) {
-                    appointments = appointmentsResponse.data || [];
-                }
-
-                // Update dashboard stats
-                updateDashboardStats(patients, appointments);
 
             } catch (error) {
                 console.error('Failed to load dashboard data:', error);
-                handleReceptionistError(error, 'Failed to load dashboard data');
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load dashboard data', 'error');
+                }
             }
         }
 
         // Update dashboard stats
-        function updateDashboardStats(patientList, appointmentList) {
-            const stats = calculateReceptionistDashboardStats(patientList, appointmentList);
-            
-            document.getElementById('totalPatients').textContent = stats.totalPatients;
-            document.getElementById('totalAppointments').textContent = stats.totalAppointments;
-            document.getElementById('pendingAppointments').textContent = stats.pendingAppointments;
-            document.getElementById('todayAppointments').textContent = stats.todayAppointments;
+        function updateDashboardStats(stats) {
+            document.getElementById('totalPatients').textContent = stats.totalPatients || 0;
+            document.getElementById('totalAppointments').textContent = stats.todayAppointments || 0;
+            document.getElementById('pendingAppointments').textContent = stats.pendingAppointments || 0;
+            document.getElementById('todayAppointments').textContent = stats.todayAppointments || 0;
         }
 
         // Initialize on page load

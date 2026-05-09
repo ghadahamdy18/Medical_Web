@@ -186,10 +186,50 @@ const getAppointmentResults = async (doctorId, appointmentId) => {
     return results;
 };
 
+const getDashboard = async (doctorId) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 1);
+
+    const [
+        totalAppointments,
+        pendingAppointments,
+        confirmedAppointments,
+        completedAppointments,
+        todayAppointments,
+        recentResults
+    ] = await Promise.all([
+        Appointment.countDocuments({ doctorUserId: doctorId }),
+        Appointment.countDocuments({ doctorUserId: doctorId, appointmentStatus: 'pending' }),
+        Appointment.countDocuments({ doctorUserId: doctorId, appointmentStatus: 'confirmed' }),
+        Appointment.countDocuments({ doctorUserId: doctorId, appointmentStatus: 'completed' }),
+        Appointment.countDocuments({ 
+            doctorUserId: doctorId, 
+            appointmentDate: { $gte: today } 
+        }),
+        ResultFile.find({ doctorUserId: doctorId })
+            .sort({ uploadedAt: -1 })
+            .limit(5)
+            .populate('appointmentId', 'appointmentDate appointmentType')
+            .lean()
+    ]);
+
+    return {
+        stats: {
+            totalAppointments,
+            pendingAppointments,
+            confirmedAppointments,
+            completedAppointments,
+            todayAppointments
+        },
+        recentResults
+    };
+};
+
 module.exports = {
     getMyAppointments,
     getAppointmentDetails,
     completeAppointment,
     uploadResult,
     getAppointmentResults,
+    getDashboard,
 };

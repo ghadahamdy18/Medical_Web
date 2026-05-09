@@ -80,10 +80,21 @@ const getAppointmentResults = async (req, res, next) => {
     }
 };
 
+const getDashboard = async (req, res, next) => {
+    try {
+        const result = await doctorService.getDashboard(req.user._id);
+
+        return sendSuccess(res, 200, 'Doctor dashboard data retrieved successfully', result);
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     getMyAppointments,
     getAppointmentDetails,
     completeAppointment,
     uploadResult,
     getAppointmentResults,
+    getDashboard,
 };

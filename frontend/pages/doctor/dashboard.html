@@ -147,15 +147,21 @@
         // Load dashboard data
         async function loadDashboardData() {
             try {
-                // Get all appointments for stats
-                const response = await getDoctorAppointments({ limit: 100 });
+                // Use the new dashboard endpoint
+                const response = await getDoctorDashboard();
                 
                 if (response.success) {
-                    appointments = response.data || [];
-                    updateDashboardStats(appointments);
-                    updateTodayAppointments(appointments);
+                    const dashboardData = response.data;
+                    updateDashboardStats(dashboardData.stats);
+                    
+                    // Still need appointments for today's list
+                    const appointmentsResponse = await getDoctorAppointments({ limit: 100 });
+                    if (appointmentsResponse.success) {
+                        appointments = appointmentsResponse.data || [];
+                        updateTodayAppointments(appointments);
+                    }
                 } else {
-                    throw new Error(response.message || 'Failed to load appointments');
+                    throw new Error(response.message || 'Failed to load dashboard data');
                 }
 
             } catch (error) {
@@ -169,13 +175,11 @@
         }
 
         // Update dashboard stats
-        function updateDashboardStats(appointmentList) {
-            const stats = calculateDashboardStats(appointmentList);
-            
-            document.getElementById('totalAppointments').textContent = stats.total;
-            document.getElementById('confirmedAppointments').textContent = stats.confirmed;
-            document.getElementById('completedAppointments').textContent = stats.completed;
-            document.getElementById('todayAppointments').textContent = stats.today;
+        function updateDashboardStats(stats) {
+            document.getElementById('totalAppointments').textContent = stats.totalAppointments || 0;
+            document.getElementById('confirmedAppointments').textContent = stats.confirmedAppointments || 0;
+            document.getElementById('completedAppointments').textContent = stats.completedAppointments || 0;
+            document.getElementById('todayAppointments').textContent = stats.todayAppointments || 0;
         }
 
         // Update today's appointments
