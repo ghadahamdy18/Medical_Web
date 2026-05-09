@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Medical Lab System - Welcome</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css">
     <style>
         .landing-page { min-height: 100vh; }
         .hero-section {
@@ -247,7 +247,7 @@
                     <label for="password">Password</label>
                     <input type="password" id="password" placeholder="Enter your password">
                 </div>
-                <button type="button" class="btn-primary" onclick="login()">Login</button>
+                <button type="button" class="btn-primary" onclick="submitLandingLogin()">Login</button>
                 
                 
             </div>
@@ -256,11 +256,20 @@
 
    
 
-    <script src="js/auth.js"></script>
+    <!-- Phase 2 — load strictly in this order -->
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/ui.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/guards.js"></script>
     <script>
         function showLogin() { document.getElementById('loginModal').classList.add('active'); }
         function closeLogin() { document.getElementById('loginModal').classList.remove('active'); }
-    
+
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof redirectIfLoggedIn === 'function') {
+                redirectIfLoggedIn();
+            }
+        });
     </script>
 </body>
 </html>
