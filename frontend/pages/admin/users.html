@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users - Medical Lab</title>
+    <link rel="stylesheet" href="../../css/dashboard.css">
+    <style>
+        body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#6f42c1;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}.page-header h1{font-size:24px;color:#333}.page-header p{color:#666;max-width:720px}.btn-create{background:#2c7be5;color:#fff;border:none;padding:10px 20px;border-radius:4px;cursor:pointer;font-size:14px}.btn-create:hover{background:#1a5fbf}.search-bar{display:flex;gap:10px;margin-bottom:20px;max-width:400px}.search-input{flex:1;padding:10px;border:1px solid #ddd;border-radius:4px;font-size:14px}.search-input:focus{outline:none;border-color:#2c7be5}.btn-search{background:#2c7be5;color:#fff;border:none;padding:10px 20px;border-radius:4px;cursor:pointer}.btn-search:hover{background:#1a5fbf}.filters{display:flex;gap:15px;margin-bottom:20px;flex-wrap:wrap}.filter-group{display:flex;flex-direction:column;gap:5px}.filter-group label{font-size:14px;font-weight:600}.filter-group select{padding:8px;border:1px solid #ddd;border-radius:4px;font-size:14px}.table-container{background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);overflow:hidden}.table-container table{width:100%;border-collapse:collapse}.table-container th,.table-container td{padding:15px 20px;text-align:left;border-bottom:1px solid #eee}.table-container th{background:#f8f9fa;font-weight:600}.table-container tr:hover{background:#f8f9fa}.action-buttons{display:flex;gap:8px}.btn-sm{padding:6px 12px;font-size:12px;border:none;border-radius:4px;cursor:pointer}.btn-view{background:#17a2b8;color:#fff}.btn-view:hover{background:#138496}.btn-edit{background:#ffc107;color:#212529}.btn-edit:hover{background:#e0a800}.status-badge{padding:5px 12px;border-radius:20px;font-size:12px}.role-badge{padding:3px 8px;border-radius:12px;font-size:11px}.role-admin{background:#6f42c1;color:#fff}.role-doctor{background:#28a745;color:#fff}.role-receptionist{background:#fd7e14;color:#fff}.role-patient{background:#2c7be5;color:#fff}.status-active{background:#d4edda;color:#155724}.status-inactive{background:#f8d7da;color:#721c24}.status-blocked{background:#dc3545;color:#fff}.status-archived{background:#6c757d;color:#fff}.empty-state{text-align:center;padding:60px 20px;color:#666}.loading{text-align:center;padding:40px;color:#666}.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:1000}.modal-content{background:#fff;margin:15% auto;padding:30px;border-radius:8px;max-width:500px}.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.modal-title{font-size:20px;font-weight:600}.modal-close{background:none;border:none;font-size:24px;cursor:pointer}.form-group{margin-bottom:15px}.form-group label{display:block;margin-bottom:5px;font-weight:600}.form-group select,.form-group input,.form-group checkbox{width:100%;padding:10px;border:1px solid #ddd;border-radius:4px;font-size:14px}.form-group input[type="checkbox"]{width:auto}.form-group select:focus,.form-group input:focus{outline:none;border-color:#2c7be5}.modal-buttons{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}.btn{padding:10px 20px;border:none;border-radius:4px;cursor:pointer}.btn-primary{background:#2c7be5;color:#fff}.btn-secondary{background:#6c757d;color:#fff}
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="dashboard-body">
+            <aside class="sidebar">
+                <div class="sidebar-logo">
+                    <h2>Medical Lab</h2>
+                </div>
+                <ul class="sidebar-menu">
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="users.html" class="active">Users</a></li>
+                    <li><a href="create-user.html">Create User</a></li>
+                    <li><a href="patient-profiles.html">Patient Profiles</a></li>
+                    <li><a href="appointments.html">Appointments</a></li>
+                    <li><a href="create-appointment.html">Create Appointment</a></li>
+                    <li><a href="results.html">Results</a></li>
+                    <li><a href="settings.html">Settings</a></li>
+                </ul>
+            </aside>
+            <div class="main-area">
+                <div class="top-bar">
+                    <div class="user-info">
+                        <div class="user-avatar" id="userInitials">A</div>
+                        <div class="user-details">
+                            <span class="user-name" id="userName">Admin User</span>
+                            <span class="user-role">System Administrator</span>
+                        </div>
+                    </div>
+                    <div class="top-bar-right">
+                        <button class="logout-btn" onclick="logoutUser()">Logout</button>
+                    </div>
+                </div>
+                <div class="content-area">
+                    <div class="page-header">
+                        <div>
+                            <h1>Users</h1>
+                            <p>Manage system users and their access</p>
+                        </div>
+                        <button class="btn-create" onclick="navigateToCreateUser()">Create User</button>
+                    </div>
+                    
+                    <div class="search-bar">
+                        <input type="text" id="searchInput" class="search-input" placeholder="Search by name, phone, or email...">
+                        <button class="btn-search" onclick="searchUsers()">Search</button>
+                    </div>
+                    
+                    <div class="filters">
+                        <div class="filter-group">
+                            <label>Role</label>
+                            <select id="roleFilter" onchange="loadUsers()">
+                                <option value="">All Roles</option>
+                                <option value="admin">Admin</option>
+                                <option value="doctor">Doctor</option>
+                                <option value="receptionist">Receptionist</option>
+                                <option value="patient">Patient</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Status</label>
+                            <select id="statusFilter" onchange="loadUsers()">
+                                <option value="">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                                <option value="blocked">Blocked</option>
+                                <option value="archived">Archived</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Page</label>
+                            <select id="pageFilter" onchange="loadUsers()">
+                                <option value="1">Page 1</option>
+                                <option value="2">Page 2</option>
+                                <option value="3">Page 3</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <div id="usersLoading" class="loading">Loading users...</div>
+                        <table id="usersTable" style="display: none;">
+                            <thead>
+                                <tr>
+                                    <th>Full Name</th>
+                                    <th>Phone Number</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Active</th>
+                                    <th>Must Change Password</th>
+                                    <th>Created At</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersBody">
+                            </tbody>
+                        </table>
+                        <div id="usersEmpty" class="empty-state" style="display: none;">
+                            <h3>No users found</h3>
+                            <p>Try adjusting your search or create a new user.</p>
+                            <button class="btn-create" onclick="navigateToCreateUser()">Create New User</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Status Modal -->
+    <div id="editStatusModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit User Status</h3>
+                <button class="modal-close" onclick="closeEditStatusModal()">&times;</button>
+            </div>
+            <form onsubmit="handleEditStatus(event)">
+                <div class="form-group">
+                    <label for="editStatus">Status *</label>
+                    <select id="editStatus" required>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <option value="blocked">Blocked</option>
+                        <option value="archived">Archived</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="editIsActive" checked>
+                        Active Account
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="editMustChangePassword">
+                        Must Change Password on Next Login
+                    </label>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="closeEditStatusModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Status</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/ui.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/guards.js"></script>
+    <script src="../../assets/js/admin.js"></script>
+    <script>
+        // Require admin role
+        requireRole('admin');
+
+        let users = [];
+        let pagination = null;
+        let currentEditUserId = null;
+
+        // Initialize page
+        async function initializePage() {
+            try {
+                const user = getCurrentUser();
+                if (!user) {
+                    window.location.href = '../../index.html';
+                    return;
+                }
+
+                // Update user info in top bar
+                document.getElementById('userName').textContent = user.fullName || user.name || 'Admin';
+                const name = user.fullName || user.name || 'Admin';
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('userInitials').textContent = initials;
+
+                // Load users
+                await loadUsers();
+
+            } catch (error) {
+                console.error('Failed to initialize page:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load page', 'error');
+                }
+            }
+        }
+
+        // Load users
+        async function loadUsers() {
+            try {
+                document.getElementById('usersLoading').style.display = 'block';
+                document.getElementById('usersTable').style.display = 'none';
+                document.getElementById('usersEmpty').style.display = 'none';
+
+                // Build filters
+                const filters = {};
+                const role = document.getElementById('roleFilter').value;
+                const status = document.getElementById('statusFilter').value;
+                const page = document.getElementById('pageFilter').value;
+                const searchTerm = document.getElementById('searchInput').value.trim();
+
+                if (role) filters.role = role;
+                if (status) filters.status = status;
+                if (page) filters.page = page;
+                if (searchTerm) filters.search = searchTerm;
+                filters.limit = 10;
+
+                // Get users from backend
+                const response = await getAdminUsers(filters);
+                
+                if (response.data !== undefined) {
+                    users = response.data || [];
+                    pagination = response.pagination || null;
+                    renderUsers(users);
+                } else {
+                    throw new Error('Invalid response format');
+                }
+
+            } catch (error) {
+                console.error('Failed to load users:', error);
+                document.getElementById('usersLoading').style.display = 'none';
+                document.getElementById('usersEmpty').style.display = 'block';
+                handleAdminError(error, 'Failed to load users');
+            }
+        }
+
+        // Search users
+        async function searchUsers() {
+            await loadUsers();
+        }
+
+        // Render users
+        function renderUsers(userList) {
+            document.getElementById('usersLoading').style.display = 'none';
+            
+            if (!userList || userList.length === 0) {
+                document.getElementById('usersEmpty').style.display = 'block';
+                document.getElementById('usersTable').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('usersTable').style.display = 'table';
+            document.getElementById('usersEmpty').style.display = 'none';
+
+            const tbody = document.getElementById('usersBody');
+            tbody.innerHTML = userList.map(user => {
+                const roleClass = `role-${user.role}`;
+                const statusClass = `status-${user.status}`;
+                
+                return `
+                    <tr>
+                        <td>${user.fullName || 'Unknown'}</td>
+                        <td>${user.phoneNumber || '-'}</td>
+                        <td>${user.email || '-'}</td>
+                        <td><span class="role-badge ${roleClass}">${formatRole(user.role)}</span></td>
+                        <td><span class="status-badge ${statusClass}">${formatUserStatus(user.status)}</span></td>
+                        <td>${user.isActive ? '✓' : '✗'}</td>
+                        <td>${user.mustChangePassword ? '✓' : '✗'}</td>
+                        <td>${formatDate(user.createdAt) || '-'}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-sm btn-view" onclick="viewUserDetails('${user._id}')">View Details</button>
+                                <button class="btn-sm btn-edit" onclick="openEditStatusModal('${user._id}')">Edit Status</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // View user details
+        function viewUserDetails(userId) {
+            navigateToUserDetails(userId);
+        }
+
+        // Open edit status modal
+        function openEditStatusModal(userId) {
+            currentEditUserId = userId;
+            
+            // Find user and populate current values
+            const user = users.find(u => u._id === userId);
+            if (user) {
+                document.getElementById('editStatus').value = user.status || 'active';
+                document.getElementById('editIsActive').checked = user.isActive !== false;
+                document.getElementById('editMustChangePassword').checked = user.mustChangePassword || false;
+            }
+            
+            document.getElementById('editStatusModal').style.display = 'block';
+        }
+
+        // Close edit status modal
+        function closeEditStatusModal() {
+            document.getElementById('editStatusModal').style.display = 'none';
+            currentEditUserId = null;
+        }
+
+        // Handle edit status
+        async function handleEditStatus(event) {
+            event.preventDefault();
+            
+            if (!currentEditUserId) {
+                handleAdminError('No user selected for editing');
+                return;
+            }
+
+            const status = document.getElementById('editStatus').value;
+            const isActive = document.getElementById('editIsActive').checked;
+            const mustChangePassword = document.getElementById('editMustChangePassword').checked;
+
+            try {
+                const payload = {
+                    status,
+                    isActive,
+                    mustChangePassword
+                };
+
+                const response = await updateAdminUserStatus(currentEditUserId, payload);
+                
+                if (response.user) {
+                    handleAdminSuccess('User status updated successfully!');
+                    closeEditStatusModal();
+                    await loadUsers(); // Refresh the list
+                } else {
+                    throw new Error('Invalid response format');
+                }
+
+            } catch (error) {
+                console.error('Failed to update user status:', error);
+                handleAdminError(error, 'Failed to update user status');
+            }
+        }
+
+        // Update pagination controls if needed
+        function updatePaginationControls() {
+            if (!pagination) return;
+
+            const pageFilter = document.getElementById('pageFilter');
+            pageFilter.innerHTML = '';
+            
+            for (let i = 1; i <= pagination.totalPages; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `Page ${i}`;
+                if (i === pagination.page) {
+                    option.selected = true;
+                }
+                pageFilter.appendChild(option);
+            }
+        }
+
+        // Handle search on Enter key
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchUsers();
+            }
+        });
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('editStatusModal');
+            if (event.target === modal) {
+                closeEditStatusModal();
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
+</body>
+</html>

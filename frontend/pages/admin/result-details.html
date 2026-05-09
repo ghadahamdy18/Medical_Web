@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result Details - Medical Lab</title>
+    <link rel="stylesheet" href="../../css/dashboard.css">
+    <style>
+        body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#6f42c1;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.back-link{display:inline-block;margin-bottom:20px;color:#2c7be5;text-decoration:none}.page-header{margin-bottom:25px}.page-header h1{font-size:24px;color:#333}.page-header p{color:#666;max-width:720px}.detail-card{background:#fff;padding:30px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);margin-bottom:20px}.detail-section{margin-bottom:25px}.detail-section:last-child{margin-bottom:0}.detail-section h3{font-size:18px;margin-bottom:15px;color:#333;border-bottom:1px solid #eee;padding-bottom:10px}.detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px}.detail-item{display:flex;flex-direction:column;gap:5px}.detail-label{font-size:12px;color:#666;text-transform:uppercase;font-weight:600}.detail-value{font-size:16px;color:#333}.badge{padding:3px 8px;border-radius:12px;font-size:11px}.badge-latest{background:#28a745;color:#fff}.badge-old{background:#6c757d;color:#fff}.file-info{background:#f8f9fa;padding:15px;border-radius:6px;margin-bottom:15px}.btn{padding:10px 20px;border:none;border-radius:4px;cursor:pointer;font-size:14px}.btn-primary{background:#2c7be5;color:#fff}.btn-primary:hover{background:#1a5fbf}.loading{text-align:center;padding:40px;color:#666}.error{text-align:center;padding:40px;color:#dc3545}
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="dashboard-body">
+            <aside class="sidebar">
+                <div class="sidebar-logo">
+                    <h2>Medical Lab</h2>
+                </div>
+                <ul class="sidebar-menu">
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="users.html">Users</a></li>
+                    <li><a href="create-user.html">Create User</a></li>
+                    <li><a href="patient-profiles.html">Patient Profiles</a></li>
+                    <li><a href="appointments.html">Appointments</a></li>
+                    <li><a href="create-appointment.html">Create Appointment</a></li>
+                    <li><a href="results.html">Results</a></li>
+                    <li><a href="settings.html">Settings</a></li>
+                </ul>
+            </aside>
+            <div class="main-area">
+                <div class="top-bar">
+                    <div class="user-info">
+                        <div class="user-avatar" id="userInitials">A</div>
+                        <div class="user-details">
+                            <span class="user-name" id="userName">Admin User</span>
+                            <span class="user-role">System Administrator</span>
+                        </div>
+                    </div>
+                    <div class="top-bar-right">
+                        <button class="logout-btn" onclick="logoutUser()">Logout</button>
+                    </div>
+                </div>
+                <div class="content-area">
+                    <a href="results.html" class="back-link">← Back to Results</a>
+                    <div class="page-header">
+                        <h1>Result Details</h1>
+                        <p>View detailed information about this lab result</p>
+                    </div>
+                    
+                    <div id="resultLoading" class="loading">Loading result details...</div>
+                    
+                    <div id="resultContent" style="display: none;">
+                        <div class="detail-card">
+                            <div class="detail-section">
+                                <h3>Result Information</h3>
+                                <div class="detail-grid">
+                                    <div class="detail-item">
+                                        <span class="detail-label">Result ID</span>
+                                        <span class="detail-value" id="resultId">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Test Name</span>
+                                        <span class="detail-value" id="testName">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Version</span>
+                                        <span class="detail-value" id="isLatest">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Uploaded At</span>
+                                        <span class="detail-value" id="uploadedAt">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-section">
+                                <h3>File Information</h3>
+                                <div class="file-info">
+                                    <div class="detail-grid">
+                                        <div class="detail-item">
+                                            <span class="detail-label">File Name</span>
+                                            <span class="detail-value" id="fileName">-</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="detail-label">File Size</span>
+                                            <span class="detail-value" id="fileSize">-</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="detail-label">MIME Type</span>
+                                            <span class="detail-value" id="mimeType">-</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-section">
+                                <h3>Doctor Information</h3>
+                                <div class="detail-grid">
+                                    <div class="detail-item">
+                                        <span class="detail-label">Doctor Name</span>
+                                        <span class="detail-value" id="doctorName">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Doctor Email</span>
+                                        <span class="detail-value" id="doctorEmail">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Doctor Phone</span>
+                                        <span class="detail-value" id="doctorPhone">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-section">
+                                <h3>Appointment Information</h3>
+                                <div class="detail-grid">
+                                    <div class="detail-item">
+                                        <span class="detail-label">Appointment ID</span>
+                                        <span class="detail-value" id="appointmentId">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Appointment Date</span>
+                                        <span class="detail-value" id="appointmentDate">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Appointment Time</span>
+                                        <span class="detail-value" id="appointmentTime">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Appointment Type</span>
+                                        <span class="detail-value" id="appointmentType">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Appointment Status</span>
+                                        <span class="detail-value" id="appointmentStatus">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-section">
+                                <h3>Patient Profile Information</h3>
+                                <div class="detail-grid">
+                                    <div class="detail-item">
+                                        <span class="detail-label">Profile Name</span>
+                                        <span class="detail-value" id="profileName">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Patient Name</span>
+                                        <span class="detail-value" id="patientName">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Patient Phone</span>
+                                        <span class="detail-value" id="patientPhone">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Gender</span>
+                                        <span class="detail-value" id="profileGender">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Date of Birth</span>
+                                        <span class="detail-value" id="profileDateOfBirth">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div id="replacedInfoSection" class="detail-section" style="display: none;">
+                                <h3>Version Information</h3>
+                                <div class="file-info">
+                                    <div class="detail-grid">
+                                        <div class="detail-item">
+                                            <span class="detail-label">Replaced Result File ID</span>
+                                            <span class="detail-value" id="replacedResultFileId">-</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="detail-label">Replaced At</span>
+                                            <span class="detail-value" id="replacedAt">-</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-top: 30px;">
+                                <button class="btn btn-primary" onclick="backToResults()">Back to Results</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="resultError" class="error" style="display: none;">
+                        <h3>Failed to load result</h3>
+                        <p>Please try again later or contact support if the problem persists.</p>
+                        <p><a href="results.html" class="btn btn-primary">Back to Results</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/ui.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/guards.js"></script>
+    <script src="../../assets/js/admin.js"></script>
+    <script>
+        // Require admin role
+        requireRole('admin');
+
+        let result = null;
+        const resultId = getQueryParam('id');
+
+        // Initialize page
+        async function initializePage() {
+            try {
+                const user = getCurrentUser();
+                if (!user) {
+                    window.location.href = '../../index.html';
+                    return;
+                }
+
+                // Update user info in top bar
+                document.getElementById('userName').textContent = user.fullName || user.name || 'Admin';
+                const name = user.fullName || user.name || 'Admin';
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('userInitials').textContent = initials;
+
+                // Load result details
+                await loadResultDetails();
+
+            } catch (error) {
+                console.error('Failed to initialize page:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load page', 'error');
+                }
+            }
+        }
+
+        // Load result details
+        async function loadResultDetails() {
+            if (!resultId) {
+                showError('No result ID provided');
+                return;
+            }
+
+            try {
+                document.getElementById('resultLoading').style.display = 'block';
+                document.getElementById('resultContent').style.display = 'none';
+                document.getElementById('resultError').style.display = 'none';
+
+                const response = await getAdminResultById(resultId);
+                
+                if (response.result) {
+                    result = response.result;
+                    renderResultDetails(result);
+                } else {
+                    throw new Error('Invalid response format');
+                }
+
+            } catch (error) {
+                console.error('Failed to load result details:', error);
+                showError(error.message || 'Failed to load result details');
+            }
+        }
+
+        // Render result details
+        function renderResultDetails(resultData) {
+            document.getElementById('resultLoading').style.display = 'none';
+            document.getElementById('resultContent').style.display = 'block';
+
+            // Result Information
+            document.getElementById('resultId').textContent = resultData._id || 'Unknown';
+            document.getElementById('testName').textContent = resultData.testName || 'Unknown Test';
+            
+            const latestElement = document.getElementById('isLatest');
+            if (resultData.isLatest) {
+                latestElement.innerHTML = '<span class="badge badge-latest">Latest</span>';
+            } else {
+                latestElement.innerHTML = '<span class="badge badge-old">Old Version</span>';
+            }
+            
+            document.getElementById('uploadedAt').textContent = formatDateTime(resultData.uploadedAt) || 'Unknown';
+
+            // File Information
+            document.getElementById('fileName').textContent = resultData.fileName || 'Unknown';
+            document.getElementById('fileSize').textContent = formatFileSize(resultData.fileSize || 0);
+            document.getElementById('mimeType').textContent = resultData.mimeType || 'Unknown';
+
+            // Doctor Information
+            document.getElementById('doctorName').textContent = resultData.doctorName || 'Unknown';
+            document.getElementById('doctorEmail').textContent = resultData.doctorEmail || 'Not provided';
+            document.getElementById('doctorPhone').textContent = resultData.doctorPhone || 'Not provided';
+
+            // Appointment Information
+            document.getElementById('appointmentId').textContent = resultData.appointmentId || 'Unknown';
+            document.getElementById('appointmentDate').textContent = formatDate(resultData.appointmentDate) || 'Unknown';
+            document.getElementById('appointmentTime').textContent = formatTime(resultData.appointmentTime) || 'Unknown';
+            document.getElementById('appointmentType').textContent = formatAppointmentType(resultData.appointmentType) || 'Unknown';
+            document.getElementById('appointmentStatus').textContent = formatAppointmentStatus(resultData.appointmentStatus) || 'Unknown';
+
+            // Patient Profile Information
+            document.getElementById('profileName').textContent = resultData.profileName || 'Unknown';
+            document.getElementById('patientName').textContent = resultData.patientName || 'Unknown';
+            document.getElementById('patientPhone').textContent = resultData.patientPhone || 'Unknown';
+            document.getElementById('profileGender').textContent = resultData.profileGender || 'Unknown';
+            document.getElementById('profileDateOfBirth').textContent = formatDate(resultData.profileDateOfBirth) || 'Unknown';
+
+            // Version Information (if replaced)
+            if (resultData.replacedResultFileId) {
+                document.getElementById('replacedInfoSection').style.display = 'block';
+                document.getElementById('replacedResultFileId').textContent = resultData.replacedResultFileId;
+                document.getElementById('replacedAt').textContent = formatDateTime(resultData.replacedAt) || 'Unknown';
+            } else {
+                document.getElementById('replacedInfoSection').style.display = 'none';
+            }
+        }
+
+        // Back to results
+        function backToResults() {
+            window.location.href = 'results.html';
+        }
+
+        // Show error
+        function showError(message) {
+            document.getElementById('resultLoading').style.display = 'none';
+            document.getElementById('resultContent').style.display = 'none';
+            document.getElementById('resultError').style.display = 'block';
+            
+            const errorElement = document.getElementById('resultError');
+            errorElement.innerHTML = `
+                <h3>Failed to load result</h3>
+                <p>${message}</p>
+                <p><a href="results.html" class="btn btn-primary">Back to Results</a></p>
+            `;
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
+</body>
+</html>

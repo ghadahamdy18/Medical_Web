@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Profiles - Medical Lab</title>
+    <link rel="stylesheet" href="../../css/dashboard.css">
+    <style>
+        body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#6f42c1;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}.page-header h1{font-size:24px;color:#333}.page-header p{color:#666;max-width:720px}.btn-create{background:#2c7be5;color:#fff;border:none;padding:10px 20px;border-radius:4px;cursor:pointer;font-size:14px}.btn-create:hover{background:#1a5fbf}.search-bar{display:flex;gap:10px;margin-bottom:20px;max-width:400px}.search-input{flex:1;padding:10px;border:1px solid #ddd;border-radius:4px;font-size:14px}.search-input:focus{outline:none;border-color:#2c7be5}.btn-search{background:#2c7be5;color:#fff;border:none;padding:10px 20px;border-radius:4px;cursor:pointer}.btn-search:hover{background:#1a5fbf}.filters{display:flex;gap:15px;margin-bottom:20px;flex-wrap:wrap}.filter-group{display:flex;flex-direction:column;gap:5px}.filter-group label{font-size:14px;font-weight:600}.filter-group select{padding:8px;border:1px solid #ddd;border-radius:4px;font-size:14px}.table-container{background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);overflow:hidden}.table-container table{width:100%;border-collapse:collapse}.table-container th,.table-container td{padding:15px 20px;text-align:left;border-bottom:1px solid #eee}.table-container th{background:#f8f9fa;font-weight:600}.table-container tr:hover{background:#f8f9fa}.action-buttons{display:flex;gap:8px}.btn-sm{padding:6px 12px;font-size:12px;border:none;border-radius:4px;cursor:pointer}.btn-edit{background:#ffc107;color:#212529}.btn-edit:hover{background:#e0a800}.btn-add{background:#28a745;color:#fff}.btn-add:hover{background:#218838}.btn-deactivate{background:#dc3545;color:#fff}.btn-deactivate:hover{background:#c82333}.btn-deactivate:disabled{background:#6c757d;cursor:not-allowed}.status-badge{padding:5px 12px;border-radius:20px;font-size:12px}.primary-badge{padding:3px 8px;border-radius:12px;font-size:11px}.badge-primary{background:#2c7be5;color:#fff}.badge-secondary{background:#6c757d;color:#fff}.status-active{background:#d4edda;color:#155724}.status-inactive{background:#f8d7da;color:#721c24}.empty-state{text-align:center;padding:60px 20px;color:#666}.loading{text-align:center;padding:40px;color:#666}.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:1000}.modal-content{background:#fff;margin:15% auto;padding:30px;border-radius:8px;max-width:500px}.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.modal-title{font-size:20px;font-weight:600}.modal-close{background:none;border:none;font-size:24px;cursor:pointer}.form-group{margin-bottom:15px}.form-group label{display:block;margin-bottom:5px;font-weight:600}.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px;border:1px solid #ddd;border-radius:4px;font-size:14px}.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#2c7be5}.form-group textarea{resize:vertical;min-height:80px}.modal-buttons{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}.btn{padding:10px 20px;border:none;border-radius:4px;cursor:pointer}.btn-primary{background:#2c7be5;color:#fff}.btn-secondary{background:#6c757d;color:#fff}
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="dashboard-body">
+            <aside class="sidebar">
+                <div class="sidebar-logo">
+                    <h2>Medical Lab</h2>
+                </div>
+                <ul class="sidebar-menu">
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="users.html">Users</a></li>
+                    <li><a href="create-user.html">Create User</a></li>
+                    <li><a href="patient-profiles.html" class="active">Patient Profiles</a></li>
+                    <li><a href="appointments.html">Appointments</a></li>
+                    <li><a href="create-appointment.html">Create Appointment</a></li>
+                    <li><a href="results.html">Results</a></li>
+                    <li><a href="settings.html">Settings</a></li>
+                </ul>
+            </aside>
+            <div class="main-area">
+                <div class="top-bar">
+                    <div class="user-info">
+                        <div class="user-avatar" id="userInitials">A</div>
+                        <div class="user-details">
+                            <span class="user-name" id="userName">Admin User</span>
+                            <span class="user-role">System Administrator</span>
+                        </div>
+                    </div>
+                    <div class="top-bar-right">
+                        <button class="logout-btn" onclick="logoutUser()">Logout</button>
+                    </div>
+                </div>
+                <div class="content-area">
+                    <div class="page-header">
+                        <div>
+                            <h1>Patient Profiles</h1>
+                            <p>View and manage patient profiles and family members</p>
+                        </div>
+                        <button class="btn-create" id="addFamilyProfileBtn" style="display: none;" onclick="addFamilyProfile()">Add Family Profile</button>
+                    </div>
+                    
+                    <div class="search-bar">
+                        <input type="text" id="searchInput" class="search-input" placeholder="Search by profile name or patient name...">
+                        <button class="btn-search" onclick="searchProfiles()">Search</button>
+                    </div>
+                    
+                    <div class="filters">
+                        <div class="filter-group">
+                            <label>Patient</label>
+                            <select id="patientFilter" onchange="loadProfiles()">
+                                <option value="">All Patients</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Active Status</label>
+                            <select id="activeFilter" onchange="loadProfiles()">
+                                <option value="">All Profiles</option>
+                                <option value="true">Active</option>
+                                <option value="false">Inactive</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Profile Type</label>
+                            <select id="primaryFilter" onchange="loadProfiles()">
+                                <option value="">All Profiles</option>
+                                <option value="true">Primary Only</option>
+                                <option value="false">Family Members</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Page</label>
+                            <select id="pageFilter" onchange="loadProfiles()">
+                                <option value="1">Page 1</option>
+                                <option value="2">Page 2</option>
+                                <option value="3">Page 3</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <div id="profilesLoading" class="loading">Loading profiles...</div>
+                        <table id="profilesTable" style="display: none;">
+                            <thead>
+                                <tr>
+                                    <th>Profile Name</th>
+                                    <th>Patient</th>
+                                    <th>Relationship</th>
+                                    <th>Primary</th>
+                                    <th>Active</th>
+                                    <th>Gender</th>
+                                    <th>Date of Birth</th>
+                                    <th>National ID</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="profilesBody">
+                            </tbody>
+                        </table>
+                        <div id="profilesEmpty" class="empty-state" style="display: none;">
+                            <h3>No profiles found</h3>
+                            <p>Try adjusting your search or create a new patient profile.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="editProfileModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Profile</h3>
+                <button class="modal-close" onclick="closeEditProfileModal()">&times;</button>
+            </div>
+            <form onsubmit="handleEditProfile(event)">
+                <input type="hidden" id="editProfileId">
+                <div class="form-group">
+                    <label for="editFullName">Full Name *</label>
+                    <input type="text" id="editFullName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editGender">Gender</label>
+                    <select id="editGender">
+                        <option value="">Select gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editDateOfBirth">Date of Birth</label>
+                    <input type="date" id="editDateOfBirth">
+                </div>
+                <div class="form-group">
+                    <label for="editNationalId">National ID</label>
+                    <input type="text" id="editNationalId">
+                </div>
+                <div class="form-group">
+                    <label for="editAddress">Address</label>
+                    <textarea id="editAddress"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editEmail">Email</label>
+                    <input type="email" id="editEmail">
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="closeEditProfileModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/ui.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/guards.js"></script>
+    <script src="../../assets/js/admin.js"></script>
+    <script>
+        // Require admin role
+        requireRole('admin');
+
+        let profiles = [];
+        let patients = [];
+        let pagination = null;
+        let currentEditProfileId = null;
+        let selectedPatientId = null;
+        
+        const userId = getQueryParam('userId');
+
+        // Initialize page
+        async function initializePage() {
+            try {
+                const user = getCurrentUser();
+                if (!user) {
+                    window.location.href = '../../index.html';
+                    return;
+                }
+
+                // Update user info in top bar
+                document.getElementById('userName').textContent = user.fullName || user.name || 'Admin';
+                const name = user.fullName || user.name || 'Admin';
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('userInitials').textContent = initials;
+
+                // Load data
+                await loadPatients();
+                await loadProfiles();
+
+            } catch (error) {
+                console.error('Failed to initialize page:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load page', 'error');
+                }
+            }
+        }
+
+        // Load patients for filter
+        async function loadPatients() {
+            try {
+                const response = await getAdminUsers({ role: 'patient', limit: 100 });
+                if (response.data !== undefined) {
+                    patients = response.data || [];
+                    populatePatientFilter(patients);
+                }
+            } catch (error) {
+                console.error('Failed to load patients:', error);
+            }
+        }
+
+        // Populate patient filter
+        function populatePatientFilter(patientList) {
+            const select = document.getElementById('patientFilter');
+            select.innerHTML = '<option value="">All Patients</option>';
+            
+            patientList.forEach(patient => {
+                const option = document.createElement('option');
+                option.value = patient._id;
+                option.textContent = `${patient.fullName} (${patient.phoneNumber})`;
+                select.appendChild(option);
+            });
+            
+            // Handle preselected patient
+            if (userId) {
+                select.value = userId;
+                selectedPatientId = userId;
+                // Show add family profile button
+                document.getElementById('addFamilyProfileBtn').style.display = 'block';
+            }
+        }
+
+        // Load profiles
+        async function loadProfiles() {
+            try {
+                document.getElementById('profilesLoading').style.display = 'block';
+                document.getElementById('profilesTable').style.display = 'none';
+                document.getElementById('profilesEmpty').style.display = 'none';
+
+                // Build filters
+                const filters = {};
+                const userId = document.getElementById('patientFilter').value;
+                const searchTerm = document.getElementById('searchInput').value.trim();
+                const isActive = document.getElementById('activeFilter').value;
+                const isPrimary = document.getElementById('primaryFilter').value;
+                const page = document.getElementById('pageFilter').value;
+
+                if (userId) filters.userId = userId;
+                if (searchTerm) filters.search = searchTerm;
+                if (isActive) filters.isActive = isActive === 'true';
+                if (isPrimary) filters.isPrimary = isPrimary === 'true';
+                if (page) filters.page = page;
+                filters.limit = 10;
+
+                // Get profiles from backend
+                const response = await getAdminPatientProfiles(filters);
+                
+                if (response.data !== undefined) {
+                    profiles = response.data || [];
+                    pagination = response.pagination || null;
+                    renderProfiles(profiles);
+                } else {
+                    throw new Error('Invalid response format');
+                }
+
+            } catch (error) {
+                console.error('Failed to load profiles:', error);
+                document.getElementById('profilesLoading').style.display = 'none';
+                document.getElementById('profilesEmpty').style.display = 'block';
+                handleAdminError(error, 'Failed to load profiles');
+            }
+        }
+
+        // Search profiles
+        async function searchProfiles() {
+            await loadProfiles();
+        }
+
+        // Render profiles
+        function renderProfiles(profileList) {
+            document.getElementById('profilesLoading').style.display = 'none';
+            
+            if (!profileList || profileList.length === 0) {
+                document.getElementById('profilesEmpty').style.display = 'block';
+                document.getElementById('profilesTable').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('profilesTable').style.display = 'table';
+            document.getElementById('profilesEmpty').style.display = 'none';
+
+            const tbody = document.getElementById('profilesBody');
+            tbody.innerHTML = profileList.map(profile => {
+                const isPrimary = profile.isPrimary;
+                const isActive = profile.isActive;
+                const canDeactivate = !isPrimary && isActive;
+                
+                return `
+                    <tr>
+                        <td>${profile.fullName || 'Unknown'}</td>
+                        <td>${profile.patientName || profile.patientFullName || 'Unknown'}</td>
+                        <td>${profile.relationshipToPrimary || '-'}</td>
+                        <td><span class="primary-badge ${isPrimary ? 'badge-primary' : 'badge-secondary'}">${isPrimary ? 'Primary' : 'Family'}</span></td>
+                        <td><span class="status-badge ${isActive ? 'status-active' : 'status-inactive'}">${isActive ? 'Active' : 'Inactive'}</span></td>
+                        <td>${profile.gender || '-'}</td>
+                        <td>${formatDate(profile.dateOfBirth) || '-'}</td>
+                        <td>${profile.nationalId || '-'}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-sm btn-edit" onclick="openEditProfileModal('${profile._id}')">Edit</button>
+                                ${isPrimary ? `<button class="btn-sm btn-add" onclick="addFamilyProfileForPatient('${profile.userId}')">Add Family</button>` : ''}
+                                ${canDeactivate ? `<button class="btn-sm btn-deactivate" onclick="deactivateProfile('${profile._id}')">Deactivate</button>` : ''}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Open edit profile modal
+        function openEditProfileModal(profileId) {
+            currentEditProfileId = profileId;
+            
+            // Find profile and populate current values
+            const profile = profiles.find(p => p._id === profileId);
+            if (profile) {
+                document.getElementById('editProfileId').value = profileId;
+                document.getElementById('editFullName').value = profile.fullName || '';
+                document.getElementById('editGender').value = profile.gender || '';
+                document.getElementById('editDateOfBirth').value = profile.dateOfBirth || '';
+                document.getElementById('editNationalId').value = profile.nationalId || '';
+                document.getElementById('editAddress').value = profile.address || '';
+                document.getElementById('editEmail').value = profile.email || '';
+            }
+            
+            document.getElementById('editProfileModal').style.display = 'block';
+        }
+
+        // Close edit profile modal
+        function closeEditProfileModal() {
+            document.getElementById('editProfileModal').style.display = 'none';
+            currentEditProfileId = null;
+        }
+
+        // Handle edit profile
+        async function handleEditProfile(event) {
+            event.preventDefault();
+            
+            if (!currentEditProfileId) {
+                handleAdminError('No profile selected for editing');
+                return;
+            }
+
+            const fullName = document.getElementById('editFullName').value.trim();
+            const gender = document.getElementById('editGender').value;
+            const dateOfBirth = document.getElementById('editDateOfBirth').value;
+            const nationalId = document.getElementById('editNationalId').value.trim();
+            const address = document.getElementById('editAddress').value.trim();
+            const email = document.getElementById('editEmail').value.trim();
+
+            try {
+                const payload = { fullName };
+                
+                if (gender) payload.gender = gender;
+                if (dateOfBirth) payload.dateOfBirth = dateOfBirth;
+                if (nationalId) payload.nationalId = nationalId;
+                if (address) payload.address = address;
+                if (email) payload.email = email;
+
+                const response = await updateAdminPatientProfile(currentEditProfileId, payload);
+                
+                if (response.profile) {
+                    handleAdminSuccess('Profile updated successfully!');
+                    closeEditProfileModal();
+                    await loadProfiles(); // Refresh the list
+                } else {
+                    throw new Error('Invalid response format');
+                }
+
+            } catch (error) {
+                console.error('Failed to update profile:', error);
+                handleAdminError(error, 'Failed to update profile');
+            }
+        }
+
+        // Deactivate profile
+        async function deactivateProfile(profileId) {
+            if (!confirm('Are you sure you want to deactivate this profile? This action cannot be undone.')) {
+                return;
+            }
+
+            try {
+                const response = await deactivateAdminPatientProfile(profileId);
+                
+                if (response.profile) {
+                    handleAdminSuccess('Profile deactivated successfully!');
+                    await loadProfiles(); // Refresh the list
+                } else {
+                    throw new Error('Invalid response format');
+                }
+
+            } catch (error) {
+                console.error('Failed to deactivate profile:', error);
+                handleAdminError(error, 'Failed to deactivate profile');
+            }
+        }
+
+        // Add family profile
+        function addFamilyProfile() {
+            if (selectedPatientId) {
+                navigateToCreatePatientProfile(selectedPatientId);
+            } else {
+                handleAdminError('Please select a patient first');
+            }
+        }
+
+        // Add family profile for specific patient
+        function addFamilyProfileForPatient(patientId) {
+            navigateToCreatePatientProfile(patientId);
+        }
+
+        // Update pagination controls if needed
+        function updatePaginationControls() {
+            if (!pagination) return;
+
+            const pageFilter = document.getElementById('pageFilter');
+            pageFilter.innerHTML = '';
+            
+            for (let i = 1; i <= pagination.totalPages; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `Page ${i}`;
+                if (i === pagination.page) {
+                    option.selected = true;
+                }
+                pageFilter.appendChild(option);
+            }
+        }
+
+        // Handle search on Enter key
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchProfiles();
+            }
+        });
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('editProfileModal');
+            if (event.target === modal) {
+                closeEditProfileModal();
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
+</body>
+</html>

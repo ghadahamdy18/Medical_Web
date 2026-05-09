@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create User - Medical Lab</title>
+    <link rel="stylesheet" href="../../css/dashboard.css">
+    <style>
+        body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#6f42c1;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.back-link{display:inline-block;margin-bottom:20px;color:#2c7be5;text-decoration:none}.page-header{margin-bottom:25px}.page-header h1{font-size:24px;color:#333}.page-header p{color:#666;max-width:720px}.form-card{background:#fff;padding:30px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);max-width:700px}.form-group{margin-bottom:20px}.form-group label{display:block;margin-bottom:8px;font-weight:600}.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:4px;font-size:14px}.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#2c7be5}.form-group textarea{resize:vertical;min-height:80px}.checkbox-group{display:flex;align-items:center;gap:10px}.checkbox-group input[type="checkbox"]{width:auto;padding:0}.profile-section{background:#f8f9fa;padding:20px;border-radius:6px;margin-top:20px}.profile-section h3{margin-bottom:15px;color:#333}.btn{padding:12px 24px;border:none;border-radius:4px;cursor:pointer;font-size:16px}.btn-primary{background:#2c7be5;color:#fff}.btn-primary:hover{background:#1a5fbf}.btn-primary:disabled{background:#6c757d;cursor:not-allowed}.error{color:#dc3545;font-size:14px;margin-top:5px}.success{background:#d4edda;border:1px solid #c3e6cb;border-radius:4px;padding:20px;margin-bottom:20px;color:#155724}.success h3{margin-bottom:10px}.success-buttons{display:flex;gap:10px;margin-top:15px}.loading{text-align:center;padding:40px;color:#666}
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="dashboard-body">
+            <aside class="sidebar">
+                <div class="sidebar-logo">
+                    <h2>Medical Lab</h2>
+                </div>
+                <ul class="sidebar-menu">
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="users.html">Users</a></li>
+                    <li><a href="create-user.html" class="active">Create User</a></li>
+                    <li><a href="patient-profiles.html">Patient Profiles</a></li>
+                    <li><a href="appointments.html">Appointments</a></li>
+                    <li><a href="create-appointment.html">Create Appointment</a></li>
+                    <li><a href="results.html">Results</a></li>
+                    <li><a href="settings.html">Settings</a></li>
+                </ul>
+            </aside>
+            <div class="main-area">
+                <div class="top-bar">
+                    <div class="user-info">
+                        <div class="user-avatar" id="userInitials">A</div>
+                        <div class="user-details">
+                            <span class="user-name" id="userName">Admin User</span>
+                            <span class="user-role">System Administrator</span>
+                        </div>
+                    </div>
+                    <div class="top-bar-right">
+                        <button class="logout-btn" onclick="logoutUser()">Logout</button>
+                    </div>
+                </div>
+                <div class="content-area">
+                    <a href="users.html" class="back-link">← Back to Users</a>
+                    <div class="page-header">
+                        <h1>Create New User</h1>
+                        <p>Create a new system user with appropriate role and permissions</p>
+                    </div>
+                    
+                    <div id="createUserForm" class="form-card">
+                        <form id="userForm" onsubmit="handleCreateUser(event)">
+                            <div class="form-group">
+                                <label for="fullName">Full Name *</label>
+                                <input type="text" id="fullName" name="fullName" required placeholder="Enter user's full name">
+                                <div id="fullNameError" class="error"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="phoneNumber">Phone Number *</label>
+                                <input type="tel" id="phoneNumber" name="phoneNumber" required placeholder="01xxxxxxxxx">
+                                <div id="phoneNumberError" class="error"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" placeholder="Enter email address (optional)">
+                                <div id="emailError" class="error"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="password">Password *</label>
+                                <input type="password" id="password" name="password" required placeholder="Enter password (min 6 characters)">
+                                <div id="passwordError" class="error"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="role">Role *</label>
+                                <select id="role" name="role" required onchange="togglePatientProfile()">
+                                    <option value="">Select role</option>
+                                    <option value="admin">Admin</option>
+                                    <option value="doctor">Doctor</option>
+                                    <option value="receptionist">Receptionist</option>
+                                    <option value="patient">Patient</option>
+                                </select>
+                                <div id="roleError" class="error"></div>
+                            </div>
+                            
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="mustChangePassword" name="mustChangePassword" checked>
+                                <label for="mustChangePassword">Must change password on first login</label>
+                            </div>
+                            
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="isActive" name="isActive" checked>
+                                <label for="isActive">Active account</label>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="status">Status *</label>
+                                <select id="status" name="status" required>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                    <option value="blocked">Blocked</option>
+                                    <option value="archived">Archived</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Patient Profile Section (shown only for patient role) -->
+                            <div id="patientProfileSection" class="profile-section" style="display: none;">
+                                <h3>Patient Profile Information</h3>
+                                <p class="text-muted">Optional: Create primary profile for this patient user</p>
+                                
+                                <div class="form-group">
+                                    <label for="profileFullName">Profile Full Name</label>
+                                    <input type="text" id="profileFullName" name="profileFullName" placeholder="Enter profile full name (optional)">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="profileGender">Gender</label>
+                                    <select id="profileGender" name="profileGender">
+                                        <option value="">Select gender</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="profileDateOfBirth">Date of Birth</label>
+                                    <input type="date" id="profileDateOfBirth" name="profileDateOfBirth">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="profileNationalId">National ID</label>
+                                    <input type="text" id="profileNationalId" name="profileNationalId" placeholder="Enter national ID (optional)">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="profileAddress">Address</label>
+                                    <textarea id="profileAddress" name="profileAddress" placeholder="Enter address (optional)"></textarea>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary" id="createBtn">
+                                Create User
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div id="createSuccess" class="success" style="display: none;">
+                        <h3>✅ User Created Successfully!</h3>
+                        <div id="userSummary">
+                            <!-- User summary will be populated here -->
+                        </div>
+                        <div id="profileSummary" style="display: none;">
+                            <!-- Profile summary will be populated here -->
+                        </div>
+                        <div class="success-buttons">
+                            <button class="btn btn-primary" onclick="viewUserDetails()">View User Details</button>
+                            <button class="btn btn-primary" onclick="createAnotherUser()">Create Another User</button>
+                            <button class="btn btn-primary" onclick="backToUsers()">Back to Users</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/ui.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/guards.js"></script>
+    <script src="../../assets/js/admin.js"></script>
+    <script>
+        // Require admin role
+        requireRole('admin');
+
+        let createdUser = null;
+
+        // Initialize page
+        async function initializePage() {
+            try {
+                const user = getCurrentUser();
+                if (!user) {
+                    window.location.href = '../../index.html';
+                    return;
+                }
+
+                // Update user info in top bar
+                document.getElementById('userName').textContent = user.fullName || user.name || 'Admin';
+                const name = user.fullName || user.name || 'Admin';
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('userInitials').textContent = initials;
+
+            } catch (error) {
+                console.error('Failed to initialize page:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load page', 'error');
+                }
+            }
+        }
+
+        // Toggle patient profile section
+        function togglePatientProfile() {
+            const role = document.getElementById('role').value;
+            const profileSection = document.getElementById('patientProfileSection');
+            
+            if (role === 'patient') {
+                profileSection.style.display = 'block';
+            } else {
+                profileSection.style.display = 'none';
+                // Clear profile fields when not patient role
+                document.getElementById('profileFullName').value = '';
+                document.getElementById('profileGender').value = '';
+                document.getElementById('profileDateOfBirth').value = '';
+                document.getElementById('profileNationalId').value = '';
+                document.getElementById('profileAddress').value = '';
+            }
+        }
+
+        // Handle create user
+        async function handleCreateUser(event) {
+            event.preventDefault();
+            
+            // Clear previous errors
+            document.getElementById('fullNameError').textContent = '';
+            document.getElementById('phoneNumberError').textContent = '';
+            document.getElementById('emailError').textContent = '';
+            document.getElementById('passwordError').textContent = '';
+            document.getElementById('roleError').textContent = '';
+            
+            // Get form values
+            const fullName = document.getElementById('fullName').value.trim();
+            const phoneNumber = document.getElementById('phoneNumber').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const role = document.getElementById('role').value;
+            const mustChangePassword = document.getElementById('mustChangePassword').checked;
+            const isActive = document.getElementById('isActive').checked;
+            const status = document.getElementById('status').value;
+            
+            // Patient profile fields
+            const profileFullName = document.getElementById('profileFullName').value.trim();
+            const profileGender = document.getElementById('profileGender').value;
+            const profileDateOfBirth = document.getElementById('profileDateOfBirth').value;
+            const profileNationalId = document.getElementById('profileNationalId').value.trim();
+            const profileAddress = document.getElementById('profileAddress').value.trim();
+            
+            // Validate
+            let hasError = false;
+            
+            if (!fullName) {
+                document.getElementById('fullNameError').textContent = 'Full name is required';
+                hasError = true;
+            }
+            
+            if (!phoneNumber) {
+                document.getElementById('phoneNumberError').textContent = 'Phone number is required';
+                hasError = true;
+            } else if (!validatePhoneNumber(phoneNumber)) {
+                document.getElementById('phoneNumberError').textContent = 'Please enter a valid Egyptian phone number (01xxxxxxxxx)';
+                hasError = true;
+            }
+            
+            if (email && !validateEmail(email)) {
+                document.getElementById('emailError').textContent = 'Please enter a valid email address';
+                hasError = true;
+            }
+            
+            if (!password) {
+                document.getElementById('passwordError').textContent = 'Password is required';
+                hasError = true;
+            } else if (!validatePassword(password)) {
+                document.getElementById('passwordError').textContent = 'Password must be at least 6 characters long';
+                hasError = true;
+            }
+            
+            if (!role) {
+                document.getElementById('roleError').textContent = 'Role is required';
+                hasError = true;
+            }
+            
+            if (hasError) return;
+            
+            try {
+                // Disable create button
+                const createBtn = document.getElementById('createBtn');
+                createBtn.disabled = true;
+                createBtn.textContent = 'Creating...';
+                
+                // Prepare payload
+                const payload = {
+                    fullName,
+                    phoneNumber,
+                    password,
+                    role,
+                    mustChangePassword,
+                    isActive,
+                    status
+                };
+                
+                // Add email if provided
+                if (email) {
+                    payload.email = email;
+                }
+                
+                // Add patient profile if role is patient and profile data provided
+                if (role === 'patient' && profileFullName) {
+                    payload.profileData = {
+                        fullName: profileFullName,
+                        isPrimary: true,
+                        isActive: true
+                    };
+                    
+                    if (profileGender) payload.profileData.gender = profileGender;
+                    if (profileDateOfBirth) payload.profileData.dateOfBirth = profileDateOfBirth;
+                    if (profileNationalId) payload.profileData.nationalId = profileNationalId;
+                    if (profileAddress) payload.profileData.address = profileAddress;
+                }
+                
+                // Create user
+                const response = await createAdminUser(payload);
+                
+                if (response.user) {
+                    createdUser = response.user;
+                    showSuccess(response.user, response.primaryProfile);
+                } else {
+                    throw new Error('Invalid response format');
+                }
+                
+            } catch (error) {
+                console.error('Failed to create user:', error);
+                handleAdminError(error, 'Failed to create user');
+            } finally {
+                // Re-enable create button
+                const createBtn = document.getElementById('createBtn');
+                createBtn.disabled = false;
+                createBtn.textContent = 'Create User';
+            }
+        }
+
+        // Show success message
+        function showSuccess(user, primaryProfile) {
+            document.getElementById('createUserForm').style.display = 'none';
+            document.getElementById('createSuccess').style.display = 'block';
+            
+            const userSummaryElement = document.getElementById('userSummary');
+            userSummaryElement.innerHTML = `
+                <div style="display: grid; gap: 10px;">
+                    <div><strong>Full Name:</strong> ${user.fullName}</div>
+                    <div><strong>Phone Number:</strong> ${user.phoneNumber}</div>
+                    <div><strong>Email:</strong> ${user.email || 'Not provided'}</div>
+                    <div><strong>Role:</strong> ${formatRole(user.role)}</div>
+                    <div><strong>Status:</strong> ${formatUserStatus(user.status)}</div>
+                    <div><strong>Active:</strong> ${user.isActive ? 'Yes' : 'No'}</div>
+                    <div><strong>Must Change Password:</strong> ${user.mustChangePassword ? 'Yes' : 'No'}</div>
+                </div>
+            `;
+            
+            // Show profile summary if exists
+            const profileSummaryElement = document.getElementById('profileSummary');
+            if (primaryProfile) {
+                profileSummaryElement.style.display = 'block';
+                profileSummaryElement.innerHTML = `
+                    <h4>Primary Profile Created</h4>
+                    <div style="display: grid; gap: 10px; margin-top: 10px;">
+                        <div><strong>Profile Name:</strong> ${primaryProfile.fullName}</div>
+                        ${primaryProfile.gender ? `<div><strong>Gender:</strong> ${primaryProfile.gender}</div>` : ''}
+                        ${primaryProfile.dateOfBirth ? `<div><strong>Date of Birth:</strong> ${formatDate(primaryProfile.dateOfBirth)}</div>` : ''}
+                        ${primaryProfile.nationalId ? `<div><strong>National ID:</strong> ${primaryProfile.nationalId}</div>` : ''}
+                        ${primaryProfile.address ? `<div><strong>Address:</strong> ${primaryProfile.address}</div>` : ''}
+                    </div>
+                `;
+            } else {
+                profileSummaryElement.style.display = 'none';
+            }
+        }
+
+        // View user details
+        function viewUserDetails() {
+            if (createdUser) {
+                navigateToUserDetails(createdUser._id);
+            }
+        }
+
+        // Create another user
+        function createAnotherUser() {
+            // Reset form
+            document.getElementById('userForm').reset();
+            
+            // Clear errors
+            document.getElementById('fullNameError').textContent = '';
+            document.getElementById('phoneNumberError').textContent = '';
+            document.getElementById('emailError').textContent = '';
+            document.getElementById('passwordError').textContent = '';
+            document.getElementById('roleError').textContent = '';
+            
+            // Hide profile section
+            document.getElementById('patientProfileSection').style.display = 'none';
+            
+            // Hide success, show form
+            document.getElementById('createSuccess').style.display = 'none';
+            document.getElementById('createUserForm').style.display = 'block';
+            
+            createdUser = null;
+        }
+
+        // Back to users
+        function backToUsers() {
+            window.location.href = 'users.html';
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results - Medical Lab</title>
+    <link rel="stylesheet" href="../../css/dashboard.css">
+    <style>
+        body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#6f42c1;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.page-header{margin-bottom:25px}.page-header h1{font-size:24px;color:#333}.page-header p{color:#666;max-width:720px}.filters{display:flex;gap:15px;margin-bottom:20px;flex-wrap:wrap}.filter-group{display:flex;flex-direction:column;gap:5px}.filter-group label{font-size:14px;font-weight:600}.filter-group select,.filter-group input{padding:8px;border:1px solid #ddd;border-radius:4px;font-size:14px}.table-container{background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);overflow:hidden}.table-container table{width:100%;border-collapse:collapse}.table-container th,.table-container td{padding:15px 20px;text-align:left;border-bottom:1px solid #eee}.table-container th{background:#f8f9fa;font-weight:600}.table-container tr:hover{background:#f8f9fa}.btn-sm{padding:6px 12px;font-size:12px;border:none;border-radius:4px;cursor:pointer}.btn-view{background:#17a2b8;color:#fff}.btn-view:hover{background:#138496}.badge{padding:3px 8px;border-radius:12px;font-size:11px}.badge-latest{background:#28a745;color:#fff}.badge-old{background:#6c757d;color:#fff}.file-size{font-size:12px;color:#666}.empty-state{text-align:center;padding:60px 20px;color:#666}.loading{text-align:center;padding:40px;color:#666}
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="dashboard-body">
+            <aside class="sidebar">
+                <div class="sidebar-logo">
+                    <h2>Medical Lab</h2>
+                </div>
+                <ul class="sidebar-menu">
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="users.html">Users</a></li>
+                    <li><a href="create-user.html">Create User</a></li>
+                    <li><a href="patient-profiles.html">Patient Profiles</a></li>
+                    <li><a href="appointments.html">Appointments</a></li>
+                    <li><a href="create-appointment.html">Create Appointment</a></li>
+                    <li><a href="results.html" class="active">Results</a></li>
+                    <li><a href="settings.html">Settings</a></li>
+                </ul>
+            </aside>
+            <div class="main-area">
+                <div class="top-bar">
+                    <div class="user-info">
+                        <div class="user-avatar" id="userInitials">A</div>
+                        <div class="user-details">
+                            <span class="user-name" id="userName">Admin User</span>
+                            <span class="user-role">System Administrator</span>
+                        </div>
+                    </div>
+                    <div class="top-bar-right">
+                        <button class="logout-btn" onclick="logoutUser()">Logout</button>
+                    </div>
+                </div>
+                <div class="content-area">
+                    <div class="page-header">
+                        <h1>Lab Results</h1>
+                        <p>View and monitor all laboratory test results</p>
+                    </div>
+                    
+                    <div class="filters">
+                        <div class="filter-group">
+                            <label>Test Name</label>
+                            <input type="text" id="testNameFilter" placeholder="Search test name..." onkeyup="handleSearchKeyup(event)">
+                        </div>
+                        <div class="filter-group">
+                            <label>Doctor</label>
+                            <select id="doctorFilter" onchange="loadResults()">
+                                <option value="">All Doctors</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Appointment</label>
+                            <input type="text" id="appointmentFilter" placeholder="Appointment ID..." onkeyup="handleSearchKeyup(event)">
+                        </div>
+                        <div class="filter-group">
+                            <label>Version</label>
+                            <select id="versionFilter" onchange="loadResults()">
+                                <option value="">All Versions</option>
+                                <option value="true">Latest Only</option>
+                                <option value="false">Old Versions</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Page</label>
+                            <select id="pageFilter" onchange="loadResults()">
+                                <option value="1">Page 1</option>
+                                <option value="2">Page 2</option>
+                                <option value="3">Page 3</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <div id="resultsLoading" class="loading">Loading results...</div>
+                        <table id="resultsTable" style="display: none;">
+                            <thead>
+                                <tr>
+                                    <th>Test Name</th>
+                                    <th>File Name</th>
+                                    <th>File Size</th>
+                                    <th>Uploaded At</th>
+                                    <th>Version</th>
+                                    <th>Doctor</th>
+                                    <th>Appointment</th>
+                                    <th>Patient Profile</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="resultsBody">
+                            </tbody>
+                        </table>
+                        <div id="resultsEmpty" class="empty-state" style="display: none;">
+                            <h3>No results found</h3>
+                            <p>Try adjusting your search filters.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/ui.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/guards.js"></script>
+    <script src="../../assets/js/admin.js"></script>
+    <script>
+        // Require admin role
+        requireRole('admin');
+
+        let results = [];
+        let doctors = [];
+        let pagination = null;
+        let searchTimeout = null;
+
+        // Initialize page
+        async function initializePage() {
+            try {
+                const user = getCurrentUser();
+                if (!user) {
+                    window.location.href = '../../index.html';
+                    return;
+                }
+
+                // Update user info in top bar
+                document.getElementById('userName').textContent = user.fullName || user.name || 'Admin';
+                const name = user.fullName || user.name || 'Admin';
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('userInitials').textContent = initials;
+
+                // Load data
+                await loadDoctors();
+                await loadResults();
+
+            } catch (error) {
+                console.error('Failed to initialize page:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load page', 'error');
+                }
+            }
+        }
+
+        // Load doctors for filter
+        async function loadDoctors() {
+            try {
+                const response = await getAdminUsers({ role: 'doctor', limit: 100 });
+                if (response.data !== undefined) {
+                    doctors = response.data || [];
+                    populateDoctorFilter(doctors);
+                }
+            } catch (error) {
+                console.error('Failed to load doctors:', error);
+            }
+        }
+
+        // Populate doctor filter
+        function populateDoctorFilter(doctorList) {
+            const select = document.getElementById('doctorFilter');
+            select.innerHTML = '<option value="">All Doctors</option>';
+            
+            doctorList.forEach(doctor => {
+                const option = document.createElement('option');
+                option.value = doctor._id;
+                option.textContent = doctor.fullName;
+                select.appendChild(option);
+            });
+        }
+
+        // Load results
+        async function loadResults() {
+            try {
+                document.getElementById('resultsLoading').style.display = 'block';
+                document.getElementById('resultsTable').style.display = 'none';
+                document.getElementById('resultsEmpty').style.display = 'none';
+
+                // Build filters
+                const filters = {};
+                const testName = document.getElementById('testNameFilter').value.trim();
+                const doctorUserId = document.getElementById('doctorFilter').value;
+                const appointmentId = document.getElementById('appointmentFilter').value.trim();
+                const isLatest = document.getElementById('versionFilter').value;
+                const page = document.getElementById('pageFilter').value;
+
+                if (testName) filters.testName = testName;
+                if (doctorUserId) filters.doctorUserId = doctorUserId;
+                if (appointmentId) filters.appointmentId = appointmentId;
+                if (isLatest) filters.isLatest = isLatest === 'true';
+                if (page) filters.page = page;
+                filters.limit = 10;
+
+                // Get results from backend
+                const response = await getAdminResults(filters);
+                
+                if (response.data !== undefined) {
+                    results = response.data || [];
+                    pagination = response.pagination || null;
+                    renderResults(results);
+                } else {
+                    throw new Error('Invalid response format');
+                }
+
+            } catch (error) {
+                console.error('Failed to load results:', error);
+                document.getElementById('resultsLoading').style.display = 'none';
+                document.getElementById('resultsEmpty').style.display = 'block';
+                handleAdminError(error, 'Failed to load results');
+            }
+        }
+
+        // Render results
+        function renderResults(resultList) {
+            document.getElementById('resultsLoading').style.display = 'none';
+            
+            if (!resultList || resultList.length === 0) {
+                document.getElementById('resultsEmpty').style.display = 'block';
+                document.getElementById('resultsTable').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('resultsTable').style.display = 'table';
+            document.getElementById('resultsEmpty').style.display = 'none';
+
+            const tbody = document.getElementById('resultsBody');
+            tbody.innerHTML = resultList.map(result => {
+                const versionBadge = result.isLatest ? 
+                    '<span class="badge badge-latest">Latest</span>' : 
+                    '<span class="badge badge-old">Old</span>';
+                
+                return `
+                    <tr>
+                        <td>${result.testName || 'Unknown Test'}</td>
+                        <td>${result.fileName || 'Unknown File'}</td>
+                        <td>
+                            <div class="file-size">${formatFileSize(result.fileSize || 0)}</div>
+                        </td>
+                        <td>${formatDateTime(result.uploadedAt)}</td>
+                        <td>${versionBadge}</td>
+                        <td>${result.doctorName || 'Unknown'}</td>
+                        <td>
+                            <div>
+                                <div>${formatDate(result.appointmentDate) || '-'}</div>
+                                <div class="file-size">${result.appointmentType || '-'}</div>
+                            </div>
+                        </td>
+                        <td>${result.profileName || 'Unknown'}</td>
+                        <td>
+                            <button class="btn-sm btn-view" onclick="viewResultDetails('${result._id}')">View Details</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // View result details
+        function viewResultDetails(resultId) {
+            navigateToResultDetails(resultId);
+        }
+
+        // Handle search keyup with debouncing
+        function handleSearchKeyup(event) {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                loadResults();
+            }, 500);
+        }
+
+        // Update pagination controls if needed
+        function updatePaginationControls() {
+            if (!pagination) return;
+
+            const pageFilter = document.getElementById('pageFilter');
+            pageFilter.innerHTML = '';
+            
+            for (let i = 1; i <= pagination.totalPages; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `Page ${i}`;
+                if (i === pagination.page) {
+                    option.selected = true;
+                }
+                pageFilter.appendChild(option);
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
+</body>
+</html>
