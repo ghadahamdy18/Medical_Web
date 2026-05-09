@@ -95,32 +95,24 @@ userSchema.index({ email: 1 }, { unique: true, sparse: true });
 userSchema.index({ role: 1, status: 1 });
 userSchema.index({ fullName: 'text', phoneNumber: 'text' });
 
-userSchema.pre('validate', function (next) {
+userSchema.pre('validate', function () {
     if (this.email === '') {
         this.email = null;
     }
-
-    next();
 });
 
-userSchema.pre('save', async function (next) {
-    try {
-        if (!this.isModified('password')) {
-            return next();
-        }
+userSchema.pre('save', async function () {
+    if (!this.isModified('password')) {
+        return;
+    }
 
-        const alreadyHashed =
-            typeof this.password === 'string' &&
-            /^\$2[aby]\$\d{2}\$/.test(this.password);
+    const alreadyHashed =
+        typeof this.password === 'string' &&
+        /^\$2[aby]\$\d{2}\$/.test(this.password);
 
-        if (!alreadyHashed) {
-            const saltRounds = 10;
-            this.password = await bcrypt.hash(this.password, saltRounds);
-        }
-
-        next();
-    } catch (error) {
-        next(error);
+    if (!alreadyHashed) {
+        const saltRounds = 10;
+        this.password = await bcrypt.hash(this.password, saltRounds);
     }
 });
 

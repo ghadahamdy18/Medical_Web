@@ -85,7 +85,7 @@ app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads'), {
 // ─── Force Temporary Password Change ─────────────────────────────────────────
 // Applies only after authentication when a valid token is provided.
 // Public auth routes like login/register still work normally.
-app.use('/api', (req, res, next) => {
+app.use('/api', async (req, res, next) => {
   const publicRoutes = [
     '/api/auth/login',
     '/api/auth/register',
@@ -95,11 +95,14 @@ app.use('/api', (req, res, next) => {
     return next();
   }
 
-  return authMiddleware(req, res, (err) => {
-    if (err) return next(err);
-
-    return forcePasswordChangeMiddleware(req, res, next);
-  });
+  try {
+    await authMiddleware(req, res, async (err) => {
+      if (err) return next(err);
+      return forcePasswordChangeMiddleware(req, res, next);
+    });
+  } catch (err) {
+    return next(err);
+  }
 });
 
 // ─── API Routes ───────────────────────────────────────────────────────────────
