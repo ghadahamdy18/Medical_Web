@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Medical Lab</title>
+    <link rel="stylesheet" href="../../css/dashboard.css">
+    <style>
+        body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#6f42c1;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.page-header{margin-bottom:25px}.page-header h1{font-size:24px;color:#333}.page-header p{color:#666;max-width:720px}.settings-card{background:#fff;padding:30px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);margin-bottom:20px}.settings-section{margin-bottom:30px}.settings-section:last-child{margin-bottom:0}.settings-section h3{font-size:18px;margin-bottom:15px;color:#333;border-bottom:1px solid #eee;padding-bottom:10px}.info-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f0f0f0}.info-item:last-child{border-bottom:none}.info-label{font-weight:600;color:#333}.info-value{color:#666}.btn{padding:10px 20px;border:none;border-radius:4px;cursor:pointer;font-size:14px}.btn-primary{background:#2c7be5;color:#fff}.btn-primary:hover{background:#1a5fbf}.btn-danger{background:#dc3545;color:#fff}.btn-danger:hover{background:#c82333}
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="dashboard-body">
+            <aside class="sidebar">
+                <div class="sidebar-logo">
+                    <h2>Medical Lab</h2>
+                </div>
+                <ul class="sidebar-menu">
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="users.html">Users</a></li>
+                    <li><a href="create-user.html">Create User</a></li>
+                    <li><a href="patient-profiles.html">Patient Profiles</a></li>
+                    <li><a href="appointments.html">Appointments</a></li>
+                    <li><a href="create-appointment.html">Create Appointment</a></li>
+                    <li><a href="results.html">Results</a></li>
+                    <li><a href="settings.html" class="active">Settings</a></li>
+                </ul>
+            </aside>
+            <div class="main-area">
+                <div class="top-bar">
+                    <div class="user-info">
+                        <div class="user-avatar" id="userInitials">A</div>
+                        <div class="user-details">
+                            <span class="user-name" id="userName">Admin User</span>
+                            <span class="user-role">System Administrator</span>
+                        </div>
+                    </div>
+                    <div class="top-bar-right">
+                        <button class="logout-btn" onclick="logoutUser()">Logout</button>
+                    </div>
+                </div>
+                <div class="content-area">
+                    <div class="page-header">
+                        <h1>Settings</h1>
+                        <p>Manage system settings and configuration</p>
+                    </div>
+                    
+                    <div class="settings-card">
+                        <div class="settings-section">
+                            <h3>System Information</h3>
+                            <div class="info-item">
+                                <span class="info-label">System Version</span>
+                                <span class="info-value">Medical Lab Management System v1.0</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Environment</span>
+                                <span class="info-value">Production</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Database Status</span>
+                                <span class="info-value">Connected</span>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-section">
+                            <h3>User Account</h3>
+                            <div class="info-item">
+                                <span class="info-label">User ID</span>
+                                <span class="info-value" id="userId">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Full Name</span>
+                                <span class="info-value" id="userFullName">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Email</span>
+                                <span class="info-value" id="userEmail">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Phone</span>
+                                <span class="info-value" id="userPhone">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Role</span>
+                                <span class="info-value">Administrator</span>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-section">
+                            <h3>Security</h3>
+                            <div class="info-item">
+                                <span class="info-label">Last Login</span>
+                                <span class="info-value" id="lastLogin">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Password Change</span>
+                                <span class="info-value">Not required</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Two-Factor Authentication</span>
+                                <span class="info-value">Disabled</span>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-section">
+                            <h3>Actions</h3>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="btn btn-primary" onclick="changePassword()">Change Password</button>
+                                <button class="btn btn-danger" onclick="logoutUser()">Logout</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/ui.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/guards.js"></script>
+    <script src="../../assets/js/admin.js"></script>
+    <script>
+        // Require admin role
+        requireRole('admin');
+
+        // Initialize page
+        async function initializePage() {
+            try {
+                const user = getCurrentUser();
+                if (!user) {
+                    window.location.href = '../../index.html';
+                    return;
+                }
+
+                // Update user info in top bar
+                document.getElementById('userName').textContent = user.fullName || user.name || 'Admin';
+                const name = user.fullName || user.name || 'Admin';
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('userInitials').textContent = initials;
+
+                // Update user information
+                document.getElementById('userId').textContent = user._id || 'Unknown';
+                document.getElementById('userFullName').textContent = user.fullName || 'Unknown';
+                document.getElementById('userEmail').textContent = user.email || 'Not provided';
+                document.getElementById('userPhone').textContent = user.phoneNumber || 'Unknown';
+                document.getElementById('lastLogin').textContent = user.lastLogin || 'Unknown';
+
+            } catch (error) {
+                console.error('Failed to initialize page:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load page', 'error');
+                }
+            }
+        }
+
+        // Change password
+        function changePassword() {
+            // Redirect to change password page or open modal
+            if (typeof showToast === 'function') {
+                showToast('Password change feature not yet implemented', 'info');
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
+</body>
+</html>
