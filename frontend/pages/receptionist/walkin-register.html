@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Walk-in Registration - Medical Lab</title>
+    <link rel="stylesheet" href="../../css/dashboard.css">
+    <style>body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#fd7e14;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.back-link{display:inline-block;margin-bottom:20px;color:#2c7be5;text-decoration:none}.page-header{margin-bottom:25px}.page-header h1{font-size:24px;color:#333}.form-card{background:#fff;padding:30px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);max-width:600px}.form-group{margin-bottom:20px}.form-group label{display:block;margin-bottom:8px;font-weight:600}.form-group input,.form-group select{width:100%;padding:12px;border:1px solid #ddd;border-radius:4px;font-size:14px}.form-group input:focus,.form-group select:focus{outline:none;border-color:#2c7be5}.btn-submit{background:#2c7be5;color:#fff;border:none;padding:14px 28px;border-radius:4px;font-size:16px;cursor:pointer;width:100%}.btn-submit:hover{background:#1a68d4}.credentials-box{background:#d4edda;border:1px solid #c3e6cb;padding:20px;border-radius:8px;margin-top:20px;display:none}.credentials-box.show{display:block}.credentials-box h3{color:#155724;margin-bottom:15px}.credential-item{background:#fff;padding:15px;border-radius:4px;margin-bottom:10px}.credential-label{font-weight:600;color:#666;font-size:12px}.credential-value{font-size:18px;color:#333;margin-top:5px}.btn-copy{background:#28a745;color:#fff;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;margin-top:10px}</style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="dashboard-body">
+            <aside class="sidebar">
+                <div class="sidebar-logo"><h2>Medical Lab</h2></div>
+                <ul class="sidebar-menu">
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="walkin-register.html" class="active">Walk-in Register</a></li>
+                    <li><a href="queue-management.html">Queue Management</a></li>
+                    <li><a href="print-results.html">Print Results</a></li>
+                </ul>
+            </aside>
+            <div class="main-area">
+                <div class="top-bar">
+                    <div class="user-info">
+                        <div class="user-avatar">R</div>
+                        <div class="user-details">
+                            <span class="user-name">Reception Desk</span>
+                            <span class="user-role">Receptionist</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-area">
+                    <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+                    <div class="page-header">
+                        <h1>Register Walk-in Patient</h1>
+                    </div>
+                    <div class="form-card">
+                        <form onsubmit="registerWalkIn(event)">
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input type="text" id="patientName" placeholder="Enter patient full name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Phone Number</label>
+                                <input type="tel" id="patientPhone" placeholder="Enter phone number" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Date of Birth</label>
+                                <input type="date" id="patientDob" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Gender</label>
+                                <select id="patientGender" required>
+                                    <option value="">Select gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Email (Optional)</label>
+                                <input type="email" id="patientEmail" placeholder="Enter email address">
+                            </div>
+                            <button type="submit" class="btn-submit">Register Patient</button>
+                        </form>
+                        <div class="credentials-box" id="credentialsBox">
+                            <h3>Patient Registered Successfully!</h3>
+                            <p style="color:#666;margin-bottom:15px">Provide these credentials to the patient:</p>
+                            <div class="credential-item">
+                                <div class="credential-label">Phone Number (Login ID)</div>
+                                <div class="credential-value" id="generatedPhone"></div>
+                            </div>
+                            <div class="credential-item">
+                                <div class="credential-label">Default Password</div>
+                                <div class="credential-value">patient123</div>
+                            </div>
+                            <button class="btn-copy" onclick="copyCredentials()">Copy Credentials</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../js/auth.js"></script>
+    <script>
+        function registerWalkIn(e){
+            e.preventDefault();
+            const phone=document.getElementById('patientPhone').value;
+            document.getElementById('generatedPhone').textContent=phone;
+            document.getElementById('credentialsBox').classList.add('show');
+            document.querySelector('.btn-submit').style.display='none';
+        }
+        function copyCredentials(){
+            const phone=document.getElementById('generatedPhone').textContent;
+            alert('Credentials copied!\nPhone: '+phone+'\nPassword: patient123');
+        }
+    </script>
+</body>
+</html>

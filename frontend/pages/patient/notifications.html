@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - Medical Lab System</title>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <style>
+        .notification-page { max-width: 800px; margin: 0 auto; }
+        .notification-filter { display: flex; gap: 15px; margin-bottom: 20px; }
+        .filter-btn { padding: 8px 16px; border: 1px solid #ddd; background: #fff; border-radius: 20px; cursor: pointer; }
+        .filter-btn.active { background: #2c7be5; color: #fff; border-color: #2c7be5; }
+        .notification-list { background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .notification-card { padding: 20px; border-bottom: 1px solid #eee; cursor: pointer; transition: background 0.2s; }
+        .notification-card:hover { background: #f8f9fa; }
+        .notification-card:last-child { border-bottom: none; }
+        .notification-card.unread { background: #e8f0fe; }
+        .notification-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .notification-icon { width: 40px; height: 40px; background: #e8f0fe; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .notification-title { font-weight: 600; font-size: 16px; }
+        .notification-time { color: #999; font-size: 12px; }
+        .notification-body { color: #666; font-size: 14px; line-height: 1.5; }
+        .mark-all-read { float: right; color: #2c7be5; cursor: pointer; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <div class="page-header">
+            <h1>Notifications</h1>
+            <span class="mark-all-read" onclick="markAllAsRead()">Mark all as read</span>
+        </div>
+
+        <div class="notification-page">
+            <div class="notification-filter">
+                <button class="filter-btn active" onclick="filterNotifications('all')">All</button>
+                <button class="filter-btn" onclick="filterNotifications('appointment')">Appointments</button>
+                <button class="filter-btn" onclick="filterNotifications('results')">Results</button>
+                <button class="filter-btn" onclick="filterNotifications('system')">System</button>
+            </div>
+
+            <div class="notification-list" id="notificationList">
+                <div class="notification-card unread" onclick="viewNotification('1')">
+                    <div class="notification-header">
+                        <div class="notification-icon">📅</div>
+                        <div>
+                            <div class="notification-title">Appointment Confirmed</div>
+                            <div class="notification-time">Today, 10:30 AM</div>
+                        </div>
+                    </div>
+                    <div class="notification-body">Your appointment for Blood Test has been confirmed for tomorrow at 9:00 AM.</div>
+                </div>
+
+                <div class="notification-card" onclick="viewNotification('2')">
+                    <div class="notification-header">
+                        <div class="notification-icon">📄</div>
+                        <div>
+                            <div class="notification-title">Lab Results Available</div>
+                            <div class="notification-time">Yesterday, 3:45 PM</div>
+                        </div>
+                    </div>
+                    <div class="notification-body">Your CBC Test results are now available. Click to view or download.</div>
+                </div>
+
+                <div class="notification-card" onclick="viewNotification('3')">
+                    <div class="notification-header">
+                        <div class="notification-icon">ℹ️</div>
+                        <div>
+                            <div class="notification-title">Reminder</div>
+                            <div class="notification-time">2 days ago</div>
+                        </div>
+                    </div>
+                    <div class="notification-body">Don't forget your upcoming appointment scheduled for next week.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../../js/auth.js"></script>
+    <script>
+        const notifications = [
+            { id: 1, type: 'appointment', title: 'Appointment Confirmed', body: 'Your appointment for Blood Test has been confirmed for tomorrow at 9:00 AM.', time: 'Today, 10:30 AM', read: false },
+            { id: 2, type: 'results', title: 'Lab Results Available', body: 'Your CBC Test results are now available. Click to view or download.', time: 'Yesterday, 3:45 PM', read: true },
+            { id: 3, type: 'system', title: 'Reminder', body: "Don't forget your upcoming appointment scheduled for next week.", time: '2 days ago', read: true }
+        ];
+
+        function filterNotifications(type) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const filtered = type === 'all' ? notifications : notifications.filter(n => n.type === type);
+            renderNotifications(filtered);
+        }
+
+        function renderNotifications(list) {
+            const container = document.getElementById('notificationList');
+            container.innerHTML = list.map(n => `
+                <div class="notification-card ${n.read ? '' : 'unread'}" onclick="viewNotification('${n.id}')">
+                    <div class="notification-header">
+                        <div class="notification-icon">${n.type === 'appointment' ? '📅' : n.type === 'results' ? '📄' : 'ℹ️'}</div>
+                        <div>
+                            <div class="notification-title">${n.title}</div>
+                            <div class="notification-time">${n.time}</div>
+                        </div>
+                    </div>
+                    <div class="notification-body">${n.body}</div>
+                </div>
+            `).join('');
+        }
+
+        function viewNotification(id) {
+            window.location.href = `notification-details.html?id=${id}`;
+        }
+
+        function markAllAsRead() {
+            document.querySelectorAll('.notification-card').forEach(card => card.classList.remove('unread'));
+        }
+    </script>
+</body>
+</html>

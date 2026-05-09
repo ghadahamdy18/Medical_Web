@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Results - Medical Lab</title>
+    <link rel="stylesheet" href="../../css/dashboard.css">
+    <style>body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#28a745;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.back-link{display:inline-block;margin-bottom:20px;color:#2c7be5;text-decoration:none}.page-header{margin-bottom:25px}.page-header h1{font-size:24px;color:#333}.upload-card{background:#fff;padding:30px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);max-width:700px}.form-group{margin-bottom:20px}.form-group label{display:block;margin-bottom:8px;font-weight:600}.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:4px;font-size:14px}.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#2c7be5}.file-upload{border:2px dashed #ddd;padding:40px;text-align:center;border-radius:8px;cursor:pointer;transition:all .2s}.file-upload:hover{border-color:#2c7be5;background:#f8f9fa}.file-upload-icon{font-size:48px;color:#2c7be5;margin-bottom:15px}.file-upload-text{color:#666}.file-name{margin-top:10px;font-weight:600;color:#28a745}.btn-upload{background:#2c7be5;color:#fff;border:none;padding:14px 28px;border-radius:4px;font-size:16px;cursor:pointer;width:100%}.btn-upload:hover{background:#1a68d4}.patient-select{padding:10px;border:1px solid #ddd;border-radius:4px;width:100%}</style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="dashboard-body">
+            <aside class="sidebar">
+                <div class="sidebar-logo"><h2>Medical Lab</h2></div>
+                <ul class="sidebar-menu">
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="patient-list.html">Patient List</a></li>
+                    <li><a href="upload-results.html" class="active">Upload Results</a></li>
+                    <li><a href="patient-notes.html">Patient Notes</a></li>
+                    <li><a href="settings.html">Settings</a></li>
+                </ul>
+            </aside>
+            <div class="main-area">
+                <div class="top-bar">
+                    <div class="user-info">
+                        <div class="user-avatar">SS</div>
+                        <div class="user-details">
+                            <span class="user-name">Dr. Sarah Smith</span>
+                            <span class="user-role">Doctor • General Medicine</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-area">
+                    <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+                    <div class="page-header">
+                        <h1>Upload Lab Results</h1>
+                        <p>Upload PDF test results for patients</p>
+                    </div>
+                    <div class="upload-card">
+                        <form onsubmit="uploadResult(event)">
+                            <div class="form-group">
+                                <label>Select Patient</label>
+                                <select class="patient-select" required>
+                                    <option value="">Choose patient...</option>
+                                    <option value="1">John Patient</option>
+                                    <option value="2">Jane Patient</option>
+                                    <option value="3">Mike Johnson</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Select Appointment</label>
+                                <select class="patient-select" required>
+                                    <option value="">Choose appointment...</option>
+                                    <option value="1">Blood Test - Apr 7, 2026</option>
+                                    <option value="2">Lipid Panel - Mar 25, 2026</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Test Type</label>
+                                <select class="patient-select" required>
+                                    <option value="">Select test type...</option>
+                                    <option value="blood">Blood Test</option>
+                                    <option value="lipid">Lipid Panel</option>
+                                    <option value="thyroid">Thyroid Function</option>
+                                    <option value="diabetes">Diabetes Screening</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Upload PDF File</label>
+                                <div class="file-upload" onclick="document.getElementById('fileInput').click()">
+                                    <div class="file-upload-icon">📄</div>
+                                    <div class="file-upload-text">Click to upload PDF file</div>
+                                    <div class="file-upload-text" style="font-size:12px">or drag and drop</div>
+                                    <input type="file" id="fileInput" style="display:none" accept=".pdf" onchange="showFileName()">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Notes (Optional)</label>
+                                <textarea rows="3" placeholder="Add any additional notes about the results..."></textarea>
+                            </div>
+                            <button type="submit" class="btn-upload">Upload Results</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../js/auth.js"></script>
+    <script>
+        function showFileName(){const f=document.getElementById('fileInput').files[0];if(f){alert('Selected file: '+f.name)}}
+        function uploadResult(e){e.preventDefault();alert('Lab results uploaded successfully!');window.location.href='dashboard.html'}
+    </script>
+</body>
+</html>

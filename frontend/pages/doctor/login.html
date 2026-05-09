@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Login - Medical Lab System</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <style>
+        .login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #2c7be5 0%, #1a68d4 100%); padding: 20px; }
+        .login-card { background: #fff; padding: 40px; border-radius: 12px; width: 400px; max-width: 100%; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+        .login-header { text-align: center; margin-bottom: 30px; }
+        .login-header h1 { color: #2c7be5; margin-bottom: 10px; }
+        .login-header p { color: #666; }
+        .role-tabs { display: flex; margin-bottom: 25px; border-bottom: 2px solid #eee; }
+        .role-tab { flex: 1; padding: 12px; text-align: center; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; }
+        .role-tab.active { border-bottom-color: #2c7be5; color: #2c7be5; font-weight: 600; }
+        .request-link { text-align: center; margin-top: 20px; color: #666; }
+        .request-link a { color: #2c7be5; text-decoration: none; }
+        .status-message { padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-rejected { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <div class="login-page">
+        <div class="login-card">
+            <div class="login-header">
+                <h1>Doctor Portal</h1>
+                <p>Login to access doctor dashboard</p>
+            </div>
+            
+            <div id="loginForm">
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" placeholder="Enter your phone number">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password">
+                </div>
+                <button type="button" class="btn-primary" onclick="doctorLogin()">Login</button>
+                
+                <p style="text-align: center; margin-top: 15px;">
+                    <a href="request-access.html" style="color: #666; text-decoration: none;">Request Access</a>
+                    <span style="margin: 0 10px;">|</span>
+                    <a href="forgot-password.html" style="color: #666; text-decoration: none;">Forgot Password?</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../js/auth.js"></script>
+    <script>
+        function doctorLogin() {
+            const phone = document.getElementById('phone').value;
+            const password = document.getElementById('password').value;
+            
+            if (!phone || !password) {
+                alert('Please enter phone and password');
+                return;
+            }
+            
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const user = users.find(u => u.phone === phone && u.password === password && u.role === 'doctor');
+            
+            if (user) {
+                if (user.status === 'pending') {
+                    alert('Your account is pending approval. Please wait for admin approval.');
+                    window.location.href = 'request-status.html?email=' + encodeURIComponent(user.email);
+                    return;
+                }
+                if (user.status === 'rejected') {
+                    alert('Your account has been rejected. Please contact support.');
+                    return;
+                }
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                window.location.href = 'dashboard.html';
+            } else {
+                alert('Invalid credentials or account not found');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Status - Doctor Portal</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <style>
+        .status-page { max-width: 500px; margin: 60px auto; padding: 20px; text-align: center; }
+        .status-card { background: #fff; border-radius: 12px; padding: 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .status-icon { width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 40px; }
+        .status-pending { background: #fff3cd; }
+        .status-approved { background: #d4edda; }
+        .status-rejected { background: #f8d7da; }
+        .status-title { font-size: 24px; font-weight: 600; margin-bottom: 10px; }
+        .status-message { color: #666; margin-bottom: 25px; line-height: 1.6; }
+        .status-details { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 25px; text-align: left; }
+        .status-details p { margin-bottom: 10px; font-size: 14px; }
+        .status-details strong { color: #333; }
+    </style>
+</head>
+<body>
+    <div class="status-page">
+        <div class="status-card">
+            <div class="status-icon status-pending" id="statusIcon">⏳</div>
+            <h1 class="status-title" id="statusTitle">Request Pending</h1>
+            <p class="status-message" id="statusMessage">Your request is currently being reviewed by our administrators. You will receive an email notification once the review is complete.</p>
+            
+            <div class="status-details">
+                <p><strong>Submitted On:</strong> <span id="submitDate">March 15, 2024</span></p>
+                <p><strong>Doctor Name:</strong> <span id="doctorName">Dr. John Smith</span></p>
+                <p><strong>Email:</strong> <span id="doctorEmail">john.smith@email.com</span></p>
+                <p><strong>Reference ID:</strong> <span id="refId">REQ-2024-00123</span></p>
+            </div>
+            
+            <p style="color: #999; font-size: 14px; margin-bottom: 20px;">Average review time: 24-48 hours</p>
+            
+            <div class="form-actions" style="justify-content: center;">
+                <a href="login.html" class="btn-primary">Go to Login</a>
+                <a href="request-access.html" class="btn-secondary">New Request</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const email = new URLSearchParams(window.location.search).get('email');
+        
+        if (email) {
+            const requestData = localStorage.getItem('doctorRequest_' + email);
+            if (requestData) {
+                const data = JSON.parse(requestData);
+                document.getElementById('doctorName').textContent = 'Dr. ' + data.firstName + ' ' + data.lastName;
+                document.getElementById('doctorEmail').textContent = data.email;
+                document.getElementById('submitDate').textContent = new Date(data.submittedAt).toLocaleDateString();
+                
+                if (data.status === 'approved') {
+                    document.getElementById('statusIcon').className = 'status-icon status-approved';
+                    document.getElementById('statusIcon').textContent = '✓';
+                    document.getElementById('statusTitle').textContent = 'Request Approved!';
+                    document.getElementById('statusMessage').textContent = 'Congratulations! Your request has been approved. You can now login to the Doctor Portal with your credentials.';
+                } else if (data.status === 'rejected') {
+                    document.getElementById('statusIcon').className = 'status-icon status-rejected';
+                    document.getElementById('statusIcon').textContent = '✕';
+                    document.getElementById('statusTitle').textContent = 'Request Rejected';
+                    document.getElementById('statusMessage').textContent = 'Unfortunately, your request has been rejected. Please contact support for more information.';
+                }
+            }
+        }
+    </script>
+</body>
+</html>

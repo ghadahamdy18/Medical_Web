@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - Admin Portal</title>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <style>
+        .notification-page { max-width: 900px; margin: 0 auto; }
+        .notification-filter { display: flex; gap: 15px; margin-bottom: 20px; }
+        .filter-btn { padding: 8px 16px; border: 1px solid #ddd; background: #fff; border-radius: 20px; cursor: pointer; }
+        .filter-btn.active { background: #2c7be5; color: #fff; border-color: #2c7be5; }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <div class="page-header">
+            <h1>Notifications</h1>
+        </div>
+
+        <div class="notification-page">
+            <div class="notification-filter">
+                <button class="filter-btn active">All</button>
+                <button class="filter-btn">Doctor Approvals</button>
+                <button class="filter-btn">Reservations</button>
+                <button class="filter-btn">System</button>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Title</th>
+                            <th>Message</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>👨‍⚕️</td>
+                            <td>New Doctor Request</td>
+                            <td>Dr. Emily Chen has submitted a request for access</td>
+                            <td>Today, 10:00 AM</td>
+                            <td><span class="status-badge status-pending">Pending</span></td>
+                            <td><a href="approvals.html" class="btn btn-sm btn-primary">Review</a></td>
+                        </tr>
+                        <tr>
+                            <td>📅</td>
+                            <td>Reservation Request</td>
+                            <td>New appointment reservation from Patient #1234</td>
+                            <td>Today, 9:30 AM</td>
+                            <td><span class="status-badge status-pending">Pending</span></td>
+                            <td><a href="appointments.html" class="btn btn-sm btn-primary">Review</a></td>
+                        </tr>
+                        <tr>
+                            <td>⚙️</td>
+                            <td>System Update</td>
+                            <td>New version 2.5.0 is available for deployment</td>
+                            <td>Yesterday</td>
+                            <td><span class="status-badge status-completed">Read</span></td>
+                            <td><a href="system-settings.html" class="btn btn-sm btn-secondary">View</a></td>
+                        </tr>
+                        <tr>
+                            <td>👨‍⚕️</td>
+                            <td>Doctor Approved</td>
+                            <td>Dr. James Wilson has been approved and activated</td>
+                            <td>2 days ago</td>
+                            <td><span class="status-badge status-completed">Read</span></td>
+                            <td><a href="user-management.html" class="btn btn-sm btn-secondary">View</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../../js/auth.js"></script>
+</body>
+</html>
