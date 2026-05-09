@@ -5,96 +5,423 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Appointments - Medical Lab</title>
     <link rel="stylesheet" href="../../css/dashboard.css">
-    <style>body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#6f42c1;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.back-link{display:inline-block;margin-bottom:20px;color:#2c7be5;text-decoration:none}.page-header{margin-bottom:25px}.page-header h1{font-size:24px;color:#333}.filter-bar{background:#fff;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);margin-bottom:20px;display:flex;gap:15px;align-items:center}.filter-bar select,.filter-bar input{padding:10px;border:1px solid #ddd;border-radius:4px}.table-container{background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);overflow:hidden}.table-container table{width:100%;border-collapse:collapse}.table-container th,.table-container td{padding:15px 20px;text-align:left;border-bottom:1px solid #eee}.table-container th{background:#f8f9fa;font-weight:600}.table-container tr:hover{background:#f8f9fa}.status-badge{padding:5px 12px;border-radius:20px;font-size:12px}.status-pending{background:#fff3cd;color:#856404}.status-confirmed{background:#d4edda;color:#155724}.status-completed{background:#cce5ff;color:#004085}.status-cancelled{background:#f8d7da;color:#721c24}</style>
+    <style>
+        body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#6f42c1;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}.page-header h1{font-size:24px;color:#333}.page-header p{color:#666;max-width:720px}.btn-create{background:#2c7be5;color:#fff;border:none;padding:10px 20px;border-radius:4px;cursor:pointer;font-size:14px}.btn-create:hover{background:#1a5fbf}.filters{display:flex;gap:15px;margin-bottom:20px;flex-wrap:wrap}.filter-group{display:flex;flex-direction:column;gap:5px}.filter-group label{font-size:14px;font-weight:600}.filter-group select,.filter-group input{padding:8px;border:1px solid #ddd;border-radius:4px;font-size:14px}.table-container{background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);overflow:hidden}.table-container table{width:100%;border-collapse:collapse}.table-container th,.table-container td{padding:15px 20px;text-align:left;border-bottom:1px solid #eee}.table-container th{background:#f8f9fa;font-weight:600}.table-container tr:hover{background:#f8f9fa}.action-buttons{display:flex;gap:8px}.btn-sm{padding:6px 12px;font-size:12px;border:none;border-radius:4px;cursor:pointer}.btn-view{background:#17a2b8;color:#fff}.btn-view:hover{background:#138496}.btn-edit{background:#ffc107;color:#212529}.btn-edit:hover{background:#e0a800}.btn-confirm{background:#28a745;color:#fff}.btn-confirm:hover{background:#218838}.btn-complete{background:#007bff;color:#fff}.btn-complete:hover{background:#0056b3}.btn-cancel{background:#dc3545;color:#fff}.btn-cancel:hover{background:#c82333}.status-badge{padding:5px 12px;border-radius:20px;font-size:12px}.status-pending{background:#fff3cd;color:#856404}.status-confirmed{background:#d4edda;color:#155724}.status-completed{background:#cce5ff;color:#004085}.status-cancelled{background:#f8d7da;color:#721c24}.empty-state{text-align:center;padding:60px 20px;color:#666}.loading{text-align:center;padding:40px;color:#666}.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:1000}.modal-content{background:#fff;margin:15% auto;padding:30px;border-radius:8px;max-width:500px}.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.modal-title{font-size:20px;font-weight:600}.modal-close{background:none;border:none;font-size:24px;cursor:pointer}.form-group{margin-bottom:15px}.form-group label{display:block;margin-bottom:5px;font-weight:600}.form-group input,.form-group select{width:100%;padding:10px;border:1px solid #ddd;border-radius:4px;font-size:14px}.form-group input:focus,.form-group select:focus{outline:none;border-color:#2c7be5}.modal-buttons{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}.btn{padding:10px 20px;border:none;border-radius:4px;cursor:pointer}.btn-primary{background:#2c7be5;color:#fff}.btn-secondary{background:#6c757d;color:#fff}
+    </style>
 </head>
 <body>
     <div class="dashboard">
         <div class="dashboard-body">
             <aside class="sidebar">
-                <div class="sidebar-logo"><h2>Medical Lab</h2></div>
+                <div class="sidebar-logo">
+                    <h2>Medical Lab</h2>
+                </div>
                 <ul class="sidebar-menu">
                     <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="users.html">Users</a></li>
+                    <li><a href="create-user.html">Create User</a></li>
+                    <li><a href="patient-profiles.html">Patient Profiles</a></li>
                     <li><a href="appointments.html" class="active">Appointments</a></li>
-                    <li><a href="user-management.html">User Management</a></li>
+                    <li><a href="create-appointment.html">Create Appointment</a></li>
+                    <li><a href="results.html">Results</a></li>
+                    <li><a href="settings.html">Settings</a></li>
                 </ul>
             </aside>
             <div class="main-area">
                 <div class="top-bar">
                     <div class="user-info">
-                        <div class="user-avatar">A</div>
+                        <div class="user-avatar" id="userInitials">A</div>
                         <div class="user-details">
-                            <span class="user-name">Admin User</span>
+                            <span class="user-name" id="userName">Admin User</span>
                             <span class="user-role">System Administrator</span>
                         </div>
                     </div>
+                    <div class="top-bar-right">
+                        <button class="logout-btn" onclick="logoutUser()">Logout</button>
+                    </div>
                 </div>
                 <div class="content-area">
-                    <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
                     <div class="page-header">
-                        <h1>All Appointments</h1>
+                        <div>
+                            <h1>Appointments</h1>
+                            <p>Manage and monitor all system appointments</p>
+                        </div>
+                        <button class="btn-create" onclick="navigateToCreateAppointment()">Create Appointment</button>
                     </div>
-                    <div class="filter-bar">
-                        <input type="date">
-                        <select><option>All Types</option><option>In-Lab</option><option>Home Visit</option></select>
-                        <select><option>All Status</option><option>Pending</option><option>Confirmed</option><option>Completed</option></select>
+                    
+                    <div class="filters">
+                        <div class="filter-group">
+                            <label>Status</label>
+                            <select id="statusFilter" onchange="loadAppointments()">
+                                <option value="">All Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="confirmed">Confirmed</option>
+                                <option value="completed">Completed</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Type</label>
+                            <select id="typeFilter" onchange="loadAppointments()">
+                                <option value="">All Types</option>
+                                <option value="in_lab">In-Lab Visit</option>
+                                <option value="home_visit">Home Visit</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Date</label>
+                            <input type="date" id="dateFilter" onchange="loadAppointments()">
+                        </div>
+                        <div class="filter-group">
+                            <label>Page</label>
+                            <select id="pageFilter" onchange="loadAppointments()">
+                                <option value="1">Page 1</option>
+                                <option value="2">Page 2</option>
+                                <option value="3">Page 3</option>
+                            </select>
+                        </div>
                     </div>
+
                     <div class="table-container">
-                        <table>
+                        <div id="appointmentsLoading" class="loading">Loading appointments...</div>
+                        <table id="appointmentsTable" style="display: none;">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Date</th>
                                     <th>Time</th>
-                                    <th>Patient</th>
-                                    <th>Type</th>
+                                    <th>Patient Profile</th>
                                     <th>Doctor</th>
+                                    <th>Type</th>
                                     <th>Status</th>
+                                    <th>Created By</th>
+                                    <th>Accepted By</th>
+                                    <th>Notes</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>#001</td>
-                                    <td>Apr 7, 2026</td>
-                                    <td>9:00 AM</td>
-                                    <td>John Patient</td>
-                                    <td>In-Lab</td>
-                                    <td>Dr. Sarah Smith</td>
-                                    <td><span class="status-badge status-confirmed">Confirmed</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#002</td>
-                                    <td>Apr 7, 2026</td>
-                                    <td>11:00 AM</td>
-                                    <td>Jane Patient</td>
-                                    <td>In-Lab</td>
-                                    <td>Dr. Sarah Smith</td>
-                                    <td><span class="status-badge status-confirmed">Confirmed</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#003</td>
-                                    <td>Apr 10, 2026</td>
-                                    <td>2:00 PM</td>
-                                    <td>John Patient</td>
-                                    <td>Home Visit</td>
-                                    <td>Dr. Sarah Smith</td>
-                                    <td><span class="status-badge status-pending">Pending</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#004</td>
-                                    <td>Apr 5, 2026</td>
-                                    <td>10:00 AM</td>
-                                    <td>Mike Johnson</td>
-                                    <td>In-Lab</td>
-                                    <td>Dr. Sarah Smith</td>
-                                    <td><span class="status-badge status-completed">Completed</span></td>
-                                </tr>
+                            <tbody id="appointmentsBody">
                             </tbody>
                         </table>
+                        <div id="appointmentsEmpty" class="empty-state" style="display: none;">
+                            <h3>No appointments found</h3>
+                            <p>Try adjusting your filters or create a new appointment.</p>
+                            <button class="btn-create" onclick="navigateToCreateAppointment()">Create New Appointment</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script src="../../js/auth.js"></script>
+
+    <!-- Edit Appointment Modal -->
+    <div id="editAppointmentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Appointment</h3>
+                <button class="modal-close" onclick="closeEditModal()">&times;</button>
+            </div>
+            <form onsubmit="handleEditAppointment(event)">
+                <input type="hidden" id="editAppointmentId">
+                <div class="form-group">
+                    <label for="editDate">Appointment Date *</label>
+                    <input type="date" id="editDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="editTime">Appointment Time *</label>
+                    <input type="time" id="editTime" required>
+                </div>
+                <div class="form-group">
+                    <label for="editNotes">Notes</label>
+                    <input type="text" id="editNotes" placeholder="Add notes (optional)">
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Appointment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/ui.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/guards.js"></script>
+    <script src="../../assets/js/admin.js"></script>
+    <script>
+        // Require admin role
+        requireRole('admin');
+
+        let appointments = [];
+        let pagination = null;
+        let currentEditId = null;
+
+        // Initialize page
+        async function initializePage() {
+            try {
+                const user = getCurrentUser();
+                if (!user) {
+                    window.location.href = '../../index.html';
+                    return;
+                }
+
+                // Update user info in top bar
+                document.getElementById('userName').textContent = user.fullName || user.name || 'Admin';
+                const name = user.fullName || user.name || 'Admin';
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('userInitials').textContent = initials;
+
+                // Load appointments
+                await loadAppointments();
+
+            } catch (error) {
+                console.error('Failed to initialize page:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load page', 'error');
+                }
+            }
+        }
+
+        // Load appointments
+        async function loadAppointments() {
+            try {
+                document.getElementById('appointmentsLoading').style.display = 'block';
+                document.getElementById('appointmentsTable').style.display = 'none';
+                document.getElementById('appointmentsEmpty').style.display = 'none';
+
+                // Build filters
+                const filters = {};
+                const status = document.getElementById('statusFilter').value;
+                const type = document.getElementById('typeFilter').value;
+                const date = document.getElementById('dateFilter').value;
+                const page = document.getElementById('pageFilter').value;
+
+                if (status) filters.appointmentStatus = status;
+                if (type) filters.appointmentType = type;
+                if (date) filters.date = date;
+                if (page) filters.page = page;
+                filters.limit = 10;
+
+                // Get appointments from backend
+                const response = await getAdminAppointments(filters);
+                
+                if (response.data !== undefined) {
+                    appointments = response.data || [];
+                    pagination = response.pagination || null;
+                    renderAppointments(appointments);
+                } else {
+                    throw new Error('Invalid response format');
+                }
+
+            } catch (error) {
+                console.error('Failed to load appointments:', error);
+                document.getElementById('appointmentsLoading').style.display = 'none';
+                document.getElementById('appointmentsEmpty').style.display = 'block';
+                handleAdminError(error, 'Failed to load appointments');
+            }
+        }
+
+        // Render appointments
+        function renderAppointments(appointmentList) {
+            document.getElementById('appointmentsLoading').style.display = 'none';
+            
+            if (!appointmentList || appointmentList.length === 0) {
+                document.getElementById('appointmentsEmpty').style.display = 'block';
+                document.getElementById('appointmentsTable').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('appointmentsTable').style.display = 'table';
+            document.getElementById('appointmentsEmpty').style.display = 'none';
+
+            const tbody = document.getElementById('appointmentsBody');
+            tbody.innerHTML = appointmentList.map(appointment => {
+                const canConfirm = canAdminConfirm(appointment);
+                const canComplete = canAdminComplete(appointment);
+                const canCancel = canAdminCancel(appointment);
+                const canEdit = canAdminEditAppointment(appointment);
+                
+                return `
+                    <tr>
+                        <td>${formatDate(appointment.appointmentDate)}</td>
+                        <td>${formatTime(appointment.appointmentTime)}</td>
+                        <td>${appointment.profileName || 'Unknown'}</td>
+                        <td>${appointment.doctorName || 'Unknown'}</td>
+                        <td>${formatAppointmentType(appointment.appointmentType)}</td>
+                        <td><span class="status-badge status-${appointment.appointmentStatus}">${formatAppointmentStatus(appointment.appointmentStatus)}</span></td>
+                        <td>${appointment.createdByName || '-'}</td>
+                        <td>${appointment.acceptedByName || '-'}</td>
+                        <td>${appointment.notes || '-'}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-sm btn-view" onclick="viewAppointmentDetails('${appointment._id}')">View</button>
+                                ${canEdit ? `<button class="btn-sm btn-edit" onclick="openEditModal('${appointment._id}')">Edit</button>` : ''}
+                                ${canConfirm ? `<button class="btn-sm btn-confirm" onclick="confirmAppointment('${appointment._id}')">Confirm</button>` : ''}
+                                ${canComplete ? `<button class="btn-sm btn-complete" onclick="completeAppointment('${appointment._id}')">Complete</button>` : ''}
+                                ${canCancel ? `<button class="btn-sm btn-cancel" onclick="cancelAppointment('${appointment._id}')">Cancel</button>` : ''}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // View appointment details
+        function viewAppointmentDetails(appointmentId) {
+            navigateToAppointmentDetails(appointmentId);
+        }
+
+        // Open edit modal
+        function openEditModal(appointmentId) {
+            currentEditId = appointmentId;
+            
+            // Find appointment and populate current values
+            const appointment = appointments.find(a => a._id === appointmentId);
+            if (appointment) {
+                document.getElementById('editAppointmentId').value = appointmentId;
+                document.getElementById('editDate').value = appointment.appointmentDate || '';
+                document.getElementById('editTime').value = appointment.appointmentTime || '';
+                document.getElementById('editNotes').value = appointment.notes || '';
+            }
+            
+            document.getElementById('editAppointmentModal').style.display = 'block';
+        }
+
+        // Close edit modal
+        function closeEditModal() {
+            document.getElementById('editAppointmentModal').style.display = 'none';
+            currentEditId = null;
+        }
+
+        // Handle edit appointment
+        async function handleEditAppointment(event) {
+            event.preventDefault();
+            
+            if (!currentEditId) {
+                handleAdminError('No appointment selected for editing');
+                return;
+            }
+
+            const appointmentDate = document.getElementById('editDate').value;
+            const appointmentTime = document.getElementById('editTime').value;
+            const notes = document.getElementById('editNotes').value.trim();
+
+            try {
+                const payload = {
+                    appointmentDate,
+                    appointmentTime,
+                    notes
+                };
+
+                const response = await updateAdminAppointment(currentEditId, payload);
+                
+                if (response.appointment) {
+                    handleAdminSuccess('Appointment updated successfully!');
+                    closeEditModal();
+                    await loadAppointments(); // Refresh the list
+                } else {
+                    throw new Error('Invalid response format');
+                }
+
+            } catch (error) {
+                console.error('Failed to update appointment:', error);
+                handleAdminError(error, 'Failed to update appointment');
+            }
+        }
+
+        // Confirm appointment
+        async function confirmAppointment(appointmentId) {
+            if (!confirm('Are you sure you want to confirm this appointment?')) {
+                return;
+            }
+
+            try {
+                const response = await confirmAdminAppointment(appointmentId);
+                
+                if (response.appointment) {
+                    handleAdminSuccess('Appointment confirmed successfully!');
+                    await loadAppointments(); // Refresh the list
+                } else {
+                    throw new Error('Invalid response format');
+                }
+
+            } catch (error) {
+                console.error('Failed to confirm appointment:', error);
+                handleAdminError(error, 'Failed to confirm appointment');
+            }
+        }
+
+        // Complete appointment
+        async function completeAppointment(appointmentId) {
+            if (!confirm('Are you sure you want to mark this appointment as completed?')) {
+                return;
+            }
+
+            try {
+                const response = await completeAdminAppointment(appointmentId);
+                
+                if (response.appointment) {
+                    handleAdminSuccess('Appointment completed successfully!');
+                    await loadAppointments(); // Refresh the list
+                } else {
+                    throw new Error('Invalid response format');
+                }
+
+            } catch (error) {
+                console.error('Failed to complete appointment:', error);
+                handleAdminError(error, 'Failed to complete appointment');
+            }
+        }
+
+        // Cancel appointment
+        async function cancelAppointment(appointmentId) {
+            if (!confirm('Are you sure you want to cancel this appointment?')) {
+                return;
+            }
+
+            try {
+                const response = await cancelAdminAppointment(appointmentId);
+                
+                if (response.appointment) {
+                    handleAdminSuccess('Appointment cancelled successfully!');
+                    await loadAppointments(); // Refresh the list
+                } else {
+                    throw new Error('Invalid response format');
+                }
+
+            } catch (error) {
+                console.error('Failed to cancel appointment:', error);
+                handleAdminError(error, 'Failed to cancel appointment');
+            }
+        }
+
+        // Update pagination controls if needed
+        function updatePaginationControls() {
+            if (!pagination) return;
+
+            const pageFilter = document.getElementById('pageFilter');
+            pageFilter.innerHTML = '';
+            
+            for (let i = 1; i <= pagination.totalPages; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `Page ${i}`;
+                if (i === pagination.page) {
+                    option.selected = true;
+                }
+                pageFilter.appendChild(option);
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('editAppointmentModal');
+            if (event.target === modal) {
+                closeEditModal();
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
 </body>
 </html>
