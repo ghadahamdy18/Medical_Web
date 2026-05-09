@@ -209,13 +209,7 @@
                     <p>Sample collection from the comfort of your home for eligible tests.</p>
                 </div>
             </div>
-            <div class="feature-item">
-                <div class="feature-icon">📱</div>
-                <div>
-                    <h4>Real-time Updates</h4>
-                    <p>Get instant notifications about appointment status and new results.</p>
-                </div>
-            </div>
+        
             <div class="feature-item">
                 <div class="feature-icon">🩺</div>
                 <div>
@@ -254,45 +248,19 @@
                     <input type="password" id="password" placeholder="Enter your password">
                 </div>
                 <button type="button" class="btn-primary" onclick="login()">Login</button>
-                <p style="text-align: center; margin-top: 15px;">
-                    <a href="#" onclick="showForgotPassword()" style="color: #2c7be5; text-decoration: none;">Forgot Password?</a>
-                </p>
+                
                 
             </div>
         </div>
     </div>
 
-    <div class="modal" id="forgotPasswordModal">
-        <div class="modal-content">
-            <span class="modal-close" onclick="closeForgotPassword()">&times;</span>
-            <div class="login-header">
-                <h1>Reset Password</h1>
-                <p>Enter your phone number to reset your password</p>
-            </div>
-            <div class="login-form">
-                <div class="form-group">
-                    <label for="resetPhone">Phone Number</label>
-                    <input type="tel" id="resetPhone" placeholder="Enter your phone number">
-                </div>
-                <button type="button" class="btn-primary" onclick="resetPassword()">Send Reset Code</button>
-            </div>
-        </div>
-    </div>
+   
 
     <script src="js/auth.js"></script>
     <script>
         function showLogin() { document.getElementById('loginModal').classList.add('active'); }
         function closeLogin() { document.getElementById('loginModal').classList.remove('active'); }
-        function showForgotPassword() { closeLogin(); document.getElementById('forgotPasswordModal').classList.add('active'); }
-        function closeForgotPassword() { document.getElementById('forgotPasswordModal').classList.remove('active'); }
-        function resetPassword() {
-            const phone = document.getElementById('resetPhone').value;
-            if (!phone) {
-                alert('Please enter your phone number');
-                return;
-            }
-            window.location.href = 'pages/auth/reset-password.html?phone=' + encodeURIComponent(phone);
-        }
+    
     </script>
 </body>
 </html>
