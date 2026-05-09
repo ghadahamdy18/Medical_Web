@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patients - Medical Lab</title>
+    <link rel="stylesheet" href="../../css/dashboard.css">
+    <style>
+        body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#fd7e14;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.page-header{margin-bottom:25px}.page-header h1{font-size:24px;color:#333}.page-header p{color:#666;max-width:720px}.search-bar{display:flex;gap:10px;margin-bottom:20px;max-width:400px}.search-input{flex:1;padding:10px;border:1px solid #ddd;border-radius:4px;font-size:14px}.search-input:focus{outline:none;border-color:#2c7be5}.btn-search{background:#2c7be5;color:#fff;border:none;padding:10px 20px;border-radius:4px;cursor:pointer}.btn-search:hover{background:#1a5fbf}.filters{display:flex;gap:15px;margin-bottom:20px;flex-wrap:wrap}.filter-group{display:flex;flex-direction:column;gap:5px}.filter-group label{font-size:14px;font-weight:600}.filter-group select{padding:8px;border:1px solid #ddd;border-radius:4px;font-size:14px}.table-container{background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);overflow:hidden}.table-container table{width:100%;border-collapse:collapse}.table-container th,.table-container td{padding:15px 20px;text-align:left;border-bottom:1px solid #eee}.table-container th{background:#f8f9fa;font-weight:600}.table-container tr:hover{background:#f8f9fa}.action-buttons{display:flex;gap:8px}.btn-sm{padding:6px 12px;font-size:12px;border:none;border-radius:4px;cursor:pointer}.btn-view{background:#2c7be5;color:#fff}.btn-view:hover{background:#1a5fbf}.btn-add{background:#28a745;color:#fff}.btn-add:hover{background:#218838}.btn-create{background:#17a2b8;color:#fff}.btn-create:hover{background:#138496}.status-badge{padding:5px 12px;border-radius:20px;font-size:12px}.status-active{background:#d4edda;color:#155724}.status-inactive{background:#f8d7da;color:#721c24}.empty-state{text-align:center;padding:60px 20px;color:#666}.loading{text-align:center;padding:40px;color:#666}
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="dashboard-body">
+            <aside class="sidebar">
+                <div class="sidebar-logo">
+                    <h2>Medical Lab</h2>
+                </div>
+                <ul class="sidebar-menu">
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="patients.html" class="active">Patients</a></li>
+                    <li><a href="create-patient.html">Create Patient</a></li>
+                    <li><a href="appointments.html">Appointments</a></li>
+                    <li><a href="create-appointment.html">Create Appointment</a></li>
+                    <li><a href="settings.html">Settings</a></li>
+                </ul>
+            </aside>
+            <div class="main-area">
+                <div class="top-bar">
+                    <div class="user-info">
+                        <div class="user-avatar" id="userInitials">R</div>
+                        <div class="user-details">
+                            <span class="user-name" id="userName">Reception Desk</span>
+                            <span class="user-role">Receptionist</span>
+                        </div>
+                    </div>
+                    <div class="top-bar-right">
+                        <button class="logout-btn" onclick="logoutUser()">Logout</button>
+                    </div>
+                </div>
+                <div class="content-area">
+                    <div class="page-header">
+                        <h1>Patients</h1>
+                        <p>Search and manage patient records</p>
+                    </div>
+                    
+                    <div class="search-bar">
+                        <input type="text" id="searchInput" class="search-input" placeholder="Search by name or phone number...">
+                        <button class="btn-search" onclick="searchPatients()">Search</button>
+                    </div>
+                    
+                    <div class="filters">
+                        <div class="filter-group">
+                            <label>Page</label>
+                            <select id="pageFilter" onchange="loadPatients()">
+                                <option value="1">Page 1</option>
+                                <option value="2">Page 2</option>
+                                <option value="3">Page 3</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <div id="patientsLoading" class="loading">Loading patients...</div>
+                        <table id="patientsTable" style="display: none;">
+                            <thead>
+                                <tr>
+                                    <th>Full Name</th>
+                                    <th>Phone Number</th>
+                                    <th>Status</th>
+                                    <th>Primary Profile</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="patientsBody">
+                            </tbody>
+                        </table>
+                        <div id="patientsEmpty" class="empty-state" style="display: none;">
+                            <h3>No patients found</h3>
+                            <p>Try adjusting your search or create a new patient.</p>
+                            <button class="btn-create" onclick="navigateToCreatePatient()">Create New Patient</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/ui.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/guards.js"></script>
+    <script src="../../assets/js/receptionist.js"></script>
+    <script>
+        // Require receptionist role
+        requireRole('receptionist');
+
+        let patients = [];
+        let pagination = null;
+
+        // Initialize page
+        async function initializePage() {
+            try {
+                const user = getCurrentUser();
+                if (!user) {
+                    window.location.href = '../../index.html';
+                    return;
+                }
+
+                // Update user info in top bar
+                document.getElementById('userName').textContent = user.fullName || user.name || 'Receptionist';
+                const name = user.fullName || user.name || 'Receptionist';
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('userInitials').textContent = initials;
+
+                // Load patients
+                await loadPatients();
+
+            } catch (error) {
+                console.error('Failed to initialize page:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load page', 'error');
+                }
+            }
+        }
+
+        // Load patients
+        async function loadPatients() {
+            try {
+                document.getElementById('patientsLoading').style.display = 'block';
+                document.getElementById('patientsTable').style.display = 'none';
+                document.getElementById('patientsEmpty').style.display = 'none';
+
+                // Build filters
+                const filters = {};
+                const page = document.getElementById('pageFilter').value;
+                const searchTerm = document.getElementById('searchInput').value.trim();
+
+                if (page) filters.page = page;
+                if (searchTerm) filters.search = searchTerm;
+                filters.limit = 10;
+
+                // Get patients from backend
+                const response = await getReceptionistPatients(filters);
+                
+                if (response.data !== undefined) {
+                    patients = response.data || [];
+                    pagination = response.pagination || null;
+                    renderPatients(patients);
+                } else {
+                    throw new Error('Invalid response format');
+                }
+
+            } catch (error) {
+                console.error('Failed to load patients:', error);
+                document.getElementById('patientsLoading').style.display = 'none';
+                document.getElementById('patientsEmpty').style.display = 'block';
+                handleReceptionistError(error, 'Failed to load patients');
+            }
+        }
+
+        // Search patients
+        async function searchPatients() {
+            await loadPatients();
+        }
+
+        // Render patients
+        function renderPatients(patientList) {
+            document.getElementById('patientsLoading').style.display = 'none';
+            
+            if (!patientList || patientList.length === 0) {
+                document.getElementById('patientsEmpty').style.display = 'block';
+                document.getElementById('patientsTable').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('patientsTable').style.display = 'table';
+            document.getElementById('patientsEmpty').style.display = 'none';
+
+            const tbody = document.getElementById('patientsBody');
+            tbody.innerHTML = patientList.map(patient => {
+                const primaryProfile = patient.profiles ? patient.profiles.find(p => p.isPrimary) : null;
+                const primaryProfileName = primaryProfile ? primaryProfile.fullName : 'No primary profile';
+                
+                return `
+                    <tr>
+                        <td>${patient.fullName || 'Unknown'}</td>
+                        <td>${patient.phoneNumber || '-'}</td>
+                        <td><span class="status-badge status-${patient.status || 'active'}">${patient.status || 'Active'}</span></td>
+                        <td>${primaryProfileName}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-sm btn-view" onclick="viewPatientDetails('${patient._id}')">View Details</button>
+                                <button class="btn-sm btn-add" onclick="addFamilyProfile('${patient._id}')">Add Family Profile</button>
+                                <button class="btn-sm btn-create" onclick="createAppointmentForPatient('${patient._id}')">Create Appointment</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // View patient details
+        function viewPatientDetails(userId) {
+            navigateToPatientDetails(userId);
+        }
+
+        // Add family profile
+        function addFamilyProfile(userId) {
+            navigateToAddFamilyProfile(userId);
+        }
+
+        // Create appointment for patient
+        function createAppointmentForPatient(userId) {
+            // Navigate to create appointment page with preselected patient
+            window.location.href = `create-appointment.html?userId=${userId}`;
+        }
+
+        // Update pagination controls if needed
+        function updatePaginationControls() {
+            if (!pagination) return;
+
+            const pageFilter = document.getElementById('pageFilter');
+            pageFilter.innerHTML = '';
+            
+            for (let i = 1; i <= pagination.totalPages; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `Page ${i}`;
+                if (i === pagination.page) {
+                    option.selected = true;
+                }
+                pageFilter.appendChild(option);
+            }
+        }
+
+        // Handle search on Enter key
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchPatients();
+            }
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
+</body>
+</html>

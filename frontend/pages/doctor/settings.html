@@ -14,7 +14,6 @@
                 <div class="sidebar-logo"><h2>Medical Lab</h2></div>
                 <ul class="sidebar-menu">
                     <li><a href="dashboard.html">Dashboard</a></li>
-                    <li><a href="patient-list.html">Patient List</a></li>
                     <li><a href="appointments.html">Appointments</a></li>
                     <li><a href="upload-results.html">Upload Results</a></li>
                     <li><a href="settings.html" class="active">Settings</a></li>
@@ -23,11 +22,14 @@
             <div class="main-area">
                 <div class="top-bar">
                     <div class="user-info">
-                        <div class="user-avatar">SS</div>
+                        <div class="user-avatar" id="userInitials">SS</div>
                         <div class="user-details">
-                            <span class="user-name">Dr. Sarah Smith</span>
-                            <span class="user-role">Doctor • General Medicine</span>
+                            <span class="user-name" id="userName">Dr. Sarah Smith</span>
+                            <span class="user-role">Doctor</span>
                         </div>
+                    </div>
+                    <div class="top-bar-right">
+                        <button class="logout-btn" onclick="logoutUser()">Logout</button>
                     </div>
                 </div>
                 <div class="content-area">
@@ -80,6 +82,43 @@
             </div>
         </div>
     </div>
-    <script src="../../js/auth.js"></script>
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/ui.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/guards.js"></script>
+    <script src="../../assets/js/doctor.js"></script>
+    <script>
+        // Require doctor role
+        requireRole('doctor');
+
+        // Initialize page
+        async function initializePage() {
+            try {
+                const user = getCurrentUser();
+                if (!user) {
+                    window.location.href = '../../index.html';
+                    return;
+                }
+
+                // Update user info in top bar
+                document.getElementById('userName').textContent = user.fullName || user.name || 'Doctor';
+                const name = user.fullName || user.name || 'Doctor';
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('userInitials').textContent = initials;
+
+                // TODO: Load user profile data from backend
+                // For now, keeping existing static data
+
+            } catch (error) {
+                console.error('Failed to initialize page:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load page', 'error');
+                }
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
 </body>
 </html>

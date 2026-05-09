@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Results - Medical Lab</title>
+    <link rel="stylesheet" href="../../css/dashboard.css">
+    <style>
+        body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#28a745;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.back-link{display:inline-block;margin-bottom:20px;color:#2c7be5;text-decoration:none}.page-header{margin-bottom:25px}.page-header h1{font-size:24px;color:#333}.results-container{display:flex;flex-direction:column;gap:20px}.result-card{background:#fff;padding:25px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);border:2px solid transparent}.result-card.latest{border-color:#28a745}.result-card.old{border-color:#6c757d}.result-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.result-title{font-size:18px;font-weight:600;color:#333}.result-badge{padding:4px 8px;border-radius:12px;font-size:11px;font-weight:600}.badge-latest{background:#28a745;color:#fff}.badge-old{background:#6c757d;color:#fff}.result-details{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin-bottom:15px}.detail-item{display:flex;flex-direction:column;gap:3px}.detail-label{font-size:12px;color:#666;text-transform:uppercase;font-weight:600}.detail-value{font-size:14px;color:#333}.result-actions{display:flex;gap:10px}.btn-sm{padding:6px 12px;font-size:12px;border:none;border-radius:4px;cursor:pointer}.btn-primary{background:#2c7be5;color:#fff}.btn-primary:hover{background:#1a5fbf}.btn-warning{background:#ffc107;color:#212529}.btn-warning:hover{background:#e0a800}.btn-success{background:#28a745;color:#fff}.btn-success:hover{background:#218838}.loading{text-align:center;padding:40px;color:#666}.empty-state{text-align:center;padding:60px 20px;color:#666}.upload-section{background:#fff;padding:25px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);text-align:center}.upload-section h3{margin-bottom:15px;color:#333}
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="dashboard-body">
+            <aside class="sidebar">
+                <div class="sidebar-logo">
+                    <h2>Medical Lab</h2>
+                </div>
+                <ul class="sidebar-menu">
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="appointments.html">Appointments</a></li>
+                    <li><a href="upload-results.html">Upload Results</a></li>
+                    <li><a href="settings.html">Settings</a></li>
+                </ul>
+            </aside>
+            <div class="main-area">
+                <div class="top-bar">
+                    <div class="user-info">
+                        <div class="user-avatar" id="userInitials">SS</div>
+                        <div class="user-details">
+                            <span class="user-name" id="userName">Dr. Sarah Smith</span>
+                            <span class="user-role">Doctor</span>
+                        </div>
+                    </div>
+                    <div class="top-bar-right">
+                        <button class="logout-btn" onclick="logoutUser()">Logout</button>
+                    </div>
+                </div>
+                <div class="content-area">
+                    <a href="appointments.html" class="back-link">← Back to Appointments</a>
+                    <div class="page-header">
+                        <h1>Appointment Results</h1>
+                        <p id="appointmentInfo">View and manage lab results for this appointment</p>
+                    </div>
+                    
+                    <div id="resultsLoading" class="loading">Loading results...</div>
+                    
+                    <div id="resultsContent" style="display: none;">
+                        <div class="upload-section">
+                            <h3>Upload New Result</h3>
+                            <button class="btn btn-primary" onclick="uploadNewResult()">Upload/Replace Result</button>
+                        </div>
+                        
+                        <div class="results-container" id="resultsContainer">
+                            <!-- Results will be populated here -->
+                        </div>
+                    </div>
+                    
+                    <div id="resultsEmpty" class="empty-state" style="display: none;">
+                        <h3>No Results Found</h3>
+                        <p>No lab results have been uploaded for this appointment yet.</p>
+                        <button class="btn btn-primary" onclick="uploadNewResult()">Upload First Result</button>
+                    </div>
+                    
+                    <div id="resultsError" class="error" style="display: none;">
+                        <h3>Failed to load results</h3>
+                        <p>Please try again later or contact support if the problem persists.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/ui.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/guards.js"></script>
+    <script src="../../assets/js/doctor.js"></script>
+    <script>
+        // Require doctor role
+        requireRole('doctor');
+
+        let results = [];
+        let appointment = null;
+        const appointmentId = getAppointmentIdFromQuery();
+
+        // Initialize page
+        async function initializePage() {
+            try {
+                const user = getCurrentUser();
+                if (!user) {
+                    window.location.href = '../../index.html';
+                    return;
+                }
+
+                // Update user info in top bar
+                document.getElementById('userName').textContent = user.fullName || user.name || 'Doctor';
+                const name = user.fullName || user.name || 'Doctor';
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('userInitials').textContent = initials;
+
+                // Load results
+                await loadResults();
+
+            } catch (error) {
+                console.error('Failed to initialize page:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load page', 'error');
+                }
+            }
+        }
+
+        // Load results
+        async function loadResults() {
+            if (!appointmentId) {
+                showError('No appointment ID provided');
+                return;
+            }
+
+            try {
+                document.getElementById('resultsLoading').style.display = 'block';
+                document.getElementById('resultsContent').style.display = 'none';
+                document.getElementById('resultsEmpty').style.display = 'none';
+                document.getElementById('resultsError').style.display = 'none';
+
+                // Get appointment details first
+                const appointmentResponse = await getDoctorAppointmentDetails(appointmentId);
+                if (appointmentResponse.success) {
+                    appointment = appointmentResponse.appointment;
+                    updateAppointmentInfo(appointment);
+                }
+
+                // Get results
+                const response = await getDoctorAppointmentResults(appointmentId);
+                
+                if (response.success) {
+                    results = response.results || [];
+                    renderResults(results);
+                } else {
+                    throw new Error(response.message || 'Failed to load results');
+                }
+
+            } catch (error) {
+                console.error('Failed to load results:', error);
+                showError(error.message || 'Failed to load results');
+            }
+        }
+
+        // Update appointment info
+        function updateAppointmentInfo(apt) {
+            const infoElement = document.getElementById('appointmentInfo');
+            const date = formatDate(apt.appointmentDate);
+            const time = formatTime(apt.appointmentTime);
+            const patient = apt.profileName || 'Unknown';
+            
+            infoElement.textContent = `Results for ${patient} - ${date} at ${time}`;
+        }
+
+        // Render results
+        function renderResults(resultsList) {
+            document.getElementById('resultsLoading').style.display = 'none';
+            
+            if (!resultsList || resultsList.length === 0) {
+                document.getElementById('resultsEmpty').style.display = 'block';
+                document.getElementById('resultsContent').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('resultsContent').style.display = 'block';
+            document.getElementById('resultsEmpty').style.display = 'none';
+
+            const container = document.getElementById('resultsContainer');
+            
+            // Sort results: latest first, then by upload date
+            const sortedResults = resultsList.sort((a, b) => {
+                // Latest results first
+                if (a.isLatest && !b.isLatest) return -1;
+                if (!a.isLatest && b.isLatest) return 1;
+                
+                // Then by upload date (newest first)
+                return new Date(b.uploadedAt) - new Date(a.uploadedAt);
+            });
+
+            container.innerHTML = sortedResults.map(result => {
+                const isLatest = result.isLatest;
+                const cardClass = isLatest ? 'latest' : 'old';
+                const badgeClass = isLatest ? 'badge-latest' : 'badge-old';
+                const badgeText = isLatest ? 'Latest' : 'Old Version';
+                
+                return `
+                    <div class="result-card ${cardClass}">
+                        <div class="result-header">
+                            <div class="result-title">${result.testName}</div>
+                            <div class="result-badge ${badgeClass}">${badgeText}</div>
+                        </div>
+                        <div class="result-details">
+                            <div class="detail-item">
+                                <span class="detail-label">File Name</span>
+                                <span class="detail-value">${result.fileName || 'Unknown'}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Uploaded</span>
+                                <span class="detail-value">${formatDateTime(result.uploadedAt)}</span>
+                            </div>
+                            ${result.doctorUploaderName ? `
+                                <div class="detail-item">
+                                    <span class="detail-label">Uploaded By</span>
+                                    <span class="detail-value">${result.doctorUploaderName}</span>
+                                </div>
+                            ` : ''}
+                            ${result.replacedResultFileId ? `
+                                <div class="detail-item">
+                                    <span class="detail-label">Replaced</span>
+                                    <span class="detail-value">Previous version</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                        <div class="result-actions">
+                            ${isLatest ? `
+                                <button class="btn-sm btn-warning" onclick="replaceResult('${result.testName}')">Replace</button>
+                            ` : `
+                                <button class="btn-sm btn-primary" onclick="viewResult('${result._id}')">View</button>
+                            `}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Upload new result
+        function uploadNewResult() {
+            navigateToUploadResults(appointmentId);
+        }
+
+        // Replace result
+        function replaceResult(testName) {
+            navigateToUploadResults(appointmentId, testName);
+        }
+
+        // View result (placeholder - could implement PDF viewer)
+        function viewResult(resultId) {
+            // For now, just navigate to upload page with the result ID
+            // In a real implementation, this could open a PDF viewer
+            if (typeof showToast === 'function') {
+                showToast('PDF viewer not implemented yet', 'info');
+            } else {
+                alert('PDF viewer not implemented yet');
+            }
+        }
+
+        // Show error
+        function showError(message) {
+            document.getElementById('resultsLoading').style.display = 'none';
+            document.getElementById('resultsContent').style.display = 'none';
+            document.getElementById('resultsEmpty').style.display = 'none';
+            document.getElementById('resultsError').style.display = 'block';
+            
+            const errorElement = document.getElementById('resultsError');
+            errorElement.innerHTML = `
+                <h3>Failed to load results</h3>
+                <p>${message}</p>
+                <p><a href="appointments.html" class="btn btn-primary">Back to Appointments</a></p>
+            `;
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
+</body>
+</html>

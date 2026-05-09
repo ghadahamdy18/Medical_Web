@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Appointment - Medical Lab</title>
+    <link rel="stylesheet" href="../../css/dashboard.css">
+    <style>
+        body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#fd7e14;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.back-link{display:inline-block;margin-bottom:20px;color:#2c7be5;text-decoration:none}.page-header{margin-bottom:25px}.page-header h1{font-size:24px;color:#333}.page-header p{color:#666;max-width:720px}.form-card{background:#fff;padding:30px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);max-width:700px}.form-group{margin-bottom:20px}.form-group label{display:block;margin-bottom:8px;font-weight:600}.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:4px;font-size:14px}.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#2c7be5}.form-group textarea{resize:vertical;min-height:80px}.patient-info{background:#f8f9fa;padding:15px;border-radius:6px;margin-bottom:20px}.btn{padding:12px 24px;border:none;border-radius:4px;cursor:pointer;font-size:16px}.btn-primary{background:#2c7be5;color:#fff}.btn-primary:hover{background:#1a5fbf}.btn-primary:disabled{background:#6c757d;cursor:not-allowed}.error{color:#dc3545;font-size:14px;margin-top:5px}.success{background:#d4edda;border:1px solid #c3e6cb;border-radius:4px;padding:20px;margin-bottom:20px;color:#155724}.success h3{margin-bottom:10px}.success-buttons{display:flex;gap:10px;margin-top:15px}.warning{background:#fff3cd;border:1px solid #ffeaa7;border-radius:4px;padding:15px;margin-bottom:20px;color:#856404}.loading{text-align:center;padding:40px;color:#666}
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="dashboard-body">
+            <aside class="sidebar">
+                <div class="sidebar-logo">
+                    <h2>Medical Lab</h2>
+                </div>
+                <ul class="sidebar-menu">
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="patients.html">Patients</a></li>
+                    <li><a href="create-patient.html">Create Patient</a></li>
+                    <li><a href="appointments.html">Appointments</a></li>
+                    <li><a href="create-appointment.html" class="active">Create Appointment</a></li>
+                    <li><a href="settings.html">Settings</a></li>
+                </ul>
+            </aside>
+            <div class="main-area">
+                <div class="top-bar">
+                    <div class="user-info">
+                        <div class="user-avatar" id="userInitials">R</div>
+                        <div class="user-details">
+                            <span class="user-name" id="userName">Reception Desk</span>
+                            <span class="user-role">Receptionist</span>
+                        </div>
+                    </div>
+                    <div class="top-bar-right">
+                        <button class="logout-btn" onclick="logoutUser()">Logout</button>
+                    </div>
+                </div>
+                <div class="content-area">
+                    <a href="appointments.html" class="back-link">← Back to Appointments</a>
+                    <div class="page-header">
+                        <h1>Create Appointment</h1>
+                        <p>Schedule a new appointment for a patient</p>
+                    </div>
+                    
+                    <div id="loading" class="loading">Loading form data...</div>
+                    
+                    <div id="appointmentForm" class="form-card" style="display: none;">
+                        <div id="doctorWarning" class="warning" style="display: none;">
+                            <strong>⚠️ Doctor List Not Available</strong>
+                            <p>Doctor list endpoint is not available yet. Please contact the backend team to implement a receptionist-safe doctor list endpoint.</p>
+                        </div>
+                        
+                        <form id="createAppointmentForm" onsubmit="handleCreateAppointment(event)">
+                            <div class="form-group">
+                                <label for="patientSearch">Search Patient *</label>
+                                <input type="text" id="patientSearch" placeholder="Type patient name or phone number..." oninput="searchPatients()">
+                                <div id="patientSearchResults" style="display: none; margin-top: 10px; max-height: 200px; overflow-y: auto; border: 1px solid #ddd; border-radius: 4px;"></div>
+                                <div id="patientError" class="error"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="patientProfile">Patient Profile *</label>
+                                <select id="patientProfile" required disabled>
+                                    <option value="">Select patient first</option>
+                                </select>
+                                <div id="profileError" class="error"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="doctor">Doctor *</label>
+                                <select id="doctor" required disabled>
+                                    <option value="">Doctor list not available</option>
+                                </select>
+                                <div id="doctorError" class="error"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="appointmentType">Appointment Type *</label>
+                                <select id="appointmentType" required onchange="toggleHomeVisitAddress()">
+                                    <option value="">Select type</option>
+                                    <option value="in_lab">In-Lab Visit</option>
+                                    <option value="home_visit">Home Visit</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="appointmentDate">Appointment Date *</label>
+                                <input type="date" id="appointmentDate" required>
+                                <div id="dateError" class="error"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="appointmentTime">Appointment Time *</label>
+                                <input type="time" id="appointmentTime" required>
+                                <div id="timeError" class="error"></div>
+                            </div>
+                            
+                            <div class="form-group" id="homeVisitAddressGroup" style="display: none;">
+                                <label for="homeVisitAddress">Home Visit Address *</label>
+                                <textarea id="homeVisitAddress" placeholder="Enter the address for home visit"></textarea>
+                                <div id="addressError" class="error"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="notes">Notes (Optional)</label>
+                                <textarea id="notes" placeholder="Add any additional notes..."></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary" id="createBtn">
+                                Create Appointment
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div id="createSuccess" class="success" style="display: none;">
+                        <h3>✅ Appointment Created Successfully!</h3>
+                        <div id="appointmentSummary">
+                            <!-- Appointment summary will be populated here -->
+                        </div>
+                        <div class="success-buttons">
+                            <button class="btn btn-primary" onclick="viewAppointments()">View Appointments</button>
+                            <button class="btn btn-primary" onclick="createAnotherAppointment()">Create Another Appointment</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/ui.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/guards.js"></script>
+    <script src="../../assets/js/receptionist.js"></script>
+    <script>
+        // Require receptionist role
+        requireRole('receptionist');
+
+        let patients = [];
+        let selectedPatient = null;
+        let doctors = [];
+        let preselectedUserId = null;
+        
+        const userId = getQueryParam('userId');
+
+        // Initialize page
+        async function initializePage() {
+            try {
+                const user = getCurrentUser();
+                if (!user) {
+                    window.location.href = '../../index.html';
+                    return;
+                }
+
+                // Update user info in top bar
+                document.getElementById('userName').textContent = user.fullName || user.name || 'Receptionist';
+                const name = user.fullName || user.name || 'Receptionist';
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('userInitials').textContent = initials;
+
+                // Load form data
+                await loadFormData();
+
+            } catch (error) {
+                console.error('Failed to initialize page:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load page', 'error');
+                }
+            }
+        }
+
+        // Load form data
+        async function loadFormData() {
+            try {
+                document.getElementById('loading').style.display = 'block';
+                document.getElementById('appointmentForm').style.display = 'none';
+
+                // Load patients
+                const patientsResponse = await getReceptionistPatients({ limit: 100 });
+                if (patientsResponse.data !== undefined) {
+                    patients = patientsResponse.data || [];
+                }
+
+                // Try to load doctors
+                await loadDoctors();
+
+                // Handle preselected patient
+                if (userId) {
+                    await selectPatient(userId);
+                }
+
+                // Set minimum date to today
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('appointmentDate').min = today;
+
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('appointmentForm').style.display = 'block';
+
+            } catch (error) {
+                console.error('Failed to load form data:', error);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('appointmentForm').style.display = 'block';
+                handleReceptionistError(error, 'Failed to load form data');
+            }
+        }
+
+        // Load doctors (try to find an endpoint)
+        async function loadDoctors() {
+            try {
+                // TODO: Backend needs to implement a receptionist-safe doctor list endpoint
+                // For now, show warning message and disable doctor select
+                document.getElementById('doctorWarning').style.display = 'block';
+                document.getElementById('doctor').disabled = true;
+                
+                // Keep doctors array empty for now
+                doctors = [];
+                
+            } catch (error) {
+                console.error('Failed to load doctors:', error);
+                document.getElementById('doctorWarning').style.display = 'block';
+                document.getElementById('doctor').disabled = true;
+            }
+        }
+
+        // Search patients
+        async function searchPatients() {
+            const searchTerm = document.getElementById('patientSearch').value.trim();
+            const resultsDiv = document.getElementById('patientSearchResults');
+            
+            if (searchTerm.length < 2) {
+                resultsDiv.style.display = 'none';
+                return;
+            }
+
+            try {
+                const response = await getReceptionistPatients({ search: searchTerm, limit: 10 });
+                const searchResults = response.data || [];
+                
+                if (searchResults.length > 0) {
+                    resultsDiv.innerHTML = searchResults.map(patient => `
+                        <div style="padding: 10px; border-bottom: 1px solid #eee; cursor: pointer;" onclick="selectPatientFromSearch('${patient._id}', '${patient.fullName}')">
+                            <div style="font-weight: 600;">${patient.fullName}</div>
+                            <div style="font-size: 12px; color: #666;">${patient.phoneNumber}</div>
+                        </div>
+                    `).join('');
+                    resultsDiv.style.display = 'block';
+                } else {
+                    resultsDiv.innerHTML = '<div style="padding: 10px; color: #666;">No patients found</div>';
+                    resultsDiv.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Search failed:', error);
+                resultsDiv.style.display = 'none';
+            }
+        }
+
+        // Select patient from search
+        async function selectPatientFromSearch(patientId, patientName) {
+            document.getElementById('patientSearch').value = patientName;
+            document.getElementById('patientSearchResults').style.display = 'none';
+            await selectPatient(patientId);
+        }
+
+        // Select patient
+        async function selectPatient(patientId) {
+            try {
+                const response = await getReceptionistPatientById(patientId);
+                if (response.user) {
+                    selectedPatient = response.user;
+                    populateProfiles(response.profiles || []);
+                    document.getElementById('patientProfile').disabled = false;
+                } else {
+                    throw new Error('Invalid response format');
+                }
+            } catch (error) {
+                console.error('Failed to select patient:', error);
+                handleReceptionistError(error, 'Failed to load patient profiles');
+            }
+        }
+
+        // Populate profiles
+        function populateProfiles(profiles) {
+            const profileSelect = document.getElementById('patientProfile');
+            profileSelect.innerHTML = '<option value="">Select profile</option>';
+            
+            profiles.forEach(profile => {
+                const option = document.createElement('option');
+                option.value = profile._id;
+                option.textContent = `${profile.fullName} ${profile.isPrimary ? '(Primary)' : ''}`;
+                profileSelect.appendChild(option);
+            });
+        }
+
+        // Toggle home visit address
+        function toggleHomeVisitAddress() {
+            const appointmentType = document.getElementById('appointmentType').value;
+            const addressGroup = document.getElementById('homeVisitAddressGroup');
+            
+            if (appointmentType === 'home_visit') {
+                addressGroup.style.display = 'block';
+                document.getElementById('homeVisitAddress').required = true;
+            } else {
+                addressGroup.style.display = 'none';
+                document.getElementById('homeVisitAddress').required = false;
+                document.getElementById('homeVisitAddress').value = '';
+            }
+        }
+
+        // Handle create appointment
+        async function handleCreateAppointment(event) {
+            event.preventDefault();
+            
+            // Clear previous errors
+            document.getElementById('patientError').textContent = '';
+            document.getElementById('profileError').textContent = '';
+            document.getElementById('doctorError').textContent = '';
+            document.getElementById('dateError').textContent = '';
+            document.getElementById('timeError').textContent = '';
+            document.getElementById('addressError').textContent = '';
+            
+            // Get form values
+            const patientProfileId = document.getElementById('patientProfile').value;
+            const doctorUserId = document.getElementById('doctor').value;
+            const appointmentType = document.getElementById('appointmentType').value;
+            const appointmentDate = document.getElementById('appointmentDate').value;
+            const appointmentTime = document.getElementById('appointmentTime').value;
+            const homeVisitAddress = document.getElementById('homeVisitAddress').value.trim();
+            const notes = document.getElementById('notes').value.trim();
+            
+            // Validate
+            let hasError = false;
+            
+            if (!patientProfileId) {
+                document.getElementById('profileError').textContent = 'Please select a patient profile';
+                hasError = true;
+            }
+            
+            if (!doctorUserId) {
+                document.getElementById('doctorError').textContent = 'Please select a doctor';
+                hasError = true;
+            }
+            
+            if (!appointmentType) {
+                hasError = true;
+            }
+            
+            if (!appointmentDate) {
+                document.getElementById('dateError').textContent = 'Appointment date is required';
+                hasError = true;
+            } else if (!validateDate(appointmentDate)) {
+                document.getElementById('dateError').textContent = 'Appointment date cannot be in the past';
+                hasError = true;
+            }
+            
+            if (!appointmentTime) {
+                document.getElementById('timeError').textContent = 'Appointment time is required';
+                hasError = true;
+            } else if (!validateTime(appointmentTime)) {
+                document.getElementById('timeError').textContent = 'Please enter a valid time';
+                hasError = true;
+            }
+            
+            if (appointmentType === 'home_visit' && !homeVisitAddress) {
+                document.getElementById('addressError').textContent = 'Home visit address is required';
+                hasError = true;
+            }
+            
+            if (hasError) return;
+            
+            // Check if doctors are available
+            if (doctors.length === 0) {
+                handleReceptionistError('Cannot create appointment: Doctor list is not available. Please contact backend team.');
+                return;
+            }
+            
+            try {
+                // Disable create button
+                const createBtn = document.getElementById('createBtn');
+                createBtn.disabled = true;
+                createBtn.textContent = 'Creating...';
+                
+                // Prepare payload
+                const payload = {
+                    patientProfileId,
+                    doctorUserId,
+                    appointmentType,
+                    appointmentDate,
+                    appointmentTime,
+                    notes
+                };
+                
+                // Add home visit address if applicable
+                if (appointmentType === 'home_visit') {
+                    payload.homeVisitAddress = homeVisitAddress;
+                }
+                
+                // Create appointment
+                const response = await createReceptionistAppointment(payload);
+                
+                if (response._id) {
+                    showSuccess(response);
+                } else {
+                    throw new Error('Invalid response format');
+                }
+                
+            } catch (error) {
+                console.error('Failed to create appointment:', error);
+                handleReceptionistError(error, 'Failed to create appointment');
+            } finally {
+                // Re-enable create button
+                const createBtn = document.getElementById('createBtn');
+                createBtn.disabled = false;
+                createBtn.textContent = 'Create Appointment';
+            }
+        }
+
+        // Show success message
+        function showSuccess(appointment) {
+            document.getElementById('appointmentForm').style.display = 'none';
+            document.getElementById('createSuccess').style.display = 'block';
+            
+            const summaryElement = document.getElementById('appointmentSummary');
+            summaryElement.innerHTML = `
+                <div style="display: grid; gap: 10px;">
+                    <div><strong>Patient Profile:</strong> ${appointment.profileName || 'Unknown'}</div>
+                    <div><strong>Doctor:</strong> ${appointment.doctorName || 'Unknown'}</div>
+                    <div><strong>Type:</strong> ${formatAppointmentType(appointment.appointmentType)}</div>
+                    <div><strong>Date:</strong> ${formatDate(appointment.appointmentDate)}</div>
+                    <div><strong>Time:</strong> ${formatTime(appointment.appointmentTime)}</div>
+                    <div><strong>Status:</strong> ${formatAppointmentStatus(appointment.appointmentStatus)}</div>
+                    ${appointment.notes ? `<div><strong>Notes:</strong> ${appointment.notes}</div>` : ''}
+                    ${appointment.homeVisitAddress ? `<div><strong>Address:</strong> ${appointment.homeVisitAddress}</div>` : ''}
+                </div>
+            `;
+        }
+
+        // View appointments
+        function viewAppointments() {
+            navigateToAppointments();
+        }
+
+        // Create another appointment
+        function createAnotherAppointment() {
+            // Reset form
+            document.getElementById('createAppointmentForm').reset();
+            
+            // Clear errors
+            document.getElementById('patientError').textContent = '';
+            document.getElementById('profileError').textContent = '';
+            document.getElementById('doctorError').textContent = '';
+            document.getElementById('dateError').textContent = '';
+            document.getElementById('timeError').textContent = '';
+            document.getElementById('addressError').textContent = '';
+            
+            // Reset selections
+            document.getElementById('patientProfile').disabled = true;
+            document.getElementById('patientProfile').innerHTML = '<option value="">Select patient first</option>';
+            
+            // Hide success, show form
+            document.getElementById('createSuccess').style.display = 'none';
+            document.getElementById('appointmentForm').style.display = 'block';
+            
+            selectedPatient = null;
+        }
+
+        // Hide search results when clicking outside
+        document.addEventListener('click', function(event) {
+            const searchInput = document.getElementById('patientSearch');
+            const resultsDiv = document.getElementById('patientSearchResults');
+            
+            if (!searchInput.contains(event.target) && !resultsDiv.contains(event.target)) {
+                resultsDiv.style.display = 'none';
+            }
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
+</body>
+</html>

@@ -14,7 +14,6 @@
                 <div class="sidebar-logo"><h2>Medical Lab</h2></div>
                 <ul class="sidebar-menu">
                     <li><a href="dashboard.html" class="active">Dashboard</a></li>
-                    <li><a href="patient-list.html">Patient List</a></li>
                     <li><a href="appointments.html">Appointments</a></li>
                     <li><a href="upload-results.html">Upload Results</a></li>
                     <li><a href="settings.html">Settings</a></li>
@@ -23,13 +22,15 @@
             <div class="main-area">
                 <div class="top-bar">
                     <div class="user-info">
-                        <div class="user-avatar">SS</div>
+                        <div class="user-avatar" id="userInitials">SS</div>
                         <div class="user-details">
-                            <span class="user-name">Dr. Sarah Smith</span>
-                            <span class="user-role">Doctor • General Medicine</span>
+                            <span class="user-name" id="userName">Dr. Sarah Smith</span>
+                            <span class="user-role">Doctor</span>
                         </div>
                     </div>
-                    <button class="logout-btn" onclick="logout()">Logout</button>
+                    <div class="top-bar-right">
+                        <button class="logout-btn" onclick="logoutUser()">Logout</button>
+                    </div>
                 </div>
                 <div class="content-area">
                     <div class="page-header">
@@ -38,88 +39,230 @@
                     </div>
                     <div class="dashboard-grid">
                         <div class="card stat-card">
-                            <div class="stat-icon blue">👥</div>
+                            <div class="stat-icon blue">�</div>
                             <div class="stat-content">
-                                <div class="stat-value">12</div>
-                                <div class="stat-label">Total Patients</div>
+                                <div class="stat-value" id="totalAppointments">0</div>
+                                <div class="stat-label">Total Appointments</div>
                             </div>
                         </div>
                         <div class="card stat-card">
                             <div class="stat-icon green">✓</div>
                             <div class="stat-content">
-                                <div class="stat-value">8</div>
-                                <div class="stat-label">Results Uploaded</div>
+                                <div class="stat-value" id="confirmedAppointments">0</div>
+                                <div class="stat-label">Confirmed</div>
                             </div>
                         </div>
                         <div class="card stat-card">
-                            <div class="stat-icon orange">📋</div>
+                            <div class="stat-icon orange">�</div>
                             <div class="stat-content">
-                                <div class="stat-value">4</div>
-                                <div class="stat-label">Pending Results</div>
+                                <div class="stat-value" id="completedAppointments">0</div>
+                                <div class="stat-label">Completed</div>
+                            </div>
+                        </div>
+                        <div class="card stat-card">
+                            <div class="stat-icon" style="background: #fff3cd; color: #856404;">⏰</div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="todayAppointments">0</div>
+                                <div class="stat-label">Today's Appointments</div>
                             </div>
                         </div>
                     </div>
                     <div class="section">
                         <div class="section-title">Quick Actions</div>
                         <div class="quick-actions">
-                            <a href="patient-list.html" class="quick-action-btn">
-                                <span>👥</span>
-                                <span>View Patients</span>
+                            <a href="appointments.html" class="quick-action-btn">
+                                <span>�</span>
+                                <span>Appointments</span>
                             </a>
                             <a href="upload-results.html" class="quick-action-btn">
                                 <span>📤</span>
                                 <span>Upload Results</span>
-                            </a>
-                            <a href="appointments.html" class="quick-action-btn">
-                                <span>📋</span>
-                                <span>Appointments</span>
                             </a>
                         </div>
                     </div>
                     <div class="section">
                         <div class="section-title">Today's Appointments</div>
                         <div class="table-container">
-                            <table>
+                            <div id="todayAppointmentsLoading" class="loading">Loading today's appointments...</div>
+                            <table id="todayAppointmentsTable" style="display: none;">
                                 <thead>
                                     <tr>
                                         <th>Time</th>
                                         <th>Patient</th>
                                         <th>Type</th>
-                                        <th>Test</th>
                                         <th>Status</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>9:00 AM</td>
-                                        <td>John Patient</td>
-                                        <td>In-Lab</td>
-                                        <td>Blood Test</td>
-                                        <td>Completed</td>
-                                    </tr>
-                                    <tr>
-                                        <td>11:00 AM</td>
-                                        <td>Jane Patient</td>
-                                        <td>In-Lab</td>
-                                        <td>Lipid Panel</td>
-                                        <td>In Progress</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2:00 PM</td>
-                                        <td>Mike Johnson</td>
-                                        <td>Home Visit</td>
-                                        <td>General Checkup</td>
-                                        <td>Scheduled</td>
-                                    </tr>
+                                <tbody id="todayAppointmentsBody">
                                 </tbody>
                             </table>
+                            <div id="todayAppointmentsEmpty" class="empty-state" style="display: none; padding: 40px;">
+                                <h4>No appointments today</h4>
+                                <p>You have no appointments scheduled for today.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script src="../../js/auth.js"></script>
-    <script>function logout(){window.location.href='../../index.html'}</script>
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/ui.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/guards.js"></script>
+    <script src="../../assets/js/doctor.js"></script>
+    <script>
+        // Require doctor role
+        requireRole('doctor');
+
+        let appointments = [];
+
+        // Initialize page
+        async function initializePage() {
+            try {
+                const user = getCurrentUser();
+                if (!user) {
+                    window.location.href = '../../index.html';
+                    return;
+                }
+
+                // Update user info in top bar
+                document.getElementById('userName').textContent = user.fullName || user.name || 'Doctor';
+                const name = user.fullName || user.name || 'Doctor';
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('userInitials').textContent = initials;
+
+                // Load dashboard data
+                await loadDashboardData();
+
+            } catch (error) {
+                console.error('Failed to initialize page:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load dashboard', 'error');
+                }
+            }
+        }
+
+        // Load dashboard data
+        async function loadDashboardData() {
+            try {
+                // Get all appointments for stats
+                const response = await getDoctorAppointments({ limit: 100 });
+                
+                if (response.success) {
+                    appointments = response.data || [];
+                    updateDashboardStats(appointments);
+                    updateTodayAppointments(appointments);
+                } else {
+                    throw new Error(response.message || 'Failed to load appointments');
+                }
+
+            } catch (error) {
+                console.error('Failed to load dashboard data:', error);
+                handleDoctorError(error, 'Failed to load dashboard data');
+                
+                // Hide loading states
+                document.getElementById('todayAppointmentsLoading').style.display = 'none';
+                document.getElementById('todayAppointmentsEmpty').style.display = 'block';
+            }
+        }
+
+        // Update dashboard stats
+        function updateDashboardStats(appointmentList) {
+            const stats = calculateDashboardStats(appointmentList);
+            
+            document.getElementById('totalAppointments').textContent = stats.total;
+            document.getElementById('confirmedAppointments').textContent = stats.confirmed;
+            document.getElementById('completedAppointments').textContent = stats.completed;
+            document.getElementById('todayAppointments').textContent = stats.today;
+        }
+
+        // Update today's appointments
+        function updateTodayAppointments(appointmentList) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            const todayAppointments = appointmentList.filter(apt => {
+                if (!apt.appointmentDate) return false;
+                const aptDate = new Date(apt.appointmentDate);
+                aptDate.setHours(0, 0, 0, 0);
+                return aptDate.getTime() === today.getTime();
+            });
+
+            document.getElementById('todayAppointmentsLoading').style.display = 'none';
+            
+            if (todayAppointments.length === 0) {
+                document.getElementById('todayAppointmentsTable').style.display = 'none';
+                document.getElementById('todayAppointmentsEmpty').style.display = 'block';
+                return;
+            }
+
+            document.getElementById('todayAppointmentsTable').style.display = 'table';
+            document.getElementById('todayAppointmentsEmpty').style.display = 'none';
+
+            const tbody = document.getElementById('todayAppointmentsBody');
+            tbody.innerHTML = todayAppointments
+                .sort((a, b) => {
+                    // Sort by time
+                    const timeA = a.appointmentTime || '00:00';
+                    const timeB = b.appointmentTime || '00:00';
+                    return timeA.localeCompare(timeB);
+                })
+                .map(appointment => {
+                    const canComplete = canDoctorComplete(appointment);
+                    const canUpload = canDoctorUploadResult(appointment);
+                    
+                    return `
+                        <tr>
+                            <td>${formatTime(appointment.appointmentTime)}</td>
+                            <td>${appointment.profileName || 'Unknown'}</td>
+                            <td>${formatAppointmentType(appointment.appointmentType)}</td>
+                            <td><span class="status-badge status-${appointment.appointmentStatus}">${formatAppointmentStatus(appointment.appointmentStatus)}</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-sm btn-view" onclick="viewDetails('${appointment._id}')">View</button>
+                                    ${canComplete ? `<button class="btn-sm btn-complete" onclick="completeAppointment('${appointment._id}')">Complete</button>` : ''}
+                                    ${canUpload ? `<button class="btn-sm btn-upload" onclick="uploadResult('${appointment._id}')">Upload</button>` : ''}
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+        }
+
+        // Action functions
+        function viewDetails(appointmentId) {
+            navigateToAppointmentDetails(appointmentId);
+        }
+
+        function uploadResult(appointmentId) {
+            navigateToUploadResults(appointmentId);
+        }
+
+        async function completeAppointment(appointmentId) {
+            if (!confirm('Are you sure you want to mark this appointment as completed?')) {
+                return;
+            }
+
+            try {
+                const response = await completeDoctorAppointment(appointmentId);
+                
+                if (response.success) {
+                    handleDoctorSuccess('Appointment completed successfully!');
+                    await loadDashboardData(); // Refresh dashboard
+                } else {
+                    throw new Error(response.message || 'Failed to complete appointment');
+                }
+
+            } catch (error) {
+                console.error('Failed to complete appointment:', error);
+                handleDoctorError(error, 'Failed to complete appointment');
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
 </body>
 </html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Details - Medical Lab</title>
+    <link rel="stylesheet" href="../../css/dashboard.css">
+    <style>
+        body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#fd7e14;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.back-link{display:inline-block;margin-bottom:20px;color:#2c7be5;text-decoration:none}.page-header{margin-bottom:25px}.page-header h1{font-size:24px;color:#333}.detail-card{background:#fff;padding:30px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);margin-bottom:20px}.detail-section{margin-bottom:25px}.detail-section:last-child{margin-bottom:0}.detail-section h3{font-size:18px;margin-bottom:15px;color:#333;border-bottom:1px solid #eee;padding-bottom:10px}.detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px}.detail-item{display:flex;flex-direction:column;gap:5px}.detail-label{font-size:12px;color:#666;text-transform:uppercase;font-weight:600}.detail-value{font-size:16px;color:#333}.profile-card{background:#f8f9fa;padding:20px;border-radius:6px;margin-bottom:15px;border-left:4px solid #2c7be5}.profile-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.profile-name{font-weight:600;color:#333}.profile-badge{padding:3px 8px;border-radius:12px;font-size:11px}.badge-primary{background:#2c7be5;color:#fff}.badge-active{background:#28a745;color:#fff}.badge-inactive{background:#dc3545;color:#fff}.profile-details{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}.profile-detail-item{font-size:14px}.profile-detail-label{color:#666;font-size:12px}.action-buttons{display:flex;gap:10px;margin-top:20px}.btn{padding:10px 20px;border:none;border-radius:4px;cursor:pointer;font-size:14px}.btn-primary{background:#2c7be5;color:#fff}.btn-primary:hover{background:#1a5fbf}.btn-success{background:#28a745;color:#fff}.btn-success:hover{background:#218838}.btn-info{background:#17a2b8;color:#fff}.btn-info:hover{background:#138496}.loading{text-align:center;padding:40px;color:#666}.error{text-align:center;padding:40px;color:#dc3545}
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="dashboard-body">
+            <aside class="sidebar">
+                <div class="sidebar-logo">
+                    <h2>Medical Lab</h2>
+                </div>
+                <ul class="sidebar-menu">
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="patients.html">Patients</a></li>
+                    <li><a href="create-patient.html">Create Patient</a></li>
+                    <li><a href="appointments.html">Appointments</a></li>
+                    <li><a href="create-appointment.html">Create Appointment</a></li>
+                    <li><a href="settings.html">Settings</a></li>
+                </ul>
+            </aside>
+            <div class="main-area">
+                <div class="top-bar">
+                    <div class="user-info">
+                        <div class="user-avatar" id="userInitials">R</div>
+                        <div class="user-details">
+                            <span class="user-name" id="userName">Reception Desk</span>
+                            <span class="user-role">Receptionist</span>
+                        </div>
+                    </div>
+                    <div class="top-bar-right">
+                        <button class="logout-btn" onclick="logoutUser()">Logout</button>
+                    </div>
+                </div>
+                <div class="content-area">
+                    <a href="patients.html" class="back-link">← Back to Patients</a>
+                    <div class="page-header">
+                        <h1>Patient Details</h1>
+                    </div>
+                    
+                    <div id="patientLoading" class="loading">Loading patient details...</div>
+                    
+                    <div id="patientContent" style="display: none;">
+                        <div class="detail-card">
+                            <div class="detail-section">
+                                <h3>Patient Information</h3>
+                                <div class="detail-grid">
+                                    <div class="detail-item">
+                                        <span class="detail-label">Full Name</span>
+                                        <span class="detail-value" id="patientFullName">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Phone Number</span>
+                                        <span class="detail-value" id="patientPhoneNumber">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Email</span>
+                                        <span class="detail-value" id="patientEmail">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Status</span>
+                                        <span class="detail-value" id="patientStatus">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Created At</span>
+                                        <span class="detail-value" id="patientCreatedAt">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-section">
+                                <h3>Patient Profiles</h3>
+                                <div id="profilesContainer">
+                                    <!-- Profiles will be populated here -->
+                                </div>
+                            </div>
+                            
+                            <div class="action-buttons">
+                                <button class="btn btn-success" onclick="addFamilyProfile()">Add Family Profile</button>
+                                <button class="btn btn-info" onclick="createAppointment()">Create Appointment</button>
+                                <button class="btn btn-primary" onclick="backToPatients()">Back to Patients</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="patientError" class="error" style="display: none;">
+                        <h3>Failed to load patient</h3>
+                        <p>Please try again later or contact support if the problem persists.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/ui.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/guards.js"></script>
+    <script src="../../assets/js/receptionist.js"></script>
+    <script>
+        // Require receptionist role
+        requireRole('receptionist');
+
+        let patient = null;
+        const userId = getQueryParam('id');
+
+        // Initialize page
+        async function initializePage() {
+            try {
+                const user = getCurrentUser();
+                if (!user) {
+                    window.location.href = '../../index.html';
+                    return;
+                }
+
+                // Update user info in top bar
+                document.getElementById('userName').textContent = user.fullName || user.name || 'Receptionist';
+                const name = user.fullName || user.name || 'Receptionist';
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('userInitials').textContent = initials;
+
+                // Load patient details
+                await loadPatientDetails();
+
+            } catch (error) {
+                console.error('Failed to initialize page:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load page', 'error');
+                }
+            }
+        }
+
+        // Load patient details
+        async function loadPatientDetails() {
+            if (!userId) {
+                showError('No patient ID provided');
+                return;
+            }
+
+            try {
+                document.getElementById('patientLoading').style.display = 'block';
+                document.getElementById('patientContent').style.display = 'none';
+                document.getElementById('patientError').style.display = 'none';
+
+                const response = await getReceptionistPatientById(userId);
+                
+                if (response.user) {
+                    patient = response.user;
+                    renderPatientDetails(patient, response.profiles || []);
+                } else {
+                    throw new Error('Invalid response format');
+                }
+
+            } catch (error) {
+                console.error('Failed to load patient details:', error);
+                showError(error.message || 'Failed to load patient details');
+            }
+        }
+
+        // Render patient details
+        function renderPatientDetails(patientData, profiles) {
+            document.getElementById('patientLoading').style.display = 'none';
+            document.getElementById('patientContent').style.display = 'block';
+
+            // Patient Information
+            document.getElementById('patientFullName').textContent = patientData.fullName || 'Unknown';
+            document.getElementById('patientPhoneNumber').textContent = patientData.phoneNumber || '-';
+            document.getElementById('patientEmail').textContent = patientData.email || '-';
+            
+            const statusElement = document.getElementById('patientStatus');
+            statusElement.innerHTML = `<span class="status-badge status-${patientData.status || 'active'}">${patientData.status || 'Active'}</span>`;
+            
+            document.getElementById('patientCreatedAt').textContent = formatDate(patientData.createdAt) || '-';
+
+            // Patient Profiles
+            renderProfiles(profiles);
+        }
+
+        // Render profiles
+        function renderProfiles(profiles) {
+            const container = document.getElementById('profilesContainer');
+            
+            if (!profiles || profiles.length === 0) {
+                container.innerHTML = '<p>No profiles found for this patient.</p>';
+                return;
+            }
+
+            container.innerHTML = profiles.map(profile => {
+                const primaryBadge = profile.isPrimary ? '<span class="profile-badge badge-primary">Primary</span>' : '';
+                const statusBadge = profile.isActive ? 
+                    '<span class="profile-badge badge-active">Active</span>' : 
+                    '<span class="profile-badge badge-inactive">Inactive</span>';
+                
+                return `
+                    <div class="profile-card">
+                        <div class="profile-header">
+                            <div class="profile-name">${profile.fullName || 'Unknown'}</div>
+                            <div>
+                                ${primaryBadge}
+                                ${statusBadge}
+                            </div>
+                        </div>
+                        <div class="profile-details">
+                            <div class="profile-detail-item">
+                                <div class="profile-detail-label">Gender</div>
+                                <div>${profile.gender || '-'}</div>
+                            </div>
+                            <div class="profile-detail-item">
+                                <div class="profile-detail-label">Date of Birth</div>
+                                <div>${formatDate(profile.dateOfBirth) || '-'}</div>
+                            </div>
+                            <div class="profile-detail-item">
+                                <div class="profile-detail-label">National ID</div>
+                                <div>${profile.nationalId || '-'}</div>
+                            </div>
+                            <div class="profile-detail-item">
+                                <div class="profile-detail-label">Relationship</div>
+                                <div>${profile.relationshipToPrimary || '-'}</div>
+                            </div>
+                            ${profile.address ? `
+                                <div class="profile-detail-item" style="grid-column: 1 / -1;">
+                                    <div class="profile-detail-label">Address</div>
+                                    <div>${profile.address}</div>
+                                </div>
+                            ` : ''}
+                            ${profile.email ? `
+                                <div class="profile-detail-item" style="grid-column: 1 / -1;">
+                                    <div class="profile-detail-label">Email</div>
+                                    <div>${profile.email}</div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Add family profile
+        function addFamilyProfile() {
+            navigateToAddFamilyProfile(userId);
+        }
+
+        // Create appointment
+        function createAppointment() {
+            // Navigate to create appointment page with preselected patient
+            window.location.href = `create-appointment.html?userId=${userId}`;
+        }
+
+        // Back to patients
+        function backToPatients() {
+            window.location.href = 'patients.html';
+        }
+
+        // Show error
+        function showError(message) {
+            document.getElementById('patientLoading').style.display = 'none';
+            document.getElementById('patientContent').style.display = 'none';
+            document.getElementById('patientError').style.display = 'block';
+            
+            const errorElement = document.getElementById('patientError');
+            errorElement.innerHTML = `
+                <h3>Failed to load patient</h3>
+                <p>${message}</p>
+                <p><a href="patients.html" class="btn btn-primary">Back to Patients</a></p>
+            `;
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
+</body>
+</html>
