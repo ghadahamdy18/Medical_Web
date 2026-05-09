@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Appointment - Medical Lab</title>
+    <link rel="stylesheet" href="../../css/dashboard.css">
+    <style>body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#2c7be5;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.form-card{background:#fff;padding:30px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);max-width:600px}.form-group{margin-bottom:20px}.form-group label{display:block;margin-bottom:8px;font-weight:600}.form-group input,.form-group select{width:100%;padding:12px;border:1px solid #ddd;border-radius:4px;font-size:14px}.form-group input:focus,.form-group select:focus{outline:none;border-color:#2c7be5}.radio-group{display:flex;gap:30px;margin-top:10px}.radio-option{display:flex;align-items:center;gap:8px}.radio-option input{width:auto}.radio-card{background:#f8f9fa;padding:15px 20px;border-radius:8px;cursor:pointer;transition:all .2s;border:2px solid transparent}.radio-card.selected{border-color:#2c7be5;background:#e8f0fe}.radio-card:hover{border-color:#ddd}.radio-card-title{font-weight:600;margin-bottom:5px}.radio-card-desc{font-size:13px;color:#666}.btn-primary{width:100%;padding:14px;background:#2c7be5;color:#fff;border:none;border-radius:4px;font-size:16px;cursor:pointer;margin-top:10px}.btn-primary:hover{background:#1a68d4}.back-link{display:inline-block;margin-bottom:20px;color:#2c7be5;text-decoration:none}</style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="dashboard-body">
+            <aside class="sidebar">
+                <div class="sidebar-logo">
+                    <h2>Medical Lab</h2>
+                </div>
+                <ul class="sidebar-menu">
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="book-appointment.html" class="active">Book Appointment</a></li>
+                    <li><a href="appointments.html">My Appointments</a></li>
+                    <li><a href="lab-results.html">Lab Results</a></li>
+                    <li><a href="notifications.html">Notifications</a></li>
+                    <li><a href="family-members.html">Family Members</a></li>
+                    <li><a href="profile.html">My Profile</a></li>
+                    <li><a href="settings.html">Settings</a></li>
+                </ul>
+                    <li><a href="lab-results.html">Lab Results</a></li>
+                    <li><a href="family-members.html">Family Members</a></li>
+                    <li><a href="profile.html">My Profile</a></li>
+                </ul>
+            </aside>
+            <div class="main-area">
+                <div class="top-bar">
+                    <div class="user-info">
+                        <div class="user-avatar">JP</div>
+                        <div class="user-details">
+                            <span class="user-name">John Patient</span>
+                            <span class="user-role">Patient</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-area">
+                    <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+                    <h1>Book New Appointment</h1>
+                    <div class="form-card">
+                        <form id="appointmentForm" onsubmit="submitAppointment(event)">
+                            <div class="form-group">
+                                <label>Select Date</label>
+                                <input type="date" id="appointmentDate" required min="2026-04-06">
+                            </div>
+                            <div class="form-group">
+                                <label>Select Time</label>
+                                <select id="appointmentTime" required>
+                                    <option value="">Choose time slot</option>
+                                    <option value="08:00">8:00 AM</option>
+                                    <option value="09:00">9:00 AM</option>
+                                    <option value="10:00">10:00 AM</option>
+                                    <option value="11:00">11:00 AM</option>
+                                    <option value="14:00">2:00 PM</option>
+                                    <option value="15:00">3:00 PM</option>
+                                    <option value="16:00">4:00 PM</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Visit Type</label>
+                                <div class="radio-group">
+                                    <label class="radio-card selected" onclick="selectVisitType('In-Lab')">
+                                        <input type="radio" name="visitType" value="In-Lab" checked style="display:none">
+                                        <div class="radio-card-title">In-Lab Visit</div>
+                                        <div class="radio-card-desc">Visit the lab for sample collection</div>
+                                    </label>
+                                    <label class="radio-card" onclick="selectVisitType('Home Visit')">
+                                        <input type="radio" name="visitType" value="Home Visit" style="display:none">
+                                        <div class="radio-card-title">Home Visit</div>
+                                        <div class="radio-card-desc">Technician comes to your home</div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Test Type / Notes (Optional)</label>
+                                <input type="text" id="testNotes" placeholder="e.g., Blood Test, Lipid Panel">
+                            </div>
+                            <button type="submit" class="btn-primary">Confirm Appointment</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../js/auth.js"></script>
+    <script>
+        function selectVisitType(type) {
+            document.querySelectorAll('.radio-card').forEach(card => card.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            event.currentTarget.querySelector('input').checked = true;
+        }
+        function submitAppointment(e) {
+            e.preventDefault();
+            const date = document.getElementById('appointmentDate').value;
+            const time = document.getElementById('appointmentTime').value;
+            const type = document.querySelector('input[name="visitType"]:checked').value;
+            const notes = document.getElementById('testNotes').value;
+            alert('Appointment booked successfully!\n\nDate: ' + date + '\nTime: ' + time + '\nType: ' + type + (notes ? '\nNotes: ' + notes : ''));
+            window.location.href = 'appointments.html';
+        }
+    </script>
+</body>
+</html>

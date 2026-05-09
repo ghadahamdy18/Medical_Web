@@ -1,0 +1,12 @@
+Demo accounts:
+
+Patient: 1234567890 / patient123
+
+Doctor: 9876543210 / doctor123
+
+Admin: 5555555555 / admin123
+
+Receptionist: 4444444444 / reception123
+
+
+pages/auth/verify-otp.html - Enter 6-digit verification code (demo code: 123456 )

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Lab System - Welcome</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .landing-page { min-height: 100vh; }
+        .hero-section {
+            background: linear-gradient(135deg, #2c7be5 0%, #1a68d4 100%);
+            color: #fff;
+            padding: 100px 30px 80px;
+            text-align: center;
+        }
+        .hero-section h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        .hero-section p {
+            font-size: 20px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+        .btn-cta {
+            display: inline-block;
+            background: #fff;
+            color: #2c7be5;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .about-section {
+            padding: 80px 30px;
+            background: #fff;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 50px;
+        }
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .about-card {
+            text-align: center;
+            padding: 30px;
+            border-radius: 12px;
+            background: #f8f9fa;
+            transition: transform 0.2s;
+        }
+        .about-card:hover { transform: translateY(-5px); }
+        .about-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        .about-card h3 { color: #333; margin-bottom: 15px; }
+        .about-card p { color: #666; line-height: 1.6; }
+        .features-section {
+            padding: 80px 30px;
+            background: #f5f5f5;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background: #e8f0fe;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        .feature-item h4 { margin-bottom: 8px; color: #333; }
+        .feature-item p { color: #666; font-size: 14px; }
+        .login-section {
+            padding: 80px 30px;
+            background: #fff;
+            text-align: center;
+        }
+        .login-section h2 { font-size: 28px; margin-bottom: 30px; color: #333; }
+        .login-btn {
+            display: inline-block;
+            background: #2c7be5;
+            color: #fff;
+            padding: 15px 50px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .login-btn:hover { background: #1a68d4; }
+        footer {
+            background: #1a68d4;
+            color: #fff;
+            padding: 30px;
+            text-align: center;
+        }
+        footer p { opacity: 0.8; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 200; justify-content: center; align-items: center; }
+        .modal.active { display: flex; }
+        .modal-content { background: #fff; padding: 40px; border-radius: 12px; width: 400px; max-width: 90%; }
+        .modal-close { float: right; font-size: 28px; cursor: pointer; color: #999; }
+        .modal-close:hover { color: #333; }
+        .login-container { width: 100%; }
+    </style>
+</head>
+<body class="landing-page">
+    <nav class="navbar">
+        <div class="navbar-brand">Medical Lab System</div>
+        <div class="navbar-links">
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#features">Features</a>
+            <a href="#" onclick="showLogin()">Login</a>
+        </div>
+    </nav>
+
+    <section id="home" class="hero-section">
+        <h1>Welcome to Medical Lab System</h1>
+        <p>Your trusted partner for comprehensive medical laboratory services. Fast, accurate, and reliable diagnostic solutions.</p>
+        <a href="#about" class="btn-cta">Learn More</a>
+    </section>
+
+    <section id="about" class="about-section">
+        <h2 class="section-title">About Our Lab</h2>
+        <div class="about-grid">
+            <div class="about-card">
+                <div class="about-icon">🏥</div>
+                <h3>Advanced Technology</h3>
+                <p>State-of-the-art diagnostic equipment and cutting-edge technology for accurate test results.</p>
+            </div>
+            <div class="about-card">
+                <div class="about-icon">👨‍⚕️</div>
+                <h3>Expert Team</h3>
+                <p>Certified medical professionals and lab technicians with years of experience.</p>
+            </div>
+            <div class="about-card">
+                <div class="about-icon">⏱️</div>
+                <h3>Fast Results</h3>
+                <p>Quick turnaround time for test results with online access for convenience.</p>
+            </div>
+            <div class="about-card">
+                <div class="about-icon">🔒</div>
+                <h3>Secure & Private</h3>
+                <p>Your medical data is protected with enterprise-grade security and privacy standards.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features-section">
+        <h2 class="section-title">Our Services</h2>
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-icon">📅</div>
+                <div>
+                    <h4>Online Appointments</h4>
+                    <p>Book lab appointments online - in-lab or home visit services available.</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">📄</div>
+                <div>
+                    <h4>Digital Results</h4>
+                    <p>Access your lab results securely online through our patient portal.</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">👨‍👩‍👧</div>
+                <div>
+                    <h4>Family Accounts</h4>
+                    <p>Manage your family's health records all in one convenient account.</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🏠</div>
+                <div>
+                    <h4>Home Visits</h4>
+                    <p>Sample collection from the comfort of your home for eligible tests.</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">📱</div>
+                <div>
+                    <h4>Real-time Updates</h4>
+                    <p>Get instant notifications about appointment status and new results.</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🩺</div>
+                <div>
+                    <h4>Doctor Portal</h4>
+                    <p>Healthcare providers can upload results and manage patient records.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="login-section">
+        <h2>Ready to Get Started?</h2>
+        <p style="color: #666; margin-bottom: 30px;">Login to manage appointments, view results, and more.</p>
+        <a href="#" onclick="showLogin()" class="login-btn">Login to Your Account</a>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Medical Lab System. All rights reserved.</p>
+        <p style="font-size: 14px; margin-top: 10px;">Trusted by healthcare professionals and patients nationwide</p>
+    </footer>
+
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeLogin()">&times;</span>
+            <div class="login-header">
+                <h1>Medical Lab System</h1>
+                <p>Sign in to access your account</p>
+            </div>
+            <div class="login-form">
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" placeholder="Enter your phone number">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password">
+                </div>
+                <button type="button" class="btn-primary" onclick="login()">Login</button>
+                <p style="text-align: center; margin-top: 15px;">
+                    <a href="#" onclick="showForgotPassword()" style="color: #2c7be5; text-decoration: none;">Forgot Password?</a>
+                </p>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="forgotPasswordModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeForgotPassword()">&times;</span>
+            <div class="login-header">
+                <h1>Reset Password</h1>
+                <p>Enter your phone number to reset your password</p>
+            </div>
+            <div class="login-form">
+                <div class="form-group">
+                    <label for="resetPhone">Phone Number</label>
+                    <input type="tel" id="resetPhone" placeholder="Enter your phone number">
+                </div>
+                <button type="button" class="btn-primary" onclick="resetPassword()">Send Reset Code</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        function showLogin() { document.getElementById('loginModal').classList.add('active'); }
+        function closeLogin() { document.getElementById('loginModal').classList.remove('active'); }
+        function showForgotPassword() { closeLogin(); document.getElementById('forgotPasswordModal').classList.add('active'); }
+        function closeForgotPassword() { document.getElementById('forgotPasswordModal').classList.remove('active'); }
+        function resetPassword() {
+            const phone = document.getElementById('resetPhone').value;
+            if (!phone) {
+                alert('Please enter your phone number');
+                return;
+            }
+            window.location.href = 'pages/auth/reset-password.html?phone=' + encodeURIComponent(phone);
+        }
+    </script>
+</body>
+</html>

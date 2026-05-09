@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointments - Medical Lab</title>
+    <link rel="stylesheet" href="../../css/dashboard.css">
+    <style>body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#6f42c1;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.back-link{display:inline-block;margin-bottom:20px;color:#2c7be5;text-decoration:none}.page-header{margin-bottom:25px}.page-header h1{font-size:24px;color:#333}.filter-bar{background:#fff;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);margin-bottom:20px;display:flex;gap:15px;align-items:center}.filter-bar select,.filter-bar input{padding:10px;border:1px solid #ddd;border-radius:4px}.table-container{background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);overflow:hidden}.table-container table{width:100%;border-collapse:collapse}.table-container th,.table-container td{padding:15px 20px;text-align:left;border-bottom:1px solid #eee}.table-container th{background:#f8f9fa;font-weight:600}.table-container tr:hover{background:#f8f9fa}.status-badge{padding:5px 12px;border-radius:20px;font-size:12px}.status-pending{background:#fff3cd;color:#856404}.status-confirmed{background:#d4edda;color:#155724}.status-completed{background:#cce5ff;color:#004085}.status-cancelled{background:#f8d7da;color:#721c24}</style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="dashboard-body">
+            <aside class="sidebar">
+                <div class="sidebar-logo"><h2>Medical Lab</h2></div>
+                <ul class="sidebar-menu">
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="appointments.html" class="active">Appointments</a></li>
+                    <li><a href="user-management.html">User Management</a></li>
+                    <li><a href="approvals.html">Staff Approvals</a></li>
+                    <li><a href="system-settings.html">System Settings</a></li>
+                </ul>
+            </aside>
+            <div class="main-area">
+                <div class="top-bar">
+                    <div class="user-info">
+                        <div class="user-avatar">A</div>
+                        <div class="user-details">
+                            <span class="user-name">Admin User</span>
+                            <span class="user-role">System Administrator</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-area">
+                    <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+                    <div class="page-header">
+                        <h1>All Appointments</h1>
+                    </div>
+                    <div class="filter-bar">
+                        <input type="date">
+                        <select><option>All Types</option><option>In-Lab</option><option>Home Visit</option></select>
+                        <select><option>All Status</option><option>Pending</option><option>Confirmed</option><option>Completed</option></select>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Patient</th>
+                                    <th>Type</th>
+                                    <th>Doctor</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#001</td>
+                                    <td>Apr 7, 2026</td>
+                                    <td>9:00 AM</td>
+                                    <td>John Patient</td>
+                                    <td>In-Lab</td>
+                                    <td>Dr. Sarah Smith</td>
+                                    <td><span class="status-badge status-confirmed">Confirmed</span></td>
+                                </tr>
+                                <tr>
+                                    <td>#002</td>
+                                    <td>Apr 7, 2026</td>
+                                    <td>11:00 AM</td>
+                                    <td>Jane Patient</td>
+                                    <td>In-Lab</td>
+                                    <td>Dr. Sarah Smith</td>
+                                    <td><span class="status-badge status-confirmed">Confirmed</span></td>
+                                </tr>
+                                <tr>
+                                    <td>#003</td>
+                                    <td>Apr 10, 2026</td>
+                                    <td>2:00 PM</td>
+                                    <td>John Patient</td>
+                                    <td>Home Visit</td>
+                                    <td>Dr. Sarah Smith</td>
+                                    <td><span class="status-badge status-pending">Pending</span></td>
+                                </tr>
+                                <tr>
+                                    <td>#004</td>
+                                    <td>Apr 5, 2026</td>
+                                    <td>10:00 AM</td>
+                                    <td>Mike Johnson</td>
+                                    <td>In-Lab</td>
+                                    <td>Dr. Sarah Smith</td>
+                                    <td><span class="status-badge status-completed">Completed</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../js/auth.js"></script>
+</body>
+</html>

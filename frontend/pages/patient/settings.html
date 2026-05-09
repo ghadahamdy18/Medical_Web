@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Patient Portal</title>
+    <link rel="stylesheet" href="../../css/dashboard.css">
+    <style>
+        body{background:#f5f5f5}
+        .dashboard{display:flex;flex-direction:column;min-height:100vh}
+        .dashboard-body{display:flex;flex:1}
+        .sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}
+        .sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}
+        .sidebar-logo h2{color:#2c7be5;font-size:20px}
+        .sidebar-menu{list-style:none}
+        .sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}
+        .sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}
+        .main-area{flex:1}
+        .top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}
+        .user-info{display:flex;align-items:center;gap:10px}
+        .user-avatar{width:40px;height:40px;background:#2c7be5;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}
+        .content-area{padding:30px}
+        .page-header{margin-bottom:25px}
+        .page-header h1{font-size:24px;color:#333}
+        .settings-container{max-width:800px}
+        .settings-section{background:#fff;padding:25px;border-radius:8px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+        .settings-section h2{font-size:18px;margin-bottom:20px;color:#333;border-bottom:1px solid #eee;padding-bottom:10px}
+        .settings-row{display:flex;justify-content:space-between;align-items:center;padding:15px 0;border-bottom:1px solid #f0f0f0}
+        .settings-row:last-child{border-bottom:none}
+        .settings-label{font-weight:500;color:#333}
+        .settings-desc{font-size:13px;color:#666;margin-top:4px}
+        .toggle-switch{position:relative;width:50px;height:26px}
+        .toggle-switch input{opacity:0;width:0;height:0}
+        .toggle-slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#ccc;transition:.4s;border-radius:26px}
+        .toggle-slider:before{position:absolute;content:"";height:20px;width:20px;left:3px;bottom:3px;background:#fff;transition:.4s;border-radius:50%}
+        input:checked+.toggle-slider{background:#2c7be5}
+        input:checked+.toggle-slider:before{transform:translateX(24px)}
+        .form-group{margin-bottom:20px}
+        .form-group label{display:block;margin-bottom:8px;font-weight:500}
+        .form-group input,.form-group select,.form-group textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:6px;font-size:14px}
+        .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#2c7be5}
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="dashboard-body">
+            <aside class="sidebar">
+                <div class="sidebar-logo"><h2>Medical Lab</h2></div>
+                <ul class="sidebar-menu">
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="book-appointment.html">Book Appointment</a></li>
+                    <li><a href="appointments.html">My Appointments</a></li>
+                    <li><a href="lab-results.html">Lab Results</a></li>
+                    <li><a href="notifications.html">Notifications</a></li>
+                    <li><a href="family-members.html">Family Members</a></li>
+                    <li><a href="profile.html">My Profile</a></li>
+                    <li><a href="settings.html" class="active">Settings</a></li>
+                </ul>
+            </aside>
+            <div class="main-area">
+                <div class="top-bar">
+                    <div class="user-info">
+                        <div class="user-avatar">JP</div>
+                        <div><strong>John Patient</strong></div>
+                    </div>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+                <div class="content-area">
+                    <div class="page-header">
+                        <h1>Settings</h1>
+                    </div>
+                    <div class="settings-container">
+                        <div class="settings-section">
+                            <h2>Notification Preferences</h2>
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-label">Email Notifications</div>
+                                    <div class="settings-desc">Receive email updates about appointments and results</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-label">SMS Notifications</div>
+                                    <div class="settings-desc">Receive text messages for important updates</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-label">Appointment Reminders</div>
+                                    <div class="settings-desc">Get reminders before your appointments</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="settings-section">
+                            <h2>Privacy & Security</h2>
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-label">Two-Factor Authentication</div>
+                                    <div class="settings-desc">Add extra security to your account</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-label">Login Notifications</div>
+                                    <div class="settings-desc">Get notified of new login attempts</div>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="settings-section">
+                            <h2>Change Password</h2>
+                            <div class="form-group">
+                                <label>Current Password</label>
+                                <input type="password" id="currentPassword" placeholder="Enter current password">
+                            </div>
+                            <div class="form-group">
+                                <label>New Password</label>
+                                <input type="password" id="newPassword" placeholder="Enter new password">
+                            </div>
+                            <div class="form-group">
+                                <label>Confirm New Password</label>
+                                <input type="password" id="confirmPassword" placeholder="Confirm new password">
+                            </div>
+                            <button class="btn-primary" onclick="changePassword()">Update Password</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../js/auth.js"></script>
+    <script>
+        function logout() { window.location.href = '../../index.html'; }
+        function changePassword() {
+            const current = document.getElementById('currentPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirm = document.getElementById('confirmPassword').value;
+            if (!current || !newPass || !confirm) { alert('Please fill all fields'); return; }
+            if (newPass !== confirm) { alert('Passwords do not match'); return; }
+            if (newPass.length < 6) { alert('Password must be at least 6 characters'); return; }
+            alert('Password updated successfully!');
+        }
+    </script>
+</body>
+</html>

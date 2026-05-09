@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab Result Details - Medical Lab System</title>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <style>
+        .result-detail { max-width: 900px; margin: 0 auto; }
+        .result-header { background: #fff; border-radius: 8px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px; }
+        .result-id { color: #666; font-size: 14px; margin-bottom: 10px; }
+        .result-title { font-size: 28px; font-weight: 600; margin-bottom: 15px; }
+        .result-meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .meta-item { display: flex; flex-direction: column; }
+        .meta-label { color: #999; font-size: 12px; text-transform: uppercase; }
+        .meta-value { font-size: 16px; font-weight: 600; }
+        .result-status { display: inline-block; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; }
+        .status-completed { background: #d4edda; color: #155724; }
+        .results-table { background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow: hidden; }
+        .results-table table { width: 100%; }
+        .test-name { font-weight: 600; }
+        .test-value { font-size: 18px; font-weight: bold; color: #2c7be5; }
+        .test-range { color: #999; font-size: 12px; }
+        .test-status { padding: 4px 10px; border-radius: 12px; font-size: 12px; }
+        .status-normal { background: #d4edda; color: #155724; }
+        .status-abnormal { background: #f8d7da; color: #721c24; }
+        .result-actions { display: flex; gap: 15px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <div class="page-header">
+            <h1><a href="lab-results.html" style="color: #333; text-decoration: none;">←</a> Lab Result Details</h1>
+        </div>
+
+        <div class="result-detail">
+            <div class="result-header">
+                <div class="result-id">Result ID: LR-2024-001234</div>
+                <div class="result-title">Complete Blood Count (CBC)</div>
+                <span class="result-status status-completed">Completed</span>
+                
+                <div class="result-meta mt-20">
+                    <div class="meta-item">
+                        <span class="meta-label">Test Date</span>
+                        <span class="meta-value">March 15, 2024</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Patient Name</span>
+                        <span class="meta-value">John Doe</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Ordered By</span>
+                        <span class="meta-value">Dr. Sarah Johnson</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Report Date</span>
+                        <span class="meta-value">March 16, 2024</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="results-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Test</th>
+                            <th>Result</th>
+                            <th>Reference Range</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="test-name">Hemoglobin</td>
+                            <td class="test-value">14.5 g/dL</td>
+                            <td class="test-range">13.5 - 17.5 g/dL</td>
+                            <td><span class="test-status status-normal">Normal</span></td>
+                        </tr>
+                        <tr>
+                            <td class="test-name">WBC Count</td>
+                            <td class="test-value">7,200 /μL</td>
+                            <td class="test-range">4,500 - 11,000 /μL</td>
+                            <td><span class="test-status status-normal">Normal</span></td>
+                        </tr>
+                        <tr>
+                            <td class="test-name">Platelet Count</td>
+                            <td class="test-value">250,000 /μL</td>
+                            <td class="test-range">150,000 - 400,000 /μL</td>
+                            <td><span class="test-status status-normal">Normal</span></td>
+                        </tr>
+                        <tr>
+                            <td class="test-name">Hematocrit</td>
+                            <td class="test-value">42%</td>
+                            <td class="test-range">38.8 - 50%</td>
+                            <td><span class="test-status status-normal">Normal</span></td>
+                        </tr>
+                        <tr>
+                            <td class="test-name">RBC Count</td>
+                            <td class="test-value">4.8 M/μL</td>
+                            <td class="test-range">4.5 - 5.5 M/μL</td>
+                            <td><span class="test-status status-normal">Normal</span></td>
+                        </tr>
+                        <tr>
+                            <td class="test-name">MCV</td>
+                            <td class="test-value">88 fL</td>
+                            <td class="test-range">80 - 100 fL</td>
+                            <td><span class="test-status status-normal">Normal</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="result-actions">
+                <button class="btn-primary" onclick="viewPDF()">View Full Report (PDF)</button>
+                <button class="btn-secondary" onclick="downloadPDF()">Download PDF</button>
+                <button class="btn-outline" onclick="shareResult()">Share Result</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../../js/auth.js"></script>
+    <script>
+        function viewPDF() {
+            window.open('pdf-viewer.html?id=LR-2024-001234', '_blank');
+        }
+        
+        function downloadPDF() {
+            alert('Downloading PDF...');
+        }
+        
+        function shareResult() {
+            const shareUrl = window.location.origin + '/share/LR-2024-001234';
+            navigator.clipboard.writeText(shareUrl);
+            alert('Share link copied to clipboard!');
+        }
+    </script>
+</body>
+</html>

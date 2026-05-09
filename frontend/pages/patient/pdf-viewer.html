@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Viewer - Medical Lab System</title>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <style>
+        .pdf-viewer-container { display: flex; height: calc(100vh - 120px); gap: 20px; }
+        .pdf-list { width: 300px; background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow-y: auto; }
+        .pdf-list h3 { margin-bottom: 15px; font-size: 18px; }
+        .pdf-item { padding: 15px; border: 1px solid #eee; border-radius: 6px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; }
+        .pdf-item:hover { background: #f8f9fa; border-color: #2c7be5; }
+        .pdf-item.active { background: #e8f0fe; border-color: #2c7be5; }
+        .pdf-item-name { font-weight: 600; font-size: 14px; margin-bottom: 5px; }
+        .pdf-item-date { color: #999; font-size: 12px; }
+        .pdf-viewer { flex: 1; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); display: flex; flex-direction: column; }
+        .pdf-toolbar { padding: 15px 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; border-radius: 8px 8px 0 0; }
+        .pdf-title { font-weight: 600; }
+        .pdf-controls { display: flex; gap: 10px; }
+        .pdf-content { flex: 1; display: flex; align-items: center; justify-content: center; background: #525659; }
+        .pdf-placeholder { text-align: center; color: #fff; }
+        .pdf-placeholder-icon { font-size: 64px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <div class="page-header">
+            <h1><a href="lab-result-details.html" style="color: #333; text-decoration: none;">←</a> PDF Viewer</h1>
+        </div>
+
+        <div class="pdf-viewer-container">
+            <div class="pdf-list">
+                <h3>Available Documents</h3>
+                <div class="pdf-item active" onclick="selectPDF(this, 'CBC Report')">
+                    <div class="pdf-item-name">CBC Report</div>
+                    <div class="pdf-item-date">March 16, 2024</div>
+                </div>
+                <div class="pdf-item" onclick="selectPDF(this, 'Lipid Profile')">
+                    <div class="pdf-item-name">Lipid Profile</div>
+                    <div class="pdf-item-date">March 10, 2024</div>
+                </div>
+                <div class="pdf-item" onclick="selectPDF(this, 'Thyroid Panel')">
+                    <div class="pdf-item-name">Thyroid Panel</div>
+                    <div class="pdf-item-date">March 5, 2024</div>
+                </div>
+                <div class="pdf-item" onclick="selectPDF(this, 'Liver Function')">
+                    <div class="pdf-item-name">Liver Function Tests</div>
+                    <div class="pdf-item-date">February 28, 2024</div>
+                </div>
+            </div>
+
+            <div class="pdf-viewer">
+                <div class="pdf-toolbar">
+                    <div class="pdf-title" id="currentPDF">CBC Report</div>
+                    <div class="pdf-controls">
+                        <button class="btn btn-sm btn-secondary" onclick="zoomOut()">-</button>
+                        <span style="padding: 8px 15px;">100%</span>
+                        <button class="btn btn-sm btn-secondary" onclick="zoomIn()">+</button>
+                        <button class="btn btn-sm btn-primary" onclick="downloadCurrentPDF()">Download</button>
+                        <button class="btn btn-sm btn-outline" onclick="printPDF()">Print</button>
+                    </div>
+                </div>
+                <div class="pdf-content">
+                    <div class="pdf-placeholder">
+                        <div class="pdf-placeholder-icon">📄</div>
+                        <h2>Complete Blood Count Report</h2>
+                        <p>Medical Lab System</p>
+                        <p style="margin-top: 30px; opacity: 0.7;">[PDF Preview Would Display Here]</p>
+                        <p style="margin-top: 10px; font-size: 14px;">Patient: John Doe | Date: March 16, 2024</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../../js/auth.js"></script>
+    <script>
+        function selectPDF(element, name) {
+            document.querySelectorAll('.pdf-item').forEach(item => item.classList.remove('active'));
+            element.classList.add('active');
+            document.getElementById('currentPDF').textContent = name;
+        }
+
+        function zoomIn() { alert('Zoom in'); }
+        function zoomOut() { alert('Zoom out'); }
+        function downloadCurrentPDF() { alert('Downloading PDF...'); }
+        function printPDF() { window.print(); }
+    </script>
+</body>
+</html>
