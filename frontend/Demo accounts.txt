@@ -1,4 +1,4 @@
-Demo accounts:
+Demo accounts (static demo login via frontend/index.html modal or inline forms that use js/auth.js):
 
 Patient: 1234567890 / patient123
 
@@ -8,5 +8,4 @@ Admin: 5555555555 / admin123
 
 Receptionist: 4444444444 / reception123
 
-
-pages/auth/verify-otp.html - Enter 6-digit verification code (demo code: 123456 )
+All roles use the same login entry point (project root welcome page). Password reset via OTP is not implemented in the backend or this Phase 1 frontend.

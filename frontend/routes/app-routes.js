@@ -1,49 +1,39 @@
 const APP_ROUTES = {
-    HOME: '../../../index.html',
-    
+    HOME: '../index.html',
+
     PATIENT: {
-        DASHBOARD: '../../patient/dashboard.html',
-        APPOINTMENTS: '../../patient/appointments.html',
-        BOOK_APPOINTMENT: '../../patient/book-appointment.html',
-        LAB_RESULTS: '../../patient/lab-results.html',
-        NOTIFICATIONS: '../../patient/notifications.html',
-        PROFILE: '../../patient/profile.html',
-        SETTINGS: '../../patient/settings.html',
-        FAMILY_MEMBERS: '../../patient/family-members.html'
+        DASHBOARD: '../pages/patient/dashboard.html',
+        APPOINTMENTS: '../pages/patient/appointments.html',
+        BOOK_APPOINTMENT: '../pages/patient/book-appointment.html',
+        LAB_RESULTS: '../pages/patient/lab-results.html',
+        PROFILE: '../pages/patient/profile.html',
+        SETTINGS: '../pages/patient/settings.html',
+        FAMILY_MEMBERS: '../pages/patient/family-members.html'
     },
 
     DOCTOR: {
-        DASHBOARD: '../../doctor/dashboard.html',
-        PATIENT_LIST: '../../doctor/patient-list.html',
-        APPOINTMENTS: '../../doctor/appointments.html',
-        UPLOAD_RESULTS: '../../doctor/upload-results.html',
-        PATIENT_NOTES: '../../doctor/patient-notes.html',
-        NOTIFICATIONS: '../../doctor/notifications.html',
-        SETTINGS: '../../doctor/settings.html',
-        LOGIN: '../../doctor/login.html',
-        REQUEST_ACCESS: '../../doctor/request-access.html'
+        DASHBOARD: '../pages/doctor/dashboard.html',
+        PATIENT_LIST: '../pages/doctor/patient-list.html',
+        APPOINTMENTS: '../pages/doctor/appointments.html',
+        UPLOAD_RESULTS: '../pages/doctor/upload-results.html',
+        SETTINGS: '../pages/doctor/settings.html'
     },
 
     ADMIN: {
-        DASHBOARD: '../../admin/dashboard.html',
-        APPROVALS: '../../admin/approvals.html',
-        USER_MANAGEMENT: '../../admin/user-management.html',
-        APPOINTMENTS: '../../admin/appointments.html',
-        NOTIFICATIONS: '../../admin/notifications.html',
-        SYSTEM_SETTINGS: '../../admin/system-settings.html'
+        DASHBOARD: '../pages/admin/dashboard.html',
+        USER_MANAGEMENT: '../pages/admin/user-management.html',
+        APPOINTMENTS: '../pages/admin/appointments.html'
     },
 
     RECEPTIONIST: {
-        DASHBOARD: '../../receptionist/dashboard.html',
-        WALKIN_REGISTER: '../../receptionist/walkin-register.html',
-        QUEUE_MANAGEMENT: '../../receptionist/queue-management.html',
-        PRINT_RESULTS: '../../receptionist/print-results.html'
+        DASHBOARD: '../pages/receptionist/dashboard.html',
+        WALKIN_REGISTER: '../pages/receptionist/walkin-register.html'
     },
 
     ERRORS: {
-        NOT_FOUND: '../../errors/404.html',
-        FORBIDDEN: '../../errors/403.html',
-        SERVER_ERROR: '../../errors/500.html'
+        NOT_FOUND: '../pages/errors/404.html',
+        FORBIDDEN: '../pages/errors/403.html',
+        SERVER_ERROR: '../pages/errors/500.html'
     }
 };
 
@@ -54,7 +44,7 @@ function navigateTo(route) {
 }
 
 function redirectBasedOnRole() {
-    const user = authService.getUser();
+    const user = typeof authService !== 'undefined' && authService ? authService.getUser() : null;
     if (!user) {
         navigateTo(APP_ROUTES.HOME);
         return;

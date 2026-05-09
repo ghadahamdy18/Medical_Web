@@ -20,14 +20,7 @@ const db = {
     doctors: [
         { id: 2, userId: 2, name: 'Dr. Sarah Smith', specialization: 'General Medicine' }
     ],
-    adminPatients: [],
-    notifications: [
-        { id: 1, type: 'appointment', title: 'New Appointment Request', message: 'John Patient booked a Home Visit for April 10', time: '2 hours ago', read: false },
-        { id: 2, type: 'registration', title: 'New Doctor Registration', message: 'Dr. Emily Johnson requested access', time: '1 day ago', read: true }
-    ],
-    staffApprovals: [
-        { id: 1, name: 'Dr. Emily Johnson', role: 'doctor', specialization: 'Pathology', status: 'Pending', requestDate: '2026-04-05' }
-    ]
+    adminPatients: []
 };
 
 let currentUser = null;
@@ -72,7 +65,8 @@ function logout() {
     currentPatientProfile = null;
     localStorage.removeItem('currentUser');
     localStorage.removeItem('currentPatientProfile');
-    window.location.href = '../index.html';
+    const path = window.location.pathname.replace(/\\/g, '/');
+    window.location.href = path.includes('/pages/') ? '../../index.html' : 'index.html';
 }
 
 function getCurrentUser() {
@@ -121,14 +115,6 @@ function getAllAppointments() {
     return db.appointments;
 }
 
-function getNotifications() {
-    return db.notifications;
-}
-
-function getStaffApprovals() {
-    return db.staffApprovals;
-}
-
 function getAllUsers() {
     return db.users;
 }
@@ -136,14 +122,6 @@ function getAllUsers() {
 function addAppointment(appointment) {
     const newId = db.appointments.length + 1;
     db.appointments.push({ ...appointment, id: newId, status: 'Pending' });
-    db.notifications.unshift({
-        id: db.notifications.length + 1,
-        type: 'appointment',
-        title: 'New Appointment Request',
-        message: `${appointment.patientName} booked a ${appointment.type} for ${appointment.date}`,
-        time: 'Just now',
-        read: false
-    });
     return true;
 }
 
