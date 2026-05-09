@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Profile - Medical Lab</title>
+    <link rel="stylesheet" href="../../css/dashboard.css">
+    <style>
+        body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#2c7be5;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.back-link{display:inline-block;margin-bottom:20px;color:#2c7be5;text-decoration:none}.page-header{margin-bottom:25px}.page-header h1{font-size:24px;color:#333}.profiles-list{display:flex;flex-direction:column;gap:15px}.profile-card{background:#fff;padding:25px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:all .2s;border:2px solid transparent}.profile-card:hover{border-color:#2c7be5;box-shadow:0 4px 12px rgba(44,123,229,.15)}.profile-card.selected{border-color:#2c7be5;background:#e8f0fe}.profile-info{display:flex;align-items:center;gap:20px}.profile-avatar{width:60px;height:60px;background:#2c7be5;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:bold}.profile-details h3{font-size:18px;margin-bottom:5px}.profile-details p{font-size:14px;color:#666;margin:2px 0}.profile-actions{display:flex;align-items:center}.selected-badge{background:#28a745;color:#fff;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600}.select-btn{background:#2c7be5;color:#fff;border:none;padding:10px 20px;border-radius:4px;cursor:pointer;font-weight:600}.select-btn:hover{background:#1a5fbf}.empty-state{text-align:center;padding:60px 20px;color:#666}.empty-state h3{font-size:20px;margin-bottom:10px}.loading{text-align:center;padding:40px;color:#666}
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="dashboard-body">
+            <aside class="sidebar">
+                <div class="sidebar-logo">
+                    <h2>Medical Lab</h2>
+                </div>
+                <ul class="sidebar-menu">
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="select-profile.html" class="active">Select Profile</a></li>
+                    <li><a href="book-appointment.html">Book Appointment</a></li>
+                    <li><a href="appointments.html">My Appointments</a></li>
+                    <li><a href="lab-results.html">Lab Results</a></li>
+                    <li><a href="family-members.html">Family Members</a></li>
+                    <li><a href="profile.html">My Profile</a></li>
+                    <li><a href="settings.html">Settings</a></li>
+                </ul>
+            </aside>
+            <div class="main-area">
+                <div class="top-bar">
+                    <div class="user-info">
+                        <div class="user-avatar" id="userInitials">JP</div>
+                        <div class="user-details">
+                            <span class="user-name" id="userName">John Patient</span>
+                            <span class="user-role">Patient</span>
+                        </div>
+                    </div>
+                    <div class="top-bar-right">
+                        <button class="logout-btn" onclick="logoutUser()">Logout</button>
+                    </div>
+                </div>
+                <div class="content-area">
+                    <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+                    <div class="page-header">
+                        <h1>Select Patient Profile</h1>
+                        <p>Choose which profile you want to use for booking appointments and viewing results</p>
+                    </div>
+                    
+                    <div id="profilesContainer" class="profiles-list">
+                        <div class="loading">Loading profiles...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/ui.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/guards.js"></script>
+    <script src="../../assets/js/patient.js"></script>
+    <script>
+        // Require patient role
+        requireRole('patient');
+
+        let profiles = [];
+        let selectedProfileId = null;
+
+        // Load profiles and user info
+        async function loadProfiles() {
+            try {
+                const user = getCurrentUser();
+                if (!user) {
+                    window.location.href = '../../index.html';
+                    return;
+                }
+
+                // Update user info in top bar
+                document.getElementById('userName').textContent = user.fullName || user.name || 'Patient';
+                const name = user.fullName || user.name || 'Patient';
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('userInitials').textContent = initials;
+
+                // Load profiles from backend
+                profiles = await getPatientProfiles();
+                
+                // Get currently selected profile
+                const selectedProfile = getSelectedPatientProfile();
+                selectedProfileId = selectedProfile ? selectedProfile._id : null;
+
+                renderProfiles();
+
+            } catch (error) {
+                console.error('Failed to load profiles:', error);
+                document.getElementById('profilesContainer').innerHTML = `
+                    <div class="empty-state">
+                        <h3>Failed to load profiles</h3>
+                        <p>Please try again later</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Render profiles list
+        function renderProfiles() {
+            const container = document.getElementById('profilesContainer');
+            
+            if (!profiles || profiles.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No profiles found</h3>
+                        <p>You don't have any patient profiles yet. Please contact support to create a profile.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = profiles.map(profile => {
+                const isSelected = profile._id === selectedProfileId;
+                const initials = profile.fullName.split(' ').map(n => n[0]).join('').toUpperCase();
+                
+                return `
+                    <div class="profile-card ${isSelected ? 'selected' : ''}" onclick="selectProfile('${profile._id}')">
+                        <div class="profile-info">
+                            <div class="profile-avatar">${initials}</div>
+                            <div class="profile-details">
+                                <h3>${profile.fullName}</h3>
+                                <p>Date of Birth: ${formatDate(profile.dateOfBirth)}</p>
+                                <p>Gender: ${profile.gender}</p>
+                                <p>Phone: ${profile.phoneNumber}</p>
+                            </div>
+                        </div>
+                        <div class="profile-actions">
+                            ${isSelected ? 
+                                '<span class="selected-badge">Currently Selected</span>' : 
+                                '<button class="select-btn">Select</button>'
+                            }
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Select a profile
+        async function selectProfile(profileId) {
+            try {
+                // If already selected, just redirect to dashboard
+                if (profileId === selectedProfileId) {
+                    window.location.href = 'dashboard.html';
+                    return;
+                }
+
+                // Call backend to select profile
+                await selectPatientProfile(profileId);
+                
+                // Find the profile object
+                const profile = profiles.find(p => p._id === profileId);
+                if (profile) {
+                    // Save to localStorage
+                    saveSelectedPatientProfile(profile);
+                    selectedProfileId = profileId;
+                    
+                    // Re-render to show selection
+                    renderProfiles();
+                    
+                    // Show success message
+                    if (typeof showToast === 'function') {
+                        showToast(`Profile selected: ${profile.fullName}`, 'success');
+                    }
+                    
+                    // Redirect to dashboard after a short delay
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                }
+            } catch (error) {
+                console.error('Failed to select profile:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Failed to select profile. Please try again.', 'error');
+                }
+            }
+        }
+
+        // Format date helper
+        function formatDate(dateString) {
+            if (!dateString) return 'Not specified';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', loadProfiles);
+    </script>
+</body>
+</html>

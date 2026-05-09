@@ -43,7 +43,7 @@
                         </div>
                     </div>
                     <div class="top-bar-right">
-                        <button class="logout-btn" onclick="logout()">Logout</button>
+                        <button class="logout-btn" onclick="logoutUser()">Logout</button>
                     </div>
                 </div>
                 <div class="content-area">
@@ -119,16 +119,98 @@
             </div>
         </div>
     </div>
-    <script src="../../js/auth.js"></script>
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/ui.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/guards.js"></script>
+    <script src="../../assets/js/patient.js"></script>
     <script>
-        const user = getCurrentUser();
-        const patient = getCurrentPatient() || db.patients[0];
-        if (user) {
-            document.getElementById('userName').textContent = user.name;
-            document.getElementById('patientName').textContent = patient.name.split(' ')[0];
-            document.getElementById('userInitials').textContent = patient.name.split(' ').map(n => n[0]).join('');
+        // Require patient role
+        requireRole('patient');
+
+        // Load dashboard data
+        async function loadDashboard() {
+            try {
+                const user = getCurrentUser();
+                if (!user) {
+                    window.location.href = '../../index.html';
+                    return;
+                }
+
+                // Update user info in top bar
+                document.getElementById('userName').textContent = user.fullName || user.name || 'Patient';
+                document.getElementById('patientName').textContent = (user.fullName || user.name || 'Patient').split(' ')[0];
+                
+                // Set user initials
+                const name = user.fullName || user.name || 'Patient';
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('userInitials').textContent = initials;
+
+                // Load dashboard data from backend
+                const dashboardData = await getPatientDashboard();
+                
+                // Update stats
+                document.getElementById('totalAppointments').textContent = dashboardData.totalAppointments || 0;
+                document.getElementById('completedTests').textContent = dashboardData.completedTests || 0;
+                document.getElementById('pendingAppointments').textContent = dashboardData.pendingAppointments || 0;
+
+                // Load selected profile
+                const selectedProfile = getSelectedPatientProfile();
+                if (selectedProfile) {
+                    document.getElementById('profileSelect').innerHTML = `<option value="${selectedProfile._id}">${selectedProfile.fullName}</option>`;
+                }
+
+                // Load upcoming appointments
+                const appointments = await getPatientAppointments();
+                const upcomingAppointments = appointments.filter(apt => 
+                    apt.status === 'pending' || apt.status === 'confirmed'
+                ).slice(0, 3); // Show only first 3
+
+                const upcomingContainer = document.getElementById('upcomingAppointments');
+                if (upcomingAppointments.length === 0) {
+                    upcomingContainer.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">No upcoming appointments</p>';
+                } else {
+                    upcomingContainer.innerHTML = upcomingAppointments.map(apt => `
+                        <div class="recent-item">
+                            <div class="recent-item-info">
+                                <h4>${apt.notes || 'Lab Test'}</h4>
+                                <p>${apt.appointmentType === 'in_lab' ? 'In-Lab Visit' : 'Home Visit'} • Dr. ${apt.doctorName || 'Doctor'}</p>
+                            </div>
+                            <div class="recent-item-time">${formatDate(apt.appointmentDate)} • ${formatTime(apt.appointmentTime)}</div>
+                        </div>
+                    `).join('');
+                }
+
+            } catch (error) {
+                console.error('Failed to load dashboard:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load dashboard data', 'error');
+                }
+            }
         }
-        function logout() { window.location.href = '../../index.html'; }
+
+        // Format date helper
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        // Format time helper
+        function formatTime(timeString) {
+            const [hours, minutes] = timeString.split(':');
+            const hour = parseInt(hours);
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const displayHour = hour > 12 ? hour - 12 : hour;
+            return `${displayHour}:${minutes} ${ampm}`;
+        }
+
+        // Logout function
+        function logout() {
+            logoutUser();
+        }
+
+        // Initialize dashboard on page load
+        document.addEventListener('DOMContentLoaded', loadDashboard);
     </script>
 </body>
 </html>

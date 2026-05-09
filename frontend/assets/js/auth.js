@@ -33,11 +33,12 @@
         }
 
         var body = Object.assign({}, data);
+        delete body.confirmPassword;
 
-        return apiPost('/auth/register', body).then(function (res) {
+        return apiPost('/auth/register', body, { skipAuthRedirect: true }).then(function (res) {
             persistSuccessfulAuthPayload(res);
             var mustFlag = !!(res.user && res.user.mustChangePassword);
-            redirectByRole(res.user, mustFlag);
+            redirectByRole(res.user || {}, mustFlag);
             return res;
         });
     }
@@ -53,7 +54,7 @@
 
         var body = { phoneNumber: String(phoneNumber).trim(), password: password };
 
-        return apiPost('/auth/login', body).then(function (res) {
+        return apiPost('/auth/login', body, { skipAuthRedirect: true }).then(function (res) {
             persistSuccessfulAuthPayload(res);
             var must =
                 typeof res.mustChangePassword === 'boolean'
@@ -123,7 +124,7 @@
                 : !!(user && user.mustChangePassword);
 
         if (must && user) {
-            global.location.href = resolveMustChangePasswordPath(user.role);
+            global.location.href = resolveMustChangePasswordPath();
             return;
         }
 
@@ -138,34 +139,41 @@
         global.location.href =
             typeof global.labResolveDashboardHref === 'function'
                 ? global.labResolveDashboardHref(user.role)
-                : 'pages/patient/dashboard.html';
+                : 'patient/dashboard.html';
     }
 
-    function resolveMustChangePasswordPath(role) {
+    function resolveMustChangePasswordPath() {
+        if (typeof global.labResolveChangePasswordHref === 'function') {
+            return global.labResolveChangePasswordHref();
+        }
         var prefix = global.labFrontend && global.labFrontend.computePathToFrontendRoot
             ? global.labFrontend.computePathToFrontendRoot()
             : '';
-
-        var r = String(role || '').toLowerCase();
-
-        if (r === 'patient')
-            return prefix + 'pages/patient/settings.html#change-password';
-        if (r === 'doctor')
-            return prefix + 'pages/doctor/settings.html#change-password';
-
-        return typeof global.labResolveDashboardHref === 'function'
-            ? global.labResolveDashboardHref(r)
-            : prefix + 'index.html';
+        return prefix + 'auth/change-password.html';
     }
 
     /** Called from landing page modal — keeps inline HTML tiny */
     async function submitLandingLogin() {
+        var btn = document.getElementById('landingLoginBtn');
+        var idleLabel = btn && btn.textContent ? btn.textContent : 'Login';
+
         try {
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Signing in…';
+            }
+
             var phoneInput = document.getElementById('phone');
             var pwdInput = document.getElementById('password');
+            var phone = phoneInput ? String(phoneInput.value).trim() : '';
+            var pwd = pwdInput ? pwdInput.value : '';
 
-            await loginUser(phoneInput && phoneInput.value, pwdInput && pwdInput.value);
+            await loginUser(phone, pwd);
         } catch (err) {
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = idleLabel;
+            }
             var msg = err && err.message ? err.message : 'Login failed.';
             if (typeof global.showToast === 'function')
                 global.showToast(msg, 'error', 6000);

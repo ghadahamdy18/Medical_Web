@@ -40,6 +40,7 @@
                 <div class="sidebar-logo"><h2>Medical Lab</h2></div>
                 <ul class="sidebar-menu">
                     <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="select-profile.html">Select Profile</a></li>
                     <li><a href="book-appointment.html">Book Appointment</a></li>
                     <li><a href="appointments.html">My Appointments</a></li>
                     <li><a href="lab-results.html">Lab Results</a></li>
@@ -51,10 +52,15 @@
             <div class="main-area">
                 <div class="top-bar">
                     <div class="user-info">
-                        <div class="user-avatar">JP</div>
-                        <div><strong>John Patient</strong></div>
+                        <div class="user-avatar" id="userInitials">JP</div>
+                        <div class="user-details">
+                            <span class="user-name" id="userName">John Patient</span>
+                            <span class="user-role">Patient</span>
+                        </div>
                     </div>
-                    <button class="logout-btn" onclick="logout()">Logout</button>
+                    <div class="top-bar-right">
+                        <button class="logout-btn" onclick="logoutUser()">Logout</button>
+                    </div>
                 </div>
                 <div class="content-area">
                     <div class="page-header">
@@ -82,18 +88,92 @@
             </div>
         </div>
     </div>
-    <script src="../../js/auth.js"></script>
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/ui.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/guards.js"></script>
+    <script src="../../assets/js/patient.js"></script>
     <script>
-        function logout() { window.location.href = '../../index.html'; }
-        function changePassword() {
+        // Require patient role
+        requireRole('patient');
+
+        // Initialize page
+        async function initializePage() {
+            try {
+                const user = getCurrentUser();
+                if (!user) {
+                    window.location.href = '../../index.html';
+                    return;
+                }
+
+                // Update user info in top bar
+                document.getElementById('userName').textContent = user.fullName || user.name || 'Patient';
+                const name = user.fullName || user.name || 'Patient';
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('userInitials').textContent = initials;
+
+            } catch (error) {
+                console.error('Failed to initialize page:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load page', 'error');
+                }
+            }
+        }
+
+        // Change password function
+        async function changePassword() {
             const current = document.getElementById('currentPassword').value;
             const newPass = document.getElementById('newPassword').value;
             const confirm = document.getElementById('confirmPassword').value;
-            if (!current || !newPass || !confirm) { alert('Please fill all fields'); return; }
-            if (newPass !== confirm) { alert('Passwords do not match'); return; }
-            if (newPass.length < 6) { alert('Password must be at least 6 characters'); return; }
-            alert('Password updated successfully!');
+            
+            if (!current || !newPass || !confirm) { 
+                if (typeof showToast === 'function') {
+                    showToast('Please fill all fields', 'error');
+                } else {
+                    alert('Please fill all fields');
+                }
+                return; 
+            }
+            if (newPass !== confirm) { 
+                if (typeof showToast === 'function') {
+                    showToast('Passwords do not match', 'error');
+                } else {
+                    alert('Passwords do not match');
+                }
+                return; 
+            }
+            if (newPass.length < 6) { 
+                if (typeof showToast === 'function') {
+                    showToast('Password must be at least 6 characters', 'error');
+                } else {
+                    alert('Password must be at least 6 characters');
+                }
+                return; 
+            }
+
+            try {
+                await changePassword(current, newPass);
+                if (typeof showToast === 'function') {
+                    showToast('Password updated successfully!', 'success');
+                } else {
+                    alert('Password updated successfully!');
+                }
+                // Clear form
+                document.getElementById('currentPassword').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+            } catch (error) {
+                console.error('Failed to change password:', error);
+                if (typeof showToast === 'function') {
+                    showToast(error.message || 'Failed to change password', 'error');
+                } else {
+                    alert('Failed to change password');
+                }
+            }
         }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializePage);
     </script>
 </body>
 </html>

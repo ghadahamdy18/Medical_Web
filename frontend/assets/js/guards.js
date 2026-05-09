@@ -13,11 +13,12 @@
         return 'index.html';
     }
 
-    /** Role-specific dashboards — actual files live at `frontend/pages/<role>/dashboard.html`. */
+    /** Role dashboards: `frontend/<role>/dashboard.html` (Phase 3). */
     function getDashboardPath(role) {
         if (typeof global.labResolveDashboardHref === 'function')
             return global.labResolveDashboardHref(role);
-        return 'pages/' + String(role || 'patient').toLowerCase() + '/dashboard.html';
+        var r = String(role || 'patient').toLowerCase();
+        return r + '/dashboard.html';
     }
 
     /**

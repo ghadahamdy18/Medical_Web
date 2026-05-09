@@ -14,6 +14,7 @@
                 <div class="sidebar-logo"><h2>Medical Lab</h2></div>
                 <ul class="sidebar-menu">
                     <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="select-profile.html">Select Profile</a></li>
                     <li><a href="book-appointment.html">Book Appointment</a></li>
                     <li><a href="appointments.html">My Appointments</a></li>
                     <li><a href="lab-results.html">Lab Results</a></li>
@@ -25,11 +26,14 @@
             <div class="main-area">
                 <div class="top-bar">
                     <div class="user-info">
-                        <div class="user-avatar">JP</div>
+                        <div class="user-avatar" id="userInitials">JP</div>
                         <div class="user-details">
-                            <span class="user-name">John Patient</span>
+                            <span class="user-name" id="userName">John Patient</span>
                             <span class="user-role">Patient</span>
                         </div>
+                    </div>
+                    <div class="top-bar-right">
+                        <button class="logout-btn" onclick="logoutUser()">Logout</button>
                     </div>
                 </div>
                 <div class="content-area">
@@ -70,6 +74,124 @@
             </div>
         </div>
     </div>
-    <script src="../../js/auth.js"></script>
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/ui.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/guards.js"></script>
+    <script src="../../assets/js/patient.js"></script>
+    <script>
+        // Require patient role
+        requireRole('patient');
+
+        // Initialize page
+        async function initializePage() {
+            try {
+                const user = getCurrentUser();
+                if (!user) {
+                    window.location.href = '../../index.html';
+                    return;
+                }
+
+                // Update user info in top bar
+                document.getElementById('userName').textContent = user.fullName || user.name || 'Patient';
+                const name = user.fullName || user.name || 'Patient';
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('userInitials').textContent = initials;
+
+                // Load profiles from backend
+                await loadProfiles();
+
+            } catch (error) {
+                console.error('Failed to initialize page:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load page', 'error');
+                }
+            }
+        }
+
+        // Load profiles
+        async function loadProfiles() {
+            try {
+                const profiles = await getPatientProfiles();
+                const selectedProfile = getSelectedPatientProfile();
+                
+                const familyGrid = document.querySelector('.family-grid');
+                if (!profiles || profiles.length === 0) {
+                    familyGrid.innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">No family profiles found</p>';
+                    return;
+                }
+
+                familyGrid.innerHTML = profiles.map(profile => {
+                    const isSelected = selectedProfile && selectedProfile._id === profile._id;
+                    const initials = profile.fullName.split(' ').map(n => n[0]).join('').toUpperCase();
+                    
+                    return `
+                        <div class="family-card ${isSelected ? 'primary' : ''}">
+                            ${isSelected ? '<span class="primary-badge">Currently Viewing</span>' : ''}
+                            <div class="family-avatar">${initials}</div>
+                            <div class="family-name">${profile.fullName}</div>
+                            <div class="family-relation">${profile.relation || 'Family Member'}</div>
+                            <div class="family-details">
+                                <p>DOB: ${formatDate(profile.dateOfBirth)}</p>
+                                <p>${profile.gender}</p>
+                            </div>
+                            <div class="family-actions">
+                                ${isSelected ? 
+                                    '<button class="btn-primary-action">Currently Selected</button>' : 
+                                    `<button class="btn-view" onclick="selectProfile('${profile._id}')">Select Profile</button>`
+                                }
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (error) {
+                console.error('Failed to load profiles:', error);
+                const familyGrid = document.querySelector('.family-grid');
+                if (familyGrid) {
+                    familyGrid.innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">Failed to load profiles</p>';
+                }
+            }
+        }
+
+        // Select profile
+        async function selectProfile(profileId) {
+            try {
+                await selectPatientProfile(profileId);
+                
+                // Reload profiles to update UI
+                await loadProfiles();
+                
+                if (typeof showToast === 'function') {
+                    showToast('Profile selected successfully!', 'success');
+                }
+                
+                // Redirect to dashboard
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1000);
+                
+            } catch (error) {
+                console.error('Failed to select profile:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Failed to select profile', 'error');
+                }
+            }
+        }
+
+        // Format date helper
+        function formatDate(dateString) {
+            if (!dateString) return 'Unknown';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
 </body>
 </html>

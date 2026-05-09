@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Registration — Medical Lab</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        body.login-page { background: #e8eef5; }
+        .auth-wrap { display: flex; justify-content: center; padding: 40px 16px 80px; }
+        .form-card-auth { background: #fff; padding: 32px; border-radius: 10px; box-shadow: 0 6px 24px rgba(0,0,0,.08); width: 100%; max-width: 560px; }
+        .form-card-auth h1 { margin-bottom: 8px; color: #333; font-size: 24px; }
+        .subtitle { color: #666; font-size: 14px; margin-bottom: 22px; }
+        .muted { font-size: 13px; color: #777; margin-top: 14px; text-align: center; }
+        .muted a { color: #2c7be5; font-weight: 600; }
+        textarea { min-height: 72px; resize: vertical; }
+    </style>
+</head>
+<body class="login-page">
+    <nav class="navbar">
+        <div class="navbar-brand">Medical Lab System</div>
+        <div class="navbar-links">
+            <a href="../index.html">Home</a>
+            <a href="#" onclick="event.preventDefault(); location.href=getLoginPath();">Login</a>
+        </div>
+    </nav>
+
+    <div class="auth-wrap">
+        <div class="form-card-auth">
+            <h1>Create patient account</h1>
+            <p class="subtitle">Register with the same details your lab will verify. All fields marked * are required.</p>
+
+            <div id="registerAlert" class="alert alert-error hidden" role="alert"></div>
+
+            <form id="registerForm" novalidate>
+                <div class="form-group">
+                    <label for="fullName">Full name *</label>
+                    <input type="text" id="fullName" name="fullName" required maxlength="100" autocomplete="name"
+                           placeholder="e.g. Ahmad Hassan">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="form-group">
+                        <label for="phoneNumber">Phone number *</label>
+                        <input type="tel" id="phoneNumber" required autocomplete="tel" placeholder="digits only">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" autocomplete="email" placeholder="optional">
+                    </div>
+                </div>
+                <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="form-group">
+                        <label for="password">Password *</label>
+                        <input type="password" id="password" autocomplete="new-password" required minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm password *</label>
+                        <input type="password" id="confirmPassword" autocomplete="new-password" required minlength="6">
+                    </div>
+                </div>
+                <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender" name="gender">
+                            <option value="">Prefer not to say</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="dateOfBirth">Date of birth</label>
+                        <input type="date" id="dateOfBirth" name="dateOfBirth">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="nationalId">National ID</label>
+                    <input type="text" id="nationalId" maxlength="50" placeholder="optional">
+                </div>
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <textarea id="address" maxlength="500" placeholder="optional"></textarea>
+                </div>
+                <button type="submit" class="btn-primary" id="registerSubmitBtn">Create account</button>
+            </form>
+
+            <p class="muted">Already have an account? <a href="../index.html">Back to home &amp; login</a></p>
+        </div>
+    </div>
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/ui.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/guards.js"></script>
+    <script>
+        function showRegisterError(msg) {
+            var box = document.getElementById('registerAlert');
+            if (!msg) {
+                box.classList.add('hidden');
+                box.textContent = '';
+                return;
+            }
+            box.textContent = msg;
+            box.classList.remove('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof redirectIfLoggedIn === 'function') {
+                redirectIfLoggedIn();
+            }
+
+            document.getElementById('registerForm').addEventListener('submit', async function (ev) {
+                ev.preventDefault();
+                showRegisterError('');
+
+                var fullName = document.getElementById('fullName').value.trim();
+                var phoneNumber = document.getElementById('phoneNumber').value.trim();
+                var email = document.getElementById('email').value.trim();
+                var password = document.getElementById('password').value;
+                var confirmPassword = document.getElementById('confirmPassword').value;
+                var gender = document.getElementById('gender').value;
+                var dateOfBirth = document.getElementById('dateOfBirth').value;
+                var nationalId = document.getElementById('nationalId').value.trim();
+                var address = document.getElementById('address').value.trim();
+
+                if (!fullName || !phoneNumber || !password) {
+                    showRegisterError('Please fill full name, phone number, and password.');
+                    return;
+                }
+                if (password.length < 6) {
+                    showRegisterError('Password must be at least 6 characters (matches server rules).');
+                    return;
+                }
+                if (password !== confirmPassword) {
+                    showRegisterError('Password and confirm password must match.');
+                    return;
+                }
+
+                var btn = document.getElementById('registerSubmitBtn');
+                var idle = btn.textContent;
+
+                /** @type {Object} Payload for POST /auth/register */
+                var data = {
+                    fullName: fullName,
+                    phoneNumber: phoneNumber,
+                    password: password,
+                    confirmPassword: confirmPassword
+                };
+
+                if (email) data.email = email;
+                if (gender) data.gender = gender;
+                if (dateOfBirth) data.dateOfBirth = dateOfBirth;
+                if (nationalId) data.nationalId = nationalId;
+                if (address) data.address = address;
+
+                try {
+                    btn.disabled = true;
+                    btn.textContent = 'Creating account…';
+                    await registerPatient(data);
+                } catch (err) {
+                    btn.disabled = false;
+                    btn.textContent = idle;
+                    var msg = err && err.message ? err.message : 'Registration failed.';
+                    showRegisterError(msg);
+                    if (typeof showToast === 'function') showToast(msg, 'error', 6500);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -143,6 +143,7 @@
             <a href="#about">About</a>
             <a href="#features">Features</a>
             <a href="#" onclick="showLogin()">Login</a>
+            <a href="auth/register.html">Create patient account</a>
         </div>
     </nav>
 
@@ -224,6 +225,10 @@
         <h2>Ready to Get Started?</h2>
         <p style="color: #666; margin-bottom: 30px;">Login to manage appointments, view results, and more.</p>
         <a href="#" onclick="showLogin()" class="login-btn">Login to Your Account</a>
+        <p style="margin-top: 20px; color: #666; font-size: 15px;">
+            New patient?
+            <a href="auth/register.html" style="color: #2c7be5; font-weight: 600;">Create patient account</a>
+        </p>
     </section>
 
     <footer>
@@ -247,9 +252,10 @@
                     <label for="password">Password</label>
                     <input type="password" id="password" placeholder="Enter your password">
                 </div>
-                <button type="button" class="btn-primary" onclick="submitLandingLogin()">Login</button>
-                
-                
+                <button type="button" id="landingLoginBtn" class="btn-primary" onclick="submitLandingLogin()">Login</button>
+                <p style="text-align: center; margin-top: 16px; font-size: 14px;">
+                    <a href="auth/register.html" style="color: #2c7be5;">Create patient account</a>
+                </p>
             </div>
         </div>
     </div>

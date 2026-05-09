@@ -12,19 +12,37 @@ const API_BASE_URL = 'http://localhost:5000/api';
 window.API_BASE_URL = API_BASE_URL;
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Frontend root relative URL (supports files under /pages/<role>/…)
+// Frontend root relative URL
+// Supports:
+//   • Phase 3 layout: .../frontend/<role>/dashboard.html, .../frontend/auth/register.html
+//   • Legacy:         .../frontend/pages/<role>/…
+//   • Live Server with site root = `frontend/`: /<auth>/<file>.html
 // ─────────────────────────────────────────────────────────────────────────────
 
 function computePathToFrontendRoot() {
-    const raw = window.location.pathname.replace(/\\/g, '/');
-    const needle = '/pages/';
-    const i = raw.indexOf(needle);
-    if (i === -1) return '';
+    let raw = window.location.pathname.replace(/\\/g, '/');
+    try {
+        raw = decodeURIComponent(raw);
+    } catch (_) {
+        /* ignore */
+    }
 
-    const afterPages = raw.slice(i + needle.length);
-    const depth = afterPages.split('/').filter(Boolean).length;
-    if (!depth) return '../';
-    return '../'.repeat(depth);
+    const segments = raw.split('/').filter(Boolean);
+
+    const pagesIdx = segments.indexOf('pages');
+    if (pagesIdx !== -1 && segments.length > pagesIdx + 1) {
+        const afterPages = segments.slice(pagesIdx + 1);
+        const depth = afterPages.length;
+        return depth > 0 ? '../'.repeat(depth) : '';
+    }
+
+    const feIdx = segments.lastIndexOf('frontend');
+    const relative = feIdx !== -1 ? segments.slice(feIdx + 1) : segments;
+
+    if (relative.length <= 1) return '';
+
+    const depthNoFile = relative.length - 1;
+    return depthNoFile > 0 ? '../'.repeat(depthNoFile) : '';
 }
 
 window.labFrontend = window.labFrontend || {};
@@ -32,6 +50,11 @@ window.labFrontend.computePathToFrontendRoot = computePathToFrontendRoot;
 
 function resolveLoginHref() {
     return computePathToFrontendRoot() + 'index.html';
+}
+
+/** First-login / forced password change (Phase 3). */
+function resolveChangePasswordHref() {
+    return computePathToFrontendRoot() + 'auth/change-password.html';
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -155,9 +178,12 @@ function collectErrorMessage(data, fallbackStatus) {
 
     const errors = data.errors || data.details;
     if (Array.isArray(errors) && errors.length) {
-        const first = errors[0];
-        if (typeof first === 'string') return first;
-        if (first && first.message) return first.message;
+        const parts = errors.map((item) => {
+            if (typeof item === 'string') return item;
+            if (item && typeof item.message === 'string') return item.message;
+            return '';
+        }).filter(Boolean);
+        if (parts.length) return parts.join(' ');
     }
 
     return `Request failed (${fallbackStatus}).`;
@@ -286,11 +312,8 @@ function resolveDashboardHref(role) {
     if (!valid.includes(r)) return resolveLoginHref();
 
     const prefix = computePathToFrontendRoot();
-    const base = `${prefix}pages/${r}`;
-    switch (r) {
-        default:
-            return `${base}/dashboard.html`;
-    }
+    // Phase 3: dashboards live at frontend/<role>/dashboard.html (not frontend/pages/…).
+    return `${prefix}${r}/dashboard.html`;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -318,3 +341,4 @@ window.clearAuthData = clearAuthData;
 
 window.labResolveLoginHref = resolveLoginHref;
 window.labResolveDashboardHref = resolveDashboardHref;
+window.labResolveChangePasswordHref = resolveChangePasswordHref;
