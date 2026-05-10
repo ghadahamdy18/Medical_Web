@@ -100,18 +100,6 @@
                             </a>
                         </div>
                     </div>
-                    <div class="section">
-                        <div class="section-title">Recent Appointments</div>
-                        <div id="recentAppointments" class="notification-list">
-                            <p style="padding: 20px; color: #666;">Loading...</p>
-                        </div>
-                    </div>
-                    <div class="section">
-                        <div class="section-title">Recent Lab Results</div>
-                        <div id="recentResults" class="notification-list">
-                            <p style="padding: 20px; color: #666;">Loading...</p>
-                        </div>
-                    </div>
                     </div>
             </div>
         </div>
@@ -134,18 +122,6 @@
                 return;
             }
 
-        // Load dashboard data
-        async function loadDashboardData() {
-            try {
-                // Use the new dashboard endpoint
-                const response = await getAdminDashboard();
-                
-                if (response && response.success !== false) {
-                    // sendSuccess spreads data at root level (not nested under .data)
-                    updateDashboardStats(response);
-                } else {
-                    throw new Error((response && response.message) || 'Failed to load dashboard data');
-                }
             document.getElementById('userName').textContent =
                 user.fullName || user.name || 'Admin';
 
@@ -156,43 +132,6 @@
                 .join('')
                 .toUpperCase();
 
-        // Update dashboard stats
-        function updateDashboardStats(dashboardData) {
-            const stats = dashboardData.stats || {};
-            const recentAppointments = dashboardData.recentAppointments || [];
-            const recentResults = dashboardData.recentResults || [];
-            
-            document.getElementById('totalUsers').textContent = stats.totalUsers || 0;
-            document.getElementById('activeDoctors').textContent = stats.totalDoctors || 0;
-            document.getElementById('totalAppointments').textContent = Object.values(stats.appointmentsByStatus || {}).reduce((sum, count) => sum + count, 0);
-            document.getElementById('pendingAppointments').textContent = (stats.appointmentsByStatus && stats.appointmentsByStatus.pending) || 0;
-            
-            // Update recent appointments if needed
-            updateRecentAppointments(recentAppointments);
-            
-            // Update recent results if needed
-            updateRecentResults(recentResults);
-        }
-
-        // Update recent appointments
-        function updateRecentAppointments(appointments) {
-            const container = document.getElementById('recentAppointments');
-            if (!container) return;
-            
-            if (appointments.length === 0) {
-                container.innerHTML = '<p style="padding: 20px; color: #666;">No recent appointments</p>';
-                return;
-            }
-            
-            container.innerHTML = appointments.map(apt => `
-                <div class="notification-item">
-                    <div class="notification-content">
-                        <div class="notification-title">${(apt.patientProfileId && apt.patientProfileId.fullName) || 'Unknown'}</div>
-                        <div class="notification-message">${formatAppointmentType(apt.appointmentType)} • Dr. ${(apt.doctorUserId && apt.doctorUserId.fullName) || 'Unassigned'}</div>
-                    </div>
-                    <div class="notification-time">${formatDate(apt.appointmentDate)} • ${formatTime(apt.appointmentTime)}</div>
-                </div>
-            `).join('');
             document.getElementById('userInitials').textContent = initials;
 
             await loadDashboardData();
@@ -204,14 +143,6 @@
         }
     }
 
-        // Update recent results
-        function updateRecentResults(results) {
-            const container = document.getElementById('recentResults');
-            if (!container) return;
-            
-            if (results.length === 0) {
-                container.innerHTML = '<p style="padding: 20px; color: #666;">No recent results</p>';
-                return;
     async function loadDashboardData() {
         try {
             const dashboardData = await apiGet('/admin/dashboard');
@@ -222,7 +153,6 @@
                 showToast('Failed to load dashboard data', 'error');
             }
         }
-        
     }
 
     function updateDashboardStats(dashboardData) {
