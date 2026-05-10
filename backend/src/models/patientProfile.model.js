@@ -141,18 +141,33 @@ patientProfileSchema.pre('validate', function () {
 
 patientProfileSchema.pre('save', async function () {
     const User = mongoose.model('User');
+    const session = this.$session();
 
-    const owner = await User.findOne({
+    const ownerQuery = User.findOne({
         _id: this.userId,
         role: 'patient',
     });
 
+    if (session) {
+        ownerQuery.session(session);
+    }
+
+    const owner = await ownerQuery;
+
     if (!owner) {
-        throw new Error('Patient profile must belong to an existing user with role patient');
+        throw new Error(
+            'Patient profile must belong to an existing user with role patient'
+        );
     }
 
     if (this.createdByUserId) {
-        const creator = await User.findById(this.createdByUserId);
+        const creatorQuery = User.findById(this.createdByUserId);
+
+        if (session) {
+            creatorQuery.session(session);
+        }
+
+        const creator = await creatorQuery;
 
         if (!creator) {
             throw new Error('Profile creator user does not exist');
@@ -161,7 +176,9 @@ patientProfileSchema.pre('save', async function () {
         const allowedCreators = ['admin', 'receptionist', 'patient'];
 
         if (!allowedCreators.includes(creator.role)) {
-            throw new Error('Patient profile creator must be admin, receptionist, or patient');
+            throw new Error(
+                'Patient profile creator must be admin, receptionist, or patient'
+            );
         }
     }
 });

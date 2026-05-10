@@ -1,41 +1,68 @@
 require('dotenv').config();
 
+const bcrypt = require('bcryptjs');
+
 const connectDB = require('../DB/connection.js');
 const User = require('../models/user.model.js');
 
 const seedAdmin = async () => {
     try {
+        // Connect database
         await connectDB();
 
-        const existingAdmin = await User.findOne({ role: 'admin' });
+        console.log('Starting admin seed...');
 
-        if (existingAdmin) {
-            console.log('Admin already exists');
-            process.exit(0);
-        }
+        // Admin credentials
+        const adminPhone = '01000000000';
+        const adminPassword = 'Admin123456';
 
-        const admin = await User.create({
-            fullName: 'System Admin',
-            phoneNumber: '01000000000',
-            email: 'admin@lab.com',
-            password: 'Admin123456',
-            role: 'admin',
-            mustChangePassword: true,
-            isActive: true,
-            status: 'active',
-            createdByUserId: null,
-        });
+        // Hash password manually
+        const hashedPassword = await bcrypt.hash(adminPassword, 10);
 
-        console.log('Admin created successfully');
+        // Create or update admin
+        const admin = await User.findOneAndUpdate(
+            {
+                phoneNumber: adminPhone,
+            },
+            {
+                fullName: 'System Admin',
+                phoneNumber: adminPhone,
+                email: 'admin@lab.com',
+
+                // Already hashed
+                password: hashedPassword,
+
+                role: 'admin',
+
+                mustChangePassword: false,
+
+                isActive: true,
+
+                status: 'active',
+
+                createdByUserId: null,
+            },
+            {
+                new: true,
+                upsert: true,
+                setDefaultsOnInsert: true,
+            }
+        );
+
+        console.log('✅ Admin seeded successfully');
+
         console.log({
             id: admin._id,
             phoneNumber: admin.phoneNumber,
-            password: 'Admin123456',
+            password: adminPassword,
+            role: admin.role,
         });
 
         process.exit(0);
     } catch (error) {
-        console.error('Admin seed failed:', error.message);
+        console.error('❌ Admin seed failed');
+        console.error(error);
+
         process.exit(1);
     }
 };
