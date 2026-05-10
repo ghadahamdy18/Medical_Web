@@ -19,7 +19,14 @@ async function getPatientDashboard() {
 // Patient Profiles
 // ─────────────────────────────────────────────────────────────────────────────
 async function getPatientProfiles() {
-    return apiGet('/patient/profiles');
+    const res = await apiGet('/patient/profiles');
+
+    if (Array.isArray(res)) return res;
+    if (res && Array.isArray(res.data)) return res.data;
+    if (res && Array.isArray(res.profiles)) return res.profiles;
+    if (res && Array.isArray(res.patientProfiles)) return res.patientProfiles;
+
+    return [];
 }
 
 async function selectPatientProfile(profileId) {
@@ -139,6 +146,24 @@ async function downloadPatientResult(resultId, fileName) {
     }
 }
 
+
+async function autoSelectPrimaryPatientProfile() {
+    const profiles = await getPatientProfiles();
+
+    if (!profiles || profiles.length === 0) {
+        return null;
+    }
+
+    const primaryProfile =
+        profiles.find(function (profile) {
+            return profile.isPrimary === true;
+        }) || profiles[0];
+
+    saveSelectedPatientProfile(primaryProfile);
+
+    return primaryProfile;
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Global exports
 // ─────────────────────────────────────────────────────────────────────────────
@@ -156,3 +181,4 @@ window.reschedulePatientAppointment = reschedulePatientAppointment;
 window.cancelPatientAppointment = cancelPatientAppointment;
 window.getPatientResults = getPatientResults;
 window.downloadPatientResult = downloadPatientResult;
+window.autoSelectPrimaryPatientProfile = autoSelectPrimaryPatientProfile;

@@ -7,7 +7,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // Base URL — edit here only when deploying to another host/port
 // ─────────────────────────────────────────────────────────────────────────────
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'http://localhost:5001/api';
 
 window.API_BASE_URL = API_BASE_URL;
 
@@ -169,22 +169,24 @@ async function parseJsonResponse(response) {
         throw err;
     }
 }
-
 function collectErrorMessage(data, fallbackStatus) {
-    if (!data || typeof data !== 'object')
+    if (!data || typeof data !== 'object') {
         return `Request failed (${fallbackStatus}). Try again later.`;
-
-    if (typeof data.message === 'string') return data.message;
+    }
 
     const errors = data.errors || data.details;
+
     if (Array.isArray(errors) && errors.length) {
         const parts = errors.map((item) => {
             if (typeof item === 'string') return item;
             if (item && typeof item.message === 'string') return item.message;
             return '';
         }).filter(Boolean);
+
         if (parts.length) return parts.join(' ');
     }
+
+    if (typeof data.message === 'string') return data.message;
 
     return `Request failed (${fallbackStatus}).`;
 }
@@ -312,8 +314,7 @@ function resolveDashboardHref(role) {
     if (!valid.includes(r)) return resolveLoginHref();
 
     const prefix = computePathToFrontendRoot();
-    // Phase 3: dashboards live at frontend/<role>/dashboard.html (not frontend/pages/…).
-    return `${prefix}${r}/dashboard.html`;
+    return `${prefix}pages/${r}/dashboard.html`;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

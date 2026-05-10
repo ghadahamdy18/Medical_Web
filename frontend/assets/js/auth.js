@@ -33,7 +33,6 @@
         }
 
         var body = Object.assign({}, data);
-        delete body.confirmPassword;
 
         return apiPost('/auth/register', body, { skipAuthRedirect: true }).then(function (res) {
             persistSuccessfulAuthPayload(res);
@@ -118,29 +117,49 @@
      * @param {boolean=} mustForceChange flag from `{ mustChangePassword }` OR user.mustChangePassword
      */
     function redirectByRole(user, mustForceChange) {
-        var must =
-            typeof mustForceChange === 'boolean'
-                ? mustForceChange
-                : !!(user && user.mustChangePassword);
+    var must =
+        typeof mustForceChange === 'boolean'
+            ? mustForceChange
+            : !!(user && user.mustChangePassword);
 
-        if (must && user) {
-            global.location.href = resolveMustChangePasswordPath();
-            return;
-        }
-
-        if (!user || !user.role) {
-            global.location.href =
-                typeof global.labResolveLoginHref === 'function'
-                    ? global.labResolveLoginHref()
-                    : 'index.html';
-            return;
-        }
-
-        global.location.href =
-            typeof global.labResolveDashboardHref === 'function'
-                ? global.labResolveDashboardHref(user.role)
-                : 'patient/dashboard.html';
+    // Force password change first
+    if (must && user) {
+        global.location.href = resolveMustChangePasswordPath();
+        return;
     }
+
+    // Invalid user
+    if (!user || !user.role) {
+        global.location.href =
+            typeof global.labResolveLoginHref === 'function'
+                ? global.labResolveLoginHref()
+                : 'index.html';
+        return;
+    }
+
+    // Auto-select primary patient profile
+    if (
+        user.role === 'patient' &&
+        typeof global.autoSelectPrimaryPatientProfile === 'function'
+    ) {
+        global
+            .autoSelectPrimaryPatientProfile()
+            .finally(function () {
+                global.location.href =
+                    typeof global.labResolveDashboardHref === 'function'
+                        ? global.labResolveDashboardHref(user.role)
+                        : `pages/${user.role}/dashboard.html`;
+            });
+
+        return;
+    }
+
+    // Normal redirect for admin/doctor/receptionist
+    global.location.href =
+        typeof global.labResolveDashboardHref === 'function'
+            ? global.labResolveDashboardHref(user.role)
+            : `pages/${user.role}/dashboard.html`;
+}
 
     function resolveMustChangePasswordPath() {
         if (typeof global.labResolveChangePasswordHref === 'function') {
