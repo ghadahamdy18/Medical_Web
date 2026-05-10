@@ -207,10 +207,34 @@ const logout = async (token) => {
     };
 };
 
+const updateProfile = async (userId, payload) => {
+    const user = await User.findById(userId);
+
+    if (!user) {
+        throw createError('User not found', 404);
+    }
+
+    // Check email uniqueness if changing email
+    if (payload.email && payload.email !== user.email) {
+        const existing = await User.findOne({ email: payload.email });
+        if (existing) {
+            throw createError('Email already in use', 409);
+        }
+    }
+
+    if (payload.fullName !== undefined) user.fullName = payload.fullName;
+    if (payload.email !== undefined) user.email = payload.email;
+
+    await user.save();
+
+    return sanitizeUser(user);
+};
+
 module.exports = {
     registerPatient,
     login,
     changePassword,
     getMe,
+    updateProfile,
     logout,
 };

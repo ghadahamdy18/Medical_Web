@@ -1,14 +1,251 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Results - Medical Lab</title>
     <link rel="stylesheet" href="../../css/dashboard.css">
     <style>
-        body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#28a745;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.back-link{display:inline-block;margin-bottom:20px;color:#2c7be5;text-decoration:none}.page-header{margin-bottom:25px}.page-header h1{font-size:24px;color:#333}.upload-card{background:#fff;padding:30px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);max-width:700px}.form-group{margin-bottom:20px}.form-group label{display:block;margin-bottom:8px;font-weight:600}.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:4px;font-size:14px}.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#2c7be5}.file-upload{border:2px dashed #ddd;padding:40px;text-align:center;border-radius:8px;cursor:pointer;transition:all .2s}.file-upload:hover{border-color:#2c7be5;background:#f8f9fa}.file-upload-icon{font-size:48px;color:#2c7be5;margin-bottom:15px}.file-upload-text{color:#666;margin-bottom:10px}.file-upload-hint{font-size:12px;color:#999}.btn{padding:12px 24px;border:none;border-radius:4px;cursor:pointer;font-size:16px}.btn-primary{background:#2c7be5;color:#fff}.btn-primary:hover{background:#1a5fbf}.btn-primary:disabled{background:#6c757d;cursor:not-allowed}.error{color:#dc3545;font-size:14px;margin-top:5px}.warning{background:#fff3cd;border:1px solid #ffeaa7;border-radius:4px;padding:15px;margin-bottom:20px;color:#856404}.loading{text-align:center;padding:40px;color:#666}.success{background:#d4edda;border:1px solid #c3e6cb;border-radius:4px;padding:15px;margin-bottom:20px;color:#155724}
+        body {
+            background: #f5f5f5
+        }
+
+        .dashboard {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh
+        }
+
+        .dashboard-body {
+            display: flex;
+            flex: 1
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #fff;
+            border-right: 1px solid #e0e0e0;
+            padding: 20px 0
+        }
+
+        .sidebar-logo {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 20px
+        }
+
+        .sidebar-logo h2 {
+            color: #2c7be5;
+            font-size: 20px
+        }
+
+        .sidebar-menu {
+            list-style: none
+        }
+
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: #555;
+            text-decoration: none;
+            transition: all .2s
+        }
+
+        .sidebar-menu li a:hover,
+        .sidebar-menu li a.active {
+            background: #e8f0fe;
+            color: #2c7be5;
+            border-right: 3px solid #2c7be5
+        }
+
+        .main-area {
+            flex: 1
+        }
+
+        .top-bar {
+            background: #fff;
+            padding: 15px 30px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #28a745;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: #666
+        }
+
+        .content-area {
+            padding: 30px
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #2c7be5;
+            text-decoration: none
+        }
+
+        .page-header {
+            margin-bottom: 25px
+        }
+
+        .page-header h1 {
+            font-size: 24px;
+            color: #333
+        }
+
+        .upload-card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .06);
+            max-width: 700px
+        }
+
+        .form-group {
+            margin-bottom: 20px
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2c7be5
+        }
+
+        .file-upload {
+            border: 2px dashed #ddd;
+            padding: 40px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all .2s
+        }
+
+        .file-upload:hover {
+            border-color: #2c7be5;
+            background: #f8f9fa
+        }
+
+        .file-upload-icon {
+            font-size: 48px;
+            color: #2c7be5;
+            margin-bottom: 15px
+        }
+
+        .file-upload-text {
+            color: #666;
+            margin-bottom: 10px
+        }
+
+        .file-upload-hint {
+            font-size: 12px;
+            color: #999
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px
+        }
+
+        .btn-primary {
+            background: #2c7be5;
+            color: #fff
+        }
+
+        .btn-primary:hover {
+            background: #1a5fbf
+        }
+
+        .btn-primary:disabled {
+            background: #6c757d;
+            cursor: not-allowed
+        }
+
+        .error {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 5px
+        }
+
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #856404
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666
+        }
+
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #155724
+        }
     </style>
 </head>
+
 <body>
     <div class="dashboard">
         <div class="dashboard-body">
@@ -42,45 +279,51 @@
                         <h1>Upload Lab Results</h1>
                         <p>Upload PDF test results for patients</p>
                     </div>
-                    
+
                     <div id="uploadLoading" class="loading">Loading appointments...</div>
-                    
+
                     <div class="upload-card" id="uploadForm" style="display: none;">
+                        <div id="appointmentInfo"
+                            style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 6px; border-left: 4px solid #2c7be5; display: none;">
+                        </div>
+                        <div id="existingResults" style="margin-bottom: 20px;"></div>
+
                         <div id="replaceWarning" class="warning" style="display: none;">
                             <strong>⚠️ Replace Result</strong>
-                            <p>Uploading a new PDF with this test name will replace the latest version of the existing result.</p>
+                            <p>Uploading a new PDF with this test name will replace the latest version of the existing
+                                result.</p>
                         </div>
-                        
-                        <form id="resultUploadForm" onsubmit="handleUpload(event)">
+
+                        <form id="resultUploadForm" onsubmit="uploadResult(event)">
                             <div class="form-group">
                                 <label>Appointment *</label>
-                                <select id="appointmentSelect" required>
+                                <select id="appointmentSelect" required onchange="handleAppointmentSelection(event)">
                                     <option value="">Choose appointment...</option>
                                 </select>
                                 <div id="appointmentError" class="error"></div>
                             </div>
-                            <div class="form-group">
-                                <label>Test Type</label>
-                                <select class="patient-select" required>
-                                    <option value="">Select test type...</option>
-                                    <option value="blood">Blood Test</option>
-                                    <option value="lipid">Lipid Panel</option>
-                                    <option value="thyroid">Thyroid Function</option>
-                                    <option value="diabetes">Diabetes Screening</option>
-                                </select>
-                            </div>
+
                             <div class="form-group">
                                 <label>Upload PDF File</label>
                                 <div class="file-upload" onclick="document.getElementById('fileInput').click()">
                                     <div class="file-upload-icon">📄</div>
                                     <div class="file-upload-text">Click to upload PDF file</div>
-                                    <div class="file-upload-text" style="font-size:12px">or drag and drop</div>
-                                    <input type="file" id="fileInput" style="display:none" accept=".pdf" onchange="showFileName()">
+                                    <div class="file-upload-text" style="font-size:12px; margin-bottom: 15px;">or drag
+                                        and drop</div>
+                                    <button type="button" class="btn"
+                                        style="background: #e8f0fe; color: #2c7be5; border: 1px solid #2c7be5; padding: 8px 16px; font-size: 14px;">Browse
+                                        Files</button>
+                                    <input type="file" id="fileInput" style="display:none" accept=".pdf"
+                                        onchange="showFileName()">
+                                </div>
+                                <div id="fileName"
+                                    style="margin-top: 10px; font-weight: bold; color: #2c7be5; text-align: center;">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label>Notes (Optional)</label>
-                                <textarea rows="3" placeholder="Add any additional notes about the results..."></textarea>
+                                <textarea rows="3"
+                                    placeholder="Add any additional notes about the results..."></textarea>
                             </div>
                             <button type="submit" class="btn-upload">Upload Results</button>
                         </form>
@@ -105,24 +348,61 @@
                 // Get appointment ID from URL
                 const urlParams = new URLSearchParams(window.location.search);
                 appointmentId = urlParams.get('id');
-                
-                if (!appointmentId) {
-                    throw new Error('No appointment ID provided');
-                }
 
-                // Load appointment details and existing results
-                await loadAppointmentDetails();
-                await loadExistingResults();
+                await loadAllAppointmentsForDropdown();
+
+                if (appointmentId) {
+                    document.getElementById('appointmentSelect').value = appointmentId;
+                    await loadAppointmentDetails();
+                    await loadExistingResults();
+                }
 
                 document.getElementById('uploadLoading').style.display = 'none';
                 document.getElementById('uploadForm').style.display = 'block';
 
             } catch (error) {
                 console.error('Failed to initialize page:', error);
-                if (typeof showToast === 'function') {
-                    showToast('Failed to load appointment details', 'error');
-                }
                 document.getElementById('uploadLoading').style.display = 'none';
+                document.getElementById('uploadForm').style.display = 'block';
+            }
+        }
+
+        // Load all appointments to populate the dropdown
+        async function loadAllAppointmentsForDropdown() {
+            try {
+                const response = await getDoctorAppointments({ limit: 100 });
+                if (response.success && response.data) {
+                    const select = document.getElementById('appointmentSelect');
+                    const uploadable = response.data.filter(a => canDoctorUploadResult(a));
+
+                    if (uploadable.length === 0) {
+                        select.innerHTML = '<option value="">No eligible appointments found</option>';
+                    } else {
+                        select.innerHTML = '<option value="">Choose appointment...</option>' +
+                            uploadable.map(a => `<option value="${a._id}">${a.patientProfileId?.fullName || 'Unknown Patient'} - ${formatDate(a.appointmentDate)}</option>`).join('');
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to load appointments for dropdown:', error);
+            }
+        }
+
+        // Handle dropdown selection change
+        async function handleAppointmentSelection(event) {
+            appointmentId = event.target.value;
+            if (appointmentId) {
+                // update URL dynamically
+                const url = new URL(window.location);
+                url.searchParams.set('id', appointmentId);
+                window.history.pushState({}, '', url);
+
+                await loadAppointmentDetails();
+                await loadExistingResults();
+            } else {
+                document.getElementById('appointmentInfo').style.display = 'none';
+                document.getElementById('existingResults').innerHTML = '';
+                document.getElementById('replaceWarning').style.display = 'none';
+                existingResults = [];
             }
         }
 
@@ -131,12 +411,14 @@
             try {
                 const response = await getDoctorAppointmentDetails(appointmentId);
                 if (response.success) {
-                    const appointment = response.data;
-                    document.getElementById('appointmentInfo').innerHTML = `
+                    const appointment = response.data.appointment || response.data; // Accommodate variable API structure
+                    const appInfo = document.getElementById('appointmentInfo');
+                    appInfo.style.display = 'block';
+                    appInfo.innerHTML = `
                         <div class="appointment-details">
-                            <h3>${appointment.patientProfileId?.fullName || 'Unknown Patient'}</h3>
-                            <p>Appointment: ${formatDate(appointment.appointmentDate)} at ${formatTime(appointment.appointmentTime)}</p>
-                            <p>Type: ${formatAppointmentType(appointment.appointmentType)}</p>
+                            <h3 style="margin-top: 0;">${appointment.patientProfileId?.fullName || 'Unknown Patient'}</h3>
+                            <p style="margin-bottom: 5px;"><strong>Date:</strong> ${formatDate(appointment.appointmentDate)} at ${formatTime(appointment.appointmentTime)}</p>
+                            <p style="margin-bottom: 0;"><strong>Type:</strong> ${formatAppointmentType(appointment.appointmentType)}</p>
                         </div>
                     `;
                 } else {
@@ -154,7 +436,7 @@
                 const response = await getDoctorAppointmentResults(appointmentId);
                 if (response.success) {
                     existingResults = response.data || [];
-                    
+
                     if (existingResults.length > 0) {
                         document.getElementById('replaceWarning').style.display = 'block';
                         document.getElementById('existingResults').innerHTML = `
@@ -179,10 +461,10 @@
         function showFileName() {
             const fileInput = document.getElementById('fileInput');
             const fileName = document.getElementById('fileName');
-            
+
             if (fileInput.files.length > 0) {
                 const file = fileInput.files[0];
-                
+
                 // Validate file type
                 if (file.type !== 'application/pdf') {
                     if (typeof showToast === 'function') {
@@ -192,7 +474,7 @@
                     fileName.textContent = '';
                     return;
                 }
-                
+
                 // Validate file size (10MB max)
                 const maxSize = 10 * 1024 * 1024; // 10MB
                 if (file.size > maxSize) {
@@ -203,7 +485,7 @@
                     fileName.textContent = '';
                     return;
                 }
-                
+
                 fileName.textContent = `Selected: ${file.name}`;
             } else {
                 fileName.textContent = '';
@@ -213,11 +495,11 @@
         // Upload result
         async function uploadResult(event) {
             event.preventDefault();
-            
+
             const fileInput = document.getElementById('fileInput');
             const testName = document.getElementById('testName').value.trim();
             const file = fileInput.files[0];
-            
+
             // Validation
             if (!file) {
                 if (typeof showToast === 'function') {
@@ -225,14 +507,14 @@
                 }
                 return;
             }
-            
+
             if (!testName) {
                 if (typeof showToast === 'function') {
                     showToast('Please enter a test name', 'error');
                 }
                 return;
             }
-            
+
             // Check if replacing existing result
             const existingResult = existingResults.find(r => r.testName.toLowerCase() === testName.toLowerCase());
             if (existingResult && existingResult.isLatest) {
@@ -241,26 +523,26 @@
                     return;
                 }
             }
-            
+
             try {
                 // Show loading state
                 const submitBtn = document.querySelector('.btn-upload');
                 submitBtn.disabled = true;
                 submitBtn.textContent = 'Uploading...';
-                
+
                 // Create FormData
                 const formData = new FormData();
                 formData.append('resultFile', file);
                 formData.append('testName', testName);
-                
+
                 // Upload result
                 const response = await uploadDoctorResult(appointmentId, formData);
-                
+
                 if (response.success) {
                     if (typeof showToast === 'function') {
                         showToast('Lab result uploaded successfully!', 'success');
                     }
-                    
+
                     // Redirect back to dashboard
                     setTimeout(() => {
                         window.location.href = 'dashboard.html';
@@ -268,7 +550,7 @@
                 } else {
                     throw new Error(response.message || 'Failed to upload result');
                 }
-                
+
             } catch (error) {
                 console.error('Failed to upload result:', error);
                 if (typeof showToast === 'function') {
@@ -286,9 +568,9 @@
         function formatDate(dateString) {
             if (!dateString) return 'Unknown';
             const date = new Date(dateString);
-            return date.toLocaleDateString('en-US', { 
-                month: 'short', 
-                day: 'numeric', 
+            return date.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
                 year: 'numeric'
             });
         }
@@ -313,4 +595,5 @@
         document.addEventListener('DOMContentLoaded', initializePage);
     </script>
 </body>
+
 </html>
