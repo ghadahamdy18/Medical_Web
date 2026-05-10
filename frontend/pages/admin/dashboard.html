@@ -105,126 +105,77 @@
         </div>
     </div>
     <script src="../../assets/js/api.js"></script>
-    <script src="../../assets/js/ui.js"></script>
-    <script src="../../assets/js/auth.js"></script>
-    <script src="../../assets/js/guards.js"></script>
-    <script src="../../assets/js/admin.js"></script>
-    <script>
-        // Require admin role
-        requireRole('admin');
+<script src="../../assets/js/ui.js"></script>
+<script src="../../assets/js/auth.js"></script>
+<script src="../../assets/js/guards.js"></script>
+<script src="../../assets/js/admin.js"></script>
 
-        let users = [];
-        let appointments = [];
-        let results = [];
+<script>
+    requireRole('admin');
 
-        // Initialize page
-        async function initializePage() {
-            try {
-                const user = getCurrentUser();
-                if (!user) {
-                    window.location.href = '../../index.html';
-                    return;
-                }
+    async function initializePage() {
+        try {
+            const user = getCurrentUser();
 
-                // Update user info in top bar
-                document.getElementById('userName').textContent = user.fullName || user.name || 'Admin';
-                const name = user.fullName || user.name || 'Admin';
-                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
-                document.getElementById('userInitials').textContent = initials;
-
-                // Load dashboard data
-                await loadDashboardData();
-
-            } catch (error) {
-                console.error('Failed to initialize page:', error);
-                if (typeof showToast === 'function') {
-                    showToast('Failed to load dashboard', 'error');
-                }
-            }
-        }
-
-        // Load dashboard data
-        async function loadDashboardData() {
-            try {
-                // Use the new dashboard endpoint
-                const response = await getAdminDashboard();
-                
-                if (response.success) {
-                    updateDashboardStats(response.data);
-                } else {
-                    throw new Error(response.message || 'Failed to load dashboard data');
-                }
-
-            } catch (error) {
-                console.error('Failed to load dashboard data:', error);
-                if (typeof showToast === 'function') {
-                    showToast('Failed to load dashboard data', 'error');
-                }
-            }
-        }
-
-        // Update dashboard stats
-        function updateDashboardStats(dashboardData) {
-            const stats = dashboardData.stats || {};
-            const recentAppointments = dashboardData.recentAppointments || [];
-            const recentResults = dashboardData.recentResults || [];
-            
-            document.getElementById('totalUsers').textContent = stats.totalUsers || 0;
-            document.getElementById('activeDoctors').textContent = stats.totalDoctors || 0;
-            document.getElementById('totalAppointments').textContent = Object.values(stats.appointmentsByStatus || {}).reduce((sum, count) => sum + count, 0);
-            document.getElementById('pendingAppointments').textContent = stats.appointmentsByStatus?.pending || 0;
-            
-            // Update recent appointments if needed
-            updateRecentAppointments(recentAppointments);
-            
-            // Update recent results if needed
-            updateRecentResults(recentResults);
-        }
-
-        // Update recent appointments
-        function updateRecentAppointments(appointments) {
-            const container = document.getElementById('recentAppointments');
-            if (!container) return;
-            
-            if (appointments.length === 0) {
-                container.innerHTML = '<p style="color: #666;">No recent appointments</p>';
+            if (!user) {
+                window.location.href = '../../index.html';
                 return;
             }
-            
-            container.innerHTML = appointments.map(apt => `
-                <div class="recent-item">
-                    <div class="recent-item-info">
-                        <h4>${apt.patientProfileId?.fullName || 'Unknown'}</h4>
-                        <p>${formatAppointmentType(apt.appointmentType)} • ${apt.doctorId?.fullName || 'Unassigned'}</p>
-                    </div>
-                    <div class="recent-item-time">${formatDate(apt.appointmentDate)} • ${formatTime(apt.appointmentTime)}</div>
-                </div>
-            `).join('');
-        }
 
-        // Update recent results
-        function updateRecentResults(results) {
-            const container = document.getElementById('recentResults');
-            if (!container) return;
-            
-            if (results.length === 0) {
-                container.innerHTML = '<p style="color: #666;">No recent results</p>';
-                return;
+            document.getElementById('userName').textContent =
+                user.fullName || user.name || 'Admin';
+
+            const name = user.fullName || user.name || 'Admin';
+            const initials = name
+                .split(' ')
+                .map(n => n[0])
+                .join('')
+                .toUpperCase();
+
+            document.getElementById('userInitials').textContent = initials;
+
+            await loadDashboardData();
+        } catch (error) {
+            console.error('Failed to initialize page:', error);
+            if (typeof showToast === 'function') {
+                showToast('Failed to load dashboard', 'error');
             }
-            
-            container.innerHTML = results.map(result => `
-                <div class="recent-item">
-                    <div class="recent-item-info">
-                        <h4>${result.testName}</h4>
-                        <p>${result.doctorId?.fullName || 'Unknown'} • ${result.appointmentId?.appointmentType || 'Unknown'}</p>
-                    </div>
-                    <div class="recent-item-time">${formatDate(result.uploadedAt)}</div>
-                </div>
-            `).join('');
         }
+    }
 
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', initializePage);
-    </script>
+    async function loadDashboardData() {
+        try {
+            const dashboardData = await apiGet('/admin/dashboard');
+            updateDashboardStats(dashboardData);
+        } catch (error) {
+            console.error('Failed to load dashboard data:', error);
+            if (typeof showToast === 'function') {
+                showToast('Failed to load dashboard data', 'error');
+            }
+        }
+    }
+
+    function updateDashboardStats(dashboardData) {
+        const stats = dashboardData.stats || {};
+        const appointmentsByStatus = stats.appointmentsByStatus || {};
+
+        const totalAppointments = Object.values(appointmentsByStatus)
+            .reduce((sum, count) => sum + Number(count || 0), 0);
+
+        document.getElementById('totalUsers').textContent =
+            stats.totalUsers || 0;
+
+        document.getElementById('activeDoctors').textContent =
+            stats.totalDoctors || 0;
+
+        document.getElementById('totalAppointments').textContent =
+            totalAppointments;
+
+        document.getElementById('pendingAppointments').textContent =
+            appointmentsByStatus.pending || 0;
+    }
+
+    document.addEventListener('DOMContentLoaded', initializePage);
+</script>
 </body>
 </html>

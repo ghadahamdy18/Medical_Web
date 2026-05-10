@@ -265,7 +265,6 @@
                         <td>${formatDate(user.createdAt) || '-'}</td>
                         <td>
                             <div class="action-buttons">
-                                <button class="btn-sm btn-view" onclick="viewUserDetails('${user._id}')">View Details</button>
                                 <button class="btn-sm btn-edit" onclick="openEditStatusModal('${user._id}')">Edit Status</button>
                             </div>
                         </td>
@@ -274,10 +273,6 @@
             }).join('');
         }
 
-        // View user details
-        function viewUserDetails(userId) {
-            navigateToUserDetails(userId);
-        }
 
         // Open edit status modal
         function openEditStatusModal(userId) {
