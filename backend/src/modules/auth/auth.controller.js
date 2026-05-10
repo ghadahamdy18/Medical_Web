@@ -50,6 +50,18 @@ const getMe = async (req, res, next) => {
     }
 };
 
+const updateProfile = async (req, res, next) => {
+    try {
+        const user = await authService.updateProfile(req.user._id, req.body);
+
+        return sendSuccess(res, 200, 'Profile updated successfully', {
+            user,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
 const logout = async (req, res, next) => {
     try {
         const authHeader = req.headers.authorization;
@@ -68,5 +80,6 @@ module.exports = {
     login,
     changePassword,
     getMe,
+    updateProfile,
     logout,
 };

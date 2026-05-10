@@ -698,6 +698,9 @@ const getDashboard = async () => {
         ResultFile.find()
             .sort({ uploadedAt: -1 })
             .limit(5)
+            .populate('appointmentId', 'appointmentDate appointmentType')
+            .populate('doctorUserId', 'fullName')
+            .lean()
             .populate({
                 path: 'appointmentId',
                 select: 'patientProfileId appointmentDate appointmentTime appointmentType',

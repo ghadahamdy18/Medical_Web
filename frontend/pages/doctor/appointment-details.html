@@ -26,9 +26,9 @@
             <div class="main-area">
                 <div class="top-bar">
                     <div class="user-info">
-                        <div class="user-avatar" id="userInitials">SS</div>
+                        <div class="user-avatar" id="userInitials">DR</div>
                         <div class="user-details">
-                            <span class="user-name" id="userName">Dr. Sarah Smith</span>
+                            <span class="user-name" id="userName">Doctor</span>
                             <span class="user-role">Doctor</span>
                         </div>
                     </div>
@@ -218,19 +218,23 @@
             const statusElement = document.getElementById('appointmentStatus');
             statusElement.innerHTML = `<span class="status-badge status-${apt.appointmentStatus}">${formatAppointmentStatus(apt.appointmentStatus)}</span>`;
 
-            // Patient Information
-            document.getElementById('patientName').textContent = apt.profileName || 'Unknown';
-            document.getElementById('patientGender').textContent = apt.profileGender || '-';
-            document.getElementById('patientDOB').textContent = formatDate(apt.profileDateOfBirth) || '-';
-            document.getElementById('patientNationalId').textContent = apt.profileNationalId || '-';
-            document.getElementById('patientAddress').textContent = apt.profileAddress || '-';
-            document.getElementById('patientRelationship').textContent = apt.profileRelationshipToPrimary || '-';
+            // Patient Information (populated from patientProfileId)
+            const patient = apt.patientProfileId || {};
+            document.getElementById('patientName').textContent = patient.fullName || 'Unknown';
+            document.getElementById('patientGender').textContent = patient.gender || '-';
+            document.getElementById('patientDOB').textContent = patient.dateOfBirth ? formatDate(patient.dateOfBirth) : '-';
+            document.getElementById('patientNationalId').textContent = patient.nationalId || '-';
+            document.getElementById('patientAddress').textContent = patient.address || '-';
+            document.getElementById('patientRelationship').textContent = patient.relationshipToPrimary || '-';
 
-            // Staff Information
-            document.getElementById('doctorName').textContent = apt.doctorName || '-';
-            document.getElementById('creatorName').textContent = apt.creatorName || '-';
-            document.getElementById('creatorRole').textContent = apt.creatorRole || '-';
-            document.getElementById('accepterName').textContent = apt.accepterName || '-';
+            // Staff Information (populated from doctorUserId, createdByUserId, acceptedByUserId)
+            const doctor = apt.doctorUserId || {};
+            const creator = apt.createdByUserId || {};
+            const accepter = apt.acceptedByUserId || {};
+            document.getElementById('doctorName').textContent = doctor.fullName || '-';
+            document.getElementById('creatorName').textContent = creator.fullName || '-';
+            document.getElementById('creatorRole').textContent = creator.role || '-';
+            document.getElementById('accepterName').textContent = accepter.fullName || '-';
 
             // Notes
             if (apt.notes) {

@@ -7,6 +7,7 @@ const {
     registerPatientValidation,
     loginValidation,
     changePasswordValidation,
+    updateProfileValidation,
 } = require('./auth.validation.js');
 
 const authMiddleware = require('../../middlewares/auth.middleware.js');
@@ -15,6 +16,12 @@ router.post('/register', registerPatientValidation, authController.registerPatie
 router.post('/login', loginValidation, authController.login);
 
 router.get('/me', authMiddleware, authController.getMe);
+router.patch(
+    '/profile',
+    authMiddleware,
+    updateProfileValidation,
+    authController.updateProfile
+);
 router.patch(
     '/change-password',
     authMiddleware,

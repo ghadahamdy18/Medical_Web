@@ -188,7 +188,9 @@ const getAppointmentResults = async (doctorId, appointmentId) => {
 
 const getDashboard = async (doctorId) => {
     const today = new Date();
-    today.setHours(0, 0, 0, 1);
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
 
     const [
         totalAppointments,
@@ -204,7 +206,7 @@ const getDashboard = async (doctorId) => {
         Appointment.countDocuments({ doctorUserId: doctorId, appointmentStatus: 'completed' }),
         Appointment.countDocuments({ 
             doctorUserId: doctorId, 
-            appointmentDate: { $gte: today } 
+            appointmentDate: { $gte: today, $lt: tomorrow } 
         }),
         ResultFile.find({ doctorUserId: doctorId })
             .sort({ uploadedAt: -1 })

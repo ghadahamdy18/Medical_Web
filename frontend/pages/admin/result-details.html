@@ -265,6 +265,11 @@
             document.getElementById('resultLoading').style.display = 'none';
             document.getElementById('resultContent').style.display = 'block';
 
+            // Extract nested objects
+            const doctor = resultData.doctorUserId || {};
+            const appointment = resultData.appointmentId || {};
+            const patient = appointment.patientProfileId || {};
+
             // Result Information
             document.getElementById('resultId').textContent = resultData._id || 'Unknown';
             document.getElementById('testName').textContent = resultData.testName || 'Unknown Test';
@@ -284,28 +289,28 @@
             document.getElementById('mimeType').textContent = resultData.mimeType || 'Unknown';
 
             // Doctor Information
-            document.getElementById('doctorName').textContent = resultData.doctorName || 'Unknown';
-            document.getElementById('doctorEmail').textContent = resultData.doctorEmail || 'Not provided';
-            document.getElementById('doctorPhone').textContent = resultData.doctorPhone || 'Not provided';
+            document.getElementById('doctorName').textContent = doctor.fullName || 'Unknown';
+            document.getElementById('doctorEmail').textContent = doctor.email || 'Not provided';
+            document.getElementById('doctorPhone').textContent = doctor.phoneNumber || 'Not provided';
 
             // Appointment Information
-            document.getElementById('appointmentId').textContent = resultData.appointmentId || 'Unknown';
-            document.getElementById('appointmentDate').textContent = formatDate(resultData.appointmentDate) || 'Unknown';
-            document.getElementById('appointmentTime').textContent = formatTime(resultData.appointmentTime) || 'Unknown';
-            document.getElementById('appointmentType').textContent = formatAppointmentType(resultData.appointmentType) || 'Unknown';
-            document.getElementById('appointmentStatus').textContent = formatAppointmentStatus(resultData.appointmentStatus) || 'Unknown';
+            document.getElementById('appointmentId').textContent = appointment._id || 'Unknown';
+            document.getElementById('appointmentDate').textContent = formatDate(appointment.appointmentDate) || 'Unknown';
+            document.getElementById('appointmentTime').textContent = formatTime(appointment.appointmentTime) || 'Unknown';
+            document.getElementById('appointmentType').textContent = formatAppointmentType(appointment.appointmentType) || 'Unknown';
+            document.getElementById('appointmentStatus').textContent = formatAppointmentStatus(appointment.appointmentStatus) || 'Unknown';
 
             // Patient Profile Information
-            document.getElementById('profileName').textContent = resultData.profileName || 'Unknown';
-            document.getElementById('patientName').textContent = resultData.patientName || 'Unknown';
-            document.getElementById('patientPhone').textContent = resultData.patientPhone || 'Unknown';
-            document.getElementById('profileGender').textContent = resultData.profileGender || 'Unknown';
-            document.getElementById('profileDateOfBirth').textContent = formatDate(resultData.profileDateOfBirth) || 'Unknown';
+            document.getElementById('profileName').textContent = patient.fullName || 'Unknown';
+            document.getElementById('patientName').textContent = patient.fullName || 'Unknown';
+            document.getElementById('patientPhone').textContent = patient.phoneNumber || 'Unknown';
+            document.getElementById('profileGender').textContent = patient.gender || 'Unknown';
+            document.getElementById('profileDateOfBirth').textContent = formatDate(patient.dateOfBirth) || 'Unknown';
 
             // Version Information (if replaced)
             if (resultData.replacedResultFileId) {
                 document.getElementById('replacedInfoSection').style.display = 'block';
-                document.getElementById('replacedResultFileId').textContent = resultData.replacedResultFileId;
+                document.getElementById('replacedResultFileId').textContent = resultData.replacedResultFileId._id || resultData.replacedResultFileId;
                 document.getElementById('replacedAt').textContent = formatDateTime(resultData.replacedAt) || 'Unknown';
             } else {
                 document.getElementById('replacedInfoSection').style.display = 'none';

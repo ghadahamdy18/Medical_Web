@@ -150,23 +150,31 @@
                 // Use the new dashboard endpoint
                 const response = await getDoctorDashboard();
                 
-                if (response.success) {
-                    const dashboardData = response.data;
-                    updateDashboardStats(dashboardData.stats);
+                if (response && response.success !== false) {
+                    // stats is spread at the top level by sendSuccess (not nested under .data)
+                    const stats = response.stats || {};
+                    updateDashboardStats(stats);
                     
-                    // Still need appointments for today's list
+                    // Fetch appointments for today's list
                     const appointmentsResponse = await getDoctorAppointments({ limit: 100 });
-                    if (appointmentsResponse.success) {
+                    if (appointmentsResponse && appointmentsResponse.data) {
                         appointments = appointmentsResponse.data || [];
+                        updateTodayAppointments(appointments);
+                    } else {
+                        // No appointments data returned
+                        appointments = [];
                         updateTodayAppointments(appointments);
                     }
                 } else {
-                    throw new Error(response.message || 'Failed to load dashboard data');
+                    throw new Error((response && response.message) || 'Failed to load dashboard data');
                 }
 
             } catch (error) {
                 console.error('Failed to load dashboard data:', error);
                 handleDoctorError(error, 'Failed to load dashboard data');
+                
+                // Reset stats to 0 on error
+                updateDashboardStats({});
                 
                 // Hide loading states
                 document.getElementById('todayAppointmentsLoading').style.display = 'none';
@@ -176,10 +184,11 @@
 
         // Update dashboard stats
         function updateDashboardStats(stats) {
-            document.getElementById('totalAppointments').textContent = stats.totalAppointments || 0;
-            document.getElementById('confirmedAppointments').textContent = stats.confirmedAppointments || 0;
-            document.getElementById('completedAppointments').textContent = stats.completedAppointments || 0;
-            document.getElementById('todayAppointments').textContent = stats.todayAppointments || 0;
+            const s = stats || {};
+            document.getElementById('totalAppointments').textContent = s.totalAppointments || 0;
+            document.getElementById('confirmedAppointments').textContent = s.confirmedAppointments || 0;
+            document.getElementById('completedAppointments').textContent = s.completedAppointments || 0;
+            document.getElementById('todayAppointments').textContent = s.todayAppointments || 0;
         }
 
         // Update today's appointments
@@ -217,10 +226,14 @@
                     const canComplete = canDoctorComplete(appointment);
                     const canUpload = canDoctorUploadResult(appointment);
                     
+                    // Get patient name from populated patientProfileId
+                    const patientName = (appointment.patientProfileId && appointment.patientProfileId.fullName)
+                        || appointment.profileName || 'Unknown';
+
                     return `
                         <tr>
                             <td>${formatTime(appointment.appointmentTime)}</td>
-                            <td>${appointment.profileName || 'Unknown'}</td>
+                            <td>${patientName}</td>
                             <td>${formatAppointmentType(appointment.appointmentType)}</td>
                             <td><span class="status-badge status-${appointment.appointmentStatus}">${formatAppointmentStatus(appointment.appointmentStatus)}</span></td>
                             <td>

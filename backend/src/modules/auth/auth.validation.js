@@ -59,8 +59,16 @@ const changePasswordValidation = validate(
     })
 );
 
+const updateProfileValidation = validate(
+    Joi.object({
+        fullName: Joi.string().trim().min(2).max(100).optional(),
+        email: Joi.string().trim().email().allow('', null).optional(),
+    }).min(1)
+);
+
 module.exports = {
     registerPatientValidation,
     loginValidation,
     changePasswordValidation,
+    updateProfileValidation,
 };

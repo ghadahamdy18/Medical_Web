@@ -41,42 +41,42 @@
                         <div class="settings-title">Profile Information</div>
                         <div class="form-group">
                             <label>Full Name</label>
-                            <input type="text" value="Dr. Sarah Smith">
+                            <input type="text" id="profileName" value="">
                         </div>
                         <div class="form-group">
                             <label>Email</label>
-                            <input type="email" value="sarah.smith@medicallab.com">
+                            <input type="email" id="profileEmail" value="">
                         </div>
                         <div class="form-group">
                             <label>Phone</label>
-                            <input type="tel" value="9876543210">
+                            <input type="tel" id="profilePhone" value="">
                         </div>
                         <div class="form-group">
                             <label>Specialization</label>
-                            <select>
+                            <select id="profileSpecialization">
                                 <option>General Medicine</option>
                                 <option>Pathology</option>
                                 <option>Cardiology</option>
                                 <option>Endocrinology</option>
                             </select>
                         </div>
-                        <button class="btn-save" onclick="alert('Profile updated!')">Save Changes</button>
+                        <button class="btn-save" id="btnSaveProfile" onclick="saveProfile()">Save Changes</button>
                     </div>
                     <div class="settings-section">
                         <div class="settings-title">Change Password</div>
                         <div class="form-group">
                             <label>Current Password</label>
-                            <input type="password" placeholder="Enter current password">
+                            <input type="password" id="currentPassword" placeholder="Enter current password">
                         </div>
                         <div class="form-group">
                             <label>New Password</label>
-                            <input type="password" placeholder="Enter new password">
+                            <input type="password" id="newPassword" placeholder="Enter new password">
                         </div>
                         <div class="form-group">
                             <label>Confirm New Password</label>
-                            <input type="password" placeholder="Confirm new password">
+                            <input type="password" id="confirmPassword" placeholder="Confirm new password">
                         </div>
-                        <button class="btn-save" onclick="alert('Password changed!')">Update Password</button>
+                        <button class="btn-save" id="btnChangePassword" onclick="updatePassword()">Update Password</button>
                     </div>
                 </div>
             </div>
@@ -106,14 +106,133 @@
                 const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
                 document.getElementById('userInitials').textContent = initials;
 
-                // TODO: Load user profile data from backend
-                // For now, keeping existing static data
+                // Load user profile data into form
+                document.getElementById('profileName').value = name;
+                document.getElementById('profileEmail').value = user.email || '';
+                document.getElementById('profilePhone').value = user.phoneNumber || user.phone || '';
+
+                if (user.specialization) {
+                    const specSelect = document.getElementById('profileSpecialization');
+                    let foundSpec = false;
+                    for (let i = 0; i < specSelect.options.length; i++) {
+                        if (specSelect.options[i].text === user.specialization || specSelect.options[i].value === user.specialization) {
+                            specSelect.selectedIndex = i;
+                            foundSpec = true;
+                            break;
+                        }
+                    }
+                    if (!foundSpec) {
+                        const newOption = document.createElement('option');
+                        newOption.text = user.specialization;
+                        newOption.value = user.specialization;
+                        specSelect.add(newOption);
+                        specSelect.selectedIndex = specSelect.options.length - 1;
+                    }
+                }
 
             } catch (error) {
                 console.error('Failed to initialize page:', error);
                 if (typeof showToast === 'function') {
                     showToast('Failed to load page', 'error');
                 }
+            }
+        }
+
+        // Save profile changes
+        async function saveProfile() {
+            const btn = document.getElementById('btnSaveProfile');
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            try {
+                const fullName = document.getElementById('profileName').value.trim();
+                const email = document.getElementById('profileEmail').value.trim();
+
+                if (!fullName) {
+                    throw new Error('Full name is required');
+                }
+
+                const payload = { fullName };
+                if (email) payload.email = email;
+
+                const response = await apiPatch('/auth/profile', payload);
+
+                // Update local storage with new user data
+                const updatedUser = response.user || response;
+                saveCurrentUser(updatedUser);
+
+                // Update the top bar
+                document.getElementById('userName').textContent = updatedUser.fullName || fullName;
+                const initials = (updatedUser.fullName || fullName).split(' ').map(n => n[0]).join('').toUpperCase();
+                document.getElementById('userInitials').textContent = initials;
+
+                if (typeof showToast === 'function') {
+                    showToast('Profile updated successfully!', 'success');
+                } else {
+                    alert('Profile updated successfully!');
+                }
+            } catch (error) {
+                console.error('Failed to update profile:', error);
+                if (typeof showToast === 'function') {
+                    showToast(error.message || 'Failed to update profile', 'error');
+                } else {
+                    alert(error.message || 'Failed to update profile');
+                }
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Save Changes';
+            }
+        }
+
+        // Update password
+        async function updatePassword() {
+            const btn = document.getElementById('btnChangePassword');
+            btn.disabled = true;
+            btn.textContent = 'Updating...';
+
+            try {
+                const currentPassword = document.getElementById('currentPassword').value;
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+
+                if (!currentPassword || !newPassword || !confirmPassword) {
+                    throw new Error('All password fields are required');
+                }
+
+                if (newPassword !== confirmPassword) {
+                    throw new Error('New password and confirm password do not match');
+                }
+
+                if (newPassword.length < 6) {
+                    throw new Error('New password must be at least 6 characters');
+                }
+
+                await apiPatch('/auth/change-password', {
+                    currentPassword,
+                    newPassword,
+                    confirmPassword,
+                });
+
+                // Clear the form
+                document.getElementById('currentPassword').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+
+                if (typeof showToast === 'function') {
+                    showToast('Password updated successfully!', 'success');
+                } else {
+                    alert('Password updated successfully!');
+                }
+            } catch (error) {
+                console.error('Failed to update password:', error);
+                if (typeof showToast === 'function') {
+                    showToast(error.message || 'Failed to update password', 'error');
+                } else {
+                    alert(error.message || 'Failed to update password');
+                }
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Update Password';
             }
         }
 

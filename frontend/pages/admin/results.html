@@ -232,6 +232,14 @@
                     '<span class="badge badge-latest">Latest</span>' : 
                     '<span class="badge badge-old">Old</span>';
                 
+                // Get data from populated Mongoose objects
+                const doctorName = (result.doctorUserId && result.doctorUserId.fullName) || 'Unknown';
+                const appointment = result.appointmentId || {};
+                const patient = appointment.patientProfileId || {};
+                const patientName = patient.fullName || 'Unknown';
+                const appointmentDate = appointment.appointmentDate ? formatDate(appointment.appointmentDate) : '-';
+                const appointmentType = appointment.appointmentType ? formatAppointmentType(appointment.appointmentType) : '-';
+
                 return `
                     <tr>
                         <td>${result.testName || 'Unknown Test'}</td>
@@ -241,14 +249,14 @@
                         </td>
                         <td>${formatDateTime(result.uploadedAt)}</td>
                         <td>${versionBadge}</td>
-                        <td>${result.doctorName || 'Unknown'}</td>
+                        <td>${doctorName}</td>
                         <td>
                             <div>
-                                <div>${formatDate(result.appointmentDate) || '-'}</div>
-                                <div class="file-size">${result.appointmentType || '-'}</div>
+                                <div>${appointmentDate}</div>
+                                <div class="file-size">${appointmentType}</div>
                             </div>
                         </td>
-                        <td>${result.profileName || 'Unknown'}</td>
+                        <td>${patientName}</td>
                         <td>
                             <button class="btn-sm btn-view" onclick="viewResultDetails('${result._id}')">View Details</button>
                         </td>
