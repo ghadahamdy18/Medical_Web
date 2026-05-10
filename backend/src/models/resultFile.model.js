@@ -89,7 +89,7 @@ resultFileSchema.index(
     }
 );
 
-resultFileSchema.pre('validate', function (next) {
+resultFileSchema.pre('validate', function () {
     if (!this.uploadedAt) {
         this.uploadedAt = new Date();
     }
@@ -97,67 +97,49 @@ resultFileSchema.pre('validate', function (next) {
     if (!this.mimeType) {
         this.mimeType = 'application/pdf';
     }
-
-    next();
 });
 
-resultFileSchema.pre('save', async function (next) {
-    try {
-        const User = mongoose.model('User');
-        const Appointment = mongoose.model('Appointment');
+resultFileSchema.pre('save', async function () {
+    const User = mongoose.model('User');
+    const Appointment = mongoose.model('Appointment');
 
-        const appointment = await Appointment.findById(this.appointmentId);
+    const appointment = await Appointment.findById(this.appointmentId);
 
-        if (!appointment) {
-            return next(
-                new Error('Result file must be linked to an existing appointment')
-            );
+    if (!appointment) {
+        throw new Error('Result file must be linked to an existing appointment');
+    }
+
+    const doctor = await User.findOne({
+        _id: this.doctorUserId,
+        role: 'doctor',
+        isActive: true,
+        status: 'active',
+    });
+
+    if (!doctor) {
+        throw new Error('Result file doctorUserId must reference an active user with role doctor');
+    }
+
+    if (String(appointment.doctorUserId) !== String(this.doctorUserId)) {
+        throw new Error('Only the doctor assigned to the appointment can upload result files');
+    }
+
+    if (this.replacedResultFileId) {
+        const replacedFile = await mongoose
+            .model('ResultFile')
+            .findById(this.replacedResultFileId);
+
+        if (!replacedFile) {
+            throw new Error('Replaced result file does not exist');
         }
 
-        const doctor = await User.findOne({
-            _id: this.doctorUserId,
-            role: 'doctor',
-            isActive: true,
-            status: 'active',
-        });
-
-        if (!doctor) {
-            return next(
-                new Error('Result file doctorUserId must reference an active user with role doctor')
-            );
+        if (String(replacedFile.appointmentId) !== String(this.appointmentId)) {
+            throw new Error('Replacement result must belong to the same appointment');
         }
 
-        if (String(appointment.doctorUserId) !== String(this.doctorUserId)) {
-            return next(
-                new Error('Only the doctor assigned to the appointment can upload result files')
-            );
+        if (replacedFile.testName !== this.testName) {
+            throw new Error('Replacement result must use the same testName as the replaced result');
         }
-
-        if (this.replacedResultFileId) {
-            const replacedFile = await mongoose
-                .model('ResultFile')
-                .findById(this.replacedResultFileId);
-
-            if (!replacedFile) {
-                return next(new Error('Replaced result file does not exist'));
-            }
-
-            if (String(replacedFile.appointmentId) !== String(this.appointmentId)) {
-                return next(
-                    new Error('Replacement result must belong to the same appointment')
-                );
-            }
-
-            if (replacedFile.testName !== this.testName) {
-                return next(
-                    new Error('Replacement result must use the same testName as the replaced result')
-                );
-            }
-        }
-
-        next();
-    } catch (error) {
-        next(error);
     }
 });
 

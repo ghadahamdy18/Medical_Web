@@ -118,67 +118,68 @@ patientProfileSchema.index(
 patientProfileSchema.index({ userId: 1, isActive: 1 });
 patientProfileSchema.index({ fullName: 'text', nationalId: 'text' });
 
-patientProfileSchema.pre('validate', async function (next) {
-    try {
-        if (this.email === '') {
-            this.email = null;
-        }
+patientProfileSchema.pre('validate', function () {
+    if (this.email === '') {
+        this.email = null;
+    }
 
-        if (this.nationalId === '') {
-            this.nationalId = null;
-        }
+    if (this.nationalId === '') {
+        this.nationalId = null;
+    }
 
-        if (this.isPrimary) {
-            this.relationshipToPrimary = 'self';
-        }
+    if (this.isPrimary) {
+        this.relationshipToPrimary = 'self';
+    }
 
-        if (!this.isPrimary && !this.relationshipToPrimary) {
-            this.invalidate(
-                'relationshipToPrimary',
-                'Relationship to primary profile is required for family member profiles'
-            );
-        }
-
-        next();
-    } catch (error) {
-        next(error);
+    if (!this.isPrimary && !this.relationshipToPrimary) {
+        this.invalidate(
+            'relationshipToPrimary',
+            'Relationship to primary profile is required for family member profiles'
+        );
     }
 });
 
-patientProfileSchema.pre('save', async function (next) {
-    try {
-        const User = mongoose.model('User');
+patientProfileSchema.pre('save', async function () {
+    const User = mongoose.model('User');
+    const session = this.$session();
 
-        const owner = await User.findOne({
-            _id: this.userId,
-            role: 'patient',
-        });
+    const ownerQuery = User.findOne({
+        _id: this.userId,
+        role: 'patient',
+    });
 
-        if (!owner) {
-            return next(
-                new Error('Patient profile must belong to an existing user with role patient')
+    if (session) {
+        ownerQuery.session(session);
+    }
+
+    const owner = await ownerQuery;
+
+    if (!owner) {
+        throw new Error(
+            'Patient profile must belong to an existing user with role patient'
+        );
+    }
+
+    if (this.createdByUserId) {
+        const creatorQuery = User.findById(this.createdByUserId);
+
+        if (session) {
+            creatorQuery.session(session);
+        }
+
+        const creator = await creatorQuery;
+
+        if (!creator) {
+            throw new Error('Profile creator user does not exist');
+        }
+
+        const allowedCreators = ['admin', 'receptionist', 'patient'];
+
+        if (!allowedCreators.includes(creator.role)) {
+            throw new Error(
+                'Patient profile creator must be admin, receptionist, or patient'
             );
         }
-
-        if (this.createdByUserId) {
-            const creator = await User.findById(this.createdByUserId);
-
-            if (!creator) {
-                return next(new Error('Profile creator user does not exist'));
-            }
-
-            const allowedCreators = ['admin', 'receptionist', 'patient'];
-
-            if (!allowedCreators.includes(creator.role)) {
-                return next(
-                    new Error('Patient profile creator must be admin, receptionist, or patient')
-                );
-            }
-        }
-
-        next();
-    } catch (error) {
-        next(error);
     }
 });
 

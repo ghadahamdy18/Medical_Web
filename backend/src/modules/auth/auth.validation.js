@@ -26,6 +26,12 @@ const registerPatientValidation = validate(
         phoneNumber: Joi.string().trim().min(6).max(20).required(),
         email: Joi.string().trim().email().allow('', null).optional(),
         password: Joi.string().min(6).max(100).required(),
+        confirmPassword: Joi.string()
+          .valid(Joi.ref('password'))
+          .required()
+          .messages({
+            'any.only': 'Confirm password must match password',
+          }),
         gender: Joi.string().valid('male', 'female').optional(),
         dateOfBirth: Joi.date().max('now').optional(),
         nationalId: Joi.string().trim().allow('', null).optional(),

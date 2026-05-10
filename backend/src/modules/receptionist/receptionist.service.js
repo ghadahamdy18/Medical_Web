@@ -225,20 +225,6 @@ const cancelAppointment = async (id) => {
     return updatedAppointment;
 };
 
-module.exports = {
-    createPatient,
-    getPatients,
-    getPatientById,
-    createPatientProfile,
-    updatePatientProfile,
-    createAppointment,
-    getAppointments,
-    confirmAppointment,
-    rescheduleAppointment,
-    cancelAppointment,
-    getDashboard
-};
-
 const getDashboard = async () => {
     const today = new Date();
     today.setHours(0, 0, 0, 1);
@@ -265,4 +251,18 @@ const getDashboard = async () => {
             confirmedAppointments
         }
     };
+};
+
+module.exports = {
+    createPatient,
+    getPatients,
+    getPatientById,
+    createPatientProfile,
+    updatePatientProfile,
+    createAppointment,
+    getAppointments,
+    confirmAppointment,
+    rescheduleAppointment,
+    cancelAppointment,
+    getDashboard
 };
