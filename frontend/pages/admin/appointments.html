@@ -244,12 +244,12 @@
                     <tr>
                         <td>${formatDate(appointment.appointmentDate)}</td>
                         <td>${formatTime(appointment.appointmentTime)}</td>
-                        <td>${appointment.profileName || 'Unknown'}</td>
-                        <td>${appointment.doctorName || 'Unknown'}</td>
+                        <td>${appointment.patientProfileId?.fullName || 'Unknown'}</td>
+                        <td>${appointment.doctorUserId?.fullName || 'Unknown'}</td>
                         <td>${formatAppointmentType(appointment.appointmentType)}</td>
                         <td><span class="status-badge status-${appointment.appointmentStatus}">${formatAppointmentStatus(appointment.appointmentStatus)}</span></td>
-                        <td>${appointment.createdByName || '-'}</td>
-                        <td>${appointment.acceptedByName || '-'}</td>
+                        <td>${appointment.createdByUserId?.fullName || '-'}</td>
+                        <td>${appointment.acceptedByUserId?.fullName || '-'}</td>
                         <td>${appointment.notes || '-'}</td>
                         <td>
                             <div class="action-buttons">
@@ -410,6 +410,11 @@
                 }
                 pageFilter.appendChild(option);
             }
+        }
+
+        // Navigate to create appointment page
+        function navigateToCreateAppointment() {
+            window.location.href = 'create-appointment.html';
         }
 
         // Close modal when clicking outside

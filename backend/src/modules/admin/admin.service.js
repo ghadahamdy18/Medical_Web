@@ -663,40 +663,52 @@ const getDashboard = async () => {
         totalPatients,
         totalDoctors,
         totalReceptionists,
-        appointmentsByStatus,
+        totalAppointments,
+        pendingAppointments,
         recentAppointments,
-        recentResults
+        recentResults,
     ] = await Promise.all([
         User.countDocuments(),
+
         User.countDocuments({ role: 'patient' }),
-        User.countDocuments({ role: 'doctor' }),
+
+        User.countDocuments({
+            role: 'doctor',
+            status: 'active',
+            isActive: true,
+        }),
+
         User.countDocuments({ role: 'receptionist' }),
-        Appointment.aggregate([
-            {
-                $group: {
-                    _id: '$appointmentStatus',
-                    count: { $sum: 1 }
-                }
-            }
-        ]),
+
+        Appointment.countDocuments(),
+
+        Appointment.countDocuments({
+            appointmentStatus: 'pending',
+        }),
+
         Appointment.find()
             .sort({ createdAt: -1 })
             .limit(5)
             .populate('patientProfileId', 'fullName')
-            .populate('doctorId', 'fullName')
+            .populate('doctorUserId', 'fullName')
+            .populate('createdByUserId', 'fullName role')
+            .populate('acceptedByUserId', 'fullName role')
             .lean(),
+
         ResultFile.find()
             .sort({ uploadedAt: -1 })
             .limit(5)
-            .populate('appointmentId', 'appointmentDate appointmentType')
-            .populate('doctorId', 'fullName')
-            .lean()
+            .populate({
+                path: 'appointmentId',
+                select: 'patientProfileId appointmentDate appointmentTime appointmentType',
+                populate: {
+                    path: 'patientProfileId',
+                    select: 'fullName',
+                },
+            })
+            .populate('doctorUserId', 'fullName')
+            .lean(),
     ]);
-
-    const appointmentsStatusMap = {};
-    appointmentsByStatus.forEach(item => {
-        appointmentsStatusMap[item._id] = item.count;
-    });
 
     return {
         stats: {
@@ -704,10 +716,14 @@ const getDashboard = async () => {
             totalPatients,
             totalDoctors,
             totalReceptionists,
-            appointmentsByStatus: appointmentsStatusMap
+            totalAppointments,
+            pendingAppointments,
+            appointmentsByStatus: {
+                pending: pendingAppointments,
+            },
         },
         recentAppointments,
-        recentResults
+        recentResults,
     };
 };
 

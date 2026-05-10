@@ -93,7 +93,7 @@
                             <thead>
                                 <tr>
                                     <th>Profile Name</th>
-                                    <th>Patient</th>
+                                    <th>Primary Account</th>
                                     <th>Relationship</th>
                                     <th>Primary</th>
                                     <th>Active</th>
@@ -307,7 +307,7 @@
                 return `
                     <tr>
                         <td>${profile.fullName || 'Unknown'}</td>
-                        <td>${profile.patientName || profile.patientFullName || 'Unknown'}</td>
+                        <td>${profile.userId?.fullName || 'Unknown'}</td>
                         <td>${profile.relationshipToPrimary || '-'}</td>
                         <td><span class="primary-badge ${isPrimary ? 'badge-primary' : 'badge-secondary'}">${isPrimary ? 'Primary' : 'Family'}</span></td>
                         <td><span class="status-badge ${isActive ? 'status-active' : 'status-inactive'}">${isActive ? 'Active' : 'Inactive'}</span></td>

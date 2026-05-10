@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Appointment - Medical Lab</title>
+    <link rel="stylesheet" href="../../css/dashboard.css">
+    <style>
+        body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#6f42c1;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.back-link{display:inline-block;margin-bottom:20px;color:#2c7be5;text-decoration:none}.page-header{margin-bottom:25px}.page-header h1{font-size:24px;color:#333}.form-card{background:#fff;padding:30px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);max-width:700px;margin:0 auto}.form-group{margin-bottom:20px}.form-group label{display:block;margin-bottom:8px;font-weight:600}.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:4px;font-size:14px}.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#2c7be5}.form-row{display:flex;gap:20px}.form-row .form-group{flex:1}.btn{padding:12px 24px;border:none;border-radius:4px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}.btn-primary{background:#2c7be5;color:#fff}.btn-primary:hover{background:#1a5490}.btn-primary:disabled{opacity:.6;cursor:not-allowed}.btn-secondary{background:#6c757d;color:#fff}.btn-secondary:hover{background:#5a6268}.form-actions{display:flex;gap:15px;margin-top:25px}.loading{display:flex;justify-content:center;align-items:center;padding:40px}.spinner{border:3px solid #f3f3f3;border-top:3px solid #2c7be5;border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}.conditional-field{margin-top:15px}
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="dashboard-body">
+            <aside class="sidebar">
+                <div class="sidebar-logo"><h2>Medical Lab</h2></div>
+                <ul class="sidebar-menu">
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="users.html">Users</a></li>
+                    <li><a href="create-user.html">Create User</a></li>
+                    <li><a href="patient-profiles.html">Patient Profiles</a></li>
+                    <li><a href="appointments.html">Appointments</a></li>
+                    <li><a href="create-appointment.html" class="active">Create Appointment</a></li>
+                    <li><a href="results.html">Results</a></li>
+                    <li><a href="settings.html">Settings</a></li>
+                </ul>
+            </aside>
+            <div class="main-area">
+                <div class="top-bar">
+                    <div class="user-info">
+                        <div class="user-avatar" id="userInitials">A</div>
+                        <div class="user-details">
+                            <span class="user-name" id="userName">Admin User</span>
+                            <span class="user-role">System Administrator</span>
+                        </div>
+                    </div>
+                    <div class="top-bar-right">
+                        <button class="logout-btn" onclick="logoutUser()">Logout</button>
+                    </div>
+                </div>
+                <div class="content-area">
+                    <a href="appointments.html" class="back-link">← Back to Appointments</a>
+                    <div class="page-header">
+                        <h1>Create Appointment</h1>
+                        <p>Schedule a new appointment for a patient</p>
+                    </div>
+                    
+                    <div id="loading" class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading form data...</p>
+                    </div>
+                    
+                    <div id="appointmentFormCard" class="form-card" style="display: none;">
+                        <form id="createAppointmentForm" onsubmit="submitAppointment(event)">
+                            <div class="form-group">
+                                <label for="patientProfileId">Patient Profile *</label>
+                                <select id="patientProfileId" name="patientProfileId" required>
+                                    <option value="">Select a patient profile...</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="doctorUserId">Doctor *</label>
+                                <select id="doctorUserId" name="doctorUserId" required>
+                                    <option value="">Select a doctor...</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="appointmentType">Appointment Type *</label>
+                                <select id="appointmentType" name="appointmentType" required onchange="toggleHomeVisitAddress()">
+                                    <option value="">Select type...</option>
+                                    <option value="in_lab">In-Lab Visit</option>
+                                    <option value="home_visit">Home Visit</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="appointmentDate">Appointment Date *</label>
+                                    <input type="date" id="appointmentDate" name="appointmentDate" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="appointmentTime">Appointment Time *</label>
+                                    <input type="time" id="appointmentTime" name="appointmentTime" required>
+                                </div>
+                            </div>
+                            
+                            <div id="homeVisitAddressGroup" class="form-group conditional-field" style="display: none;">
+                                <label for="homeVisitAddress">Home Visit Address *</label>
+                                <textarea id="homeVisitAddress" name="homeVisitAddress" rows="3" placeholder="Enter complete address for home visit..."></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="notes">Notes</label>
+                                <textarea id="notes" name="notes" rows="4" placeholder="Add any additional notes about the appointment..."></textarea>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary" id="submitBtn">Create Appointment</button>
+                                <button type="button" class="btn btn-secondary" onclick="window.location.href='appointments.html'">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Phase 2 — load strictly in this order -->
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/ui.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/guards.js"></script>
+    <script src="../../assets/js/admin.js"></script>
+    <script>
+        let patientProfiles = [];
+        let doctors = [];
+
+        // Initialize page
+        async function initializePage() {
+            try {
+                // Protect page - admin only
+                requireRole('admin');
+
+                // Update user info in top bar
+                const user = getCurrentUser();
+                if (user) {
+                    document.getElementById('userName').textContent = user.fullName || user.name || 'Admin User';
+                    const name = user.fullName || user.name || 'Admin User';
+                    const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                    document.getElementById('userInitials').textContent = initials;
+                }
+
+                // Load patient profiles and doctors in parallel
+                await Promise.all([
+                    loadPatientProfiles(),
+                    loadDoctors()
+                ]);
+
+                // Set minimum date to today
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('appointmentDate').min = today;
+
+                // Hide loading and show form
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('appointmentFormCard').style.display = 'block';
+
+            } catch (error) {
+                console.error('Failed to initialize page:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load form data', 'error');
+                }
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        // Load patient profiles
+        async function loadPatientProfiles() {
+            try {
+                const response = await getAdminPatientProfiles({ limit: 100 });
+                
+                // Handle different response formats
+                if (response.data !== undefined) {
+                    patientProfiles = response.data || [];
+                } else if (response.profiles !== undefined) {
+                    patientProfiles = response.profiles || [];
+                } else if (response.patientProfiles !== undefined) {
+                    patientProfiles = response.patientProfiles || [];
+                } else if (response.data && response.data.profiles !== undefined) {
+                    patientProfiles = response.data.profiles || [];
+                } else {
+                    patientProfiles = [];
+                }
+
+                const select = document.getElementById('patientProfileId');
+                select.innerHTML = '<option value="">Select a patient profile...</option>';
+                
+                patientProfiles.forEach(profile => {
+                    const option = document.createElement('option');
+                    option.value = profile._id;
+                    option.textContent = profile.fullName;
+                    select.appendChild(option);
+                });
+
+            } catch (error) {
+                console.error('Failed to load patient profiles:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load patient profiles', 'error');
+                }
+            }
+        }
+
+        // Load doctors
+        async function loadDoctors() {
+            try {
+                const response = await getAdminUsers({ role: 'doctor', status: 'active', limit: 100 });
+                
+                // Handle different response formats
+                if (response.data !== undefined) {
+                    doctors = response.data || [];
+                } else if (response.users !== undefined) {
+                    doctors = response.users || [];
+                } else if (response.data && response.data.users !== undefined) {
+                    doctors = response.data.users || [];
+                } else {
+                    doctors = [];
+                }
+
+                const select = document.getElementById('doctorUserId');
+                select.innerHTML = '<option value="">Select a doctor...</option>';
+                
+                doctors.forEach(doctor => {
+                    const option = document.createElement('option');
+                    option.value = doctor._id;
+                    option.textContent = doctor.fullName;
+                    select.appendChild(option);
+                });
+
+            } catch (error) {
+                console.error('Failed to load doctors:', error);
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load doctors', 'error');
+                }
+            }
+        }
+
+        // Toggle home visit address field
+        function toggleHomeVisitAddress() {
+            const appointmentType = document.getElementById('appointmentType').value;
+            const addressGroup = document.getElementById('homeVisitAddressGroup');
+            
+            if (appointmentType === 'home_visit') {
+                addressGroup.style.display = 'block';
+                document.getElementById('homeVisitAddress').required = true;
+            } else {
+                addressGroup.style.display = 'none';
+                document.getElementById('homeVisitAddress').required = false;
+                document.getElementById('homeVisitAddress').value = '';
+            }
+        }
+
+        // Submit appointment
+        async function submitAppointment(event) {
+            event.preventDefault();
+
+            // Get form values
+            const patientProfileId = document.getElementById('patientProfileId').value;
+            const doctorUserId = document.getElementById('doctorUserId').value;
+            const appointmentType = document.getElementById('appointmentType').value;
+            const appointmentDate = document.getElementById('appointmentDate').value;
+            const appointmentTime = document.getElementById('appointmentTime').value;
+            const homeVisitAddress = document.getElementById('homeVisitAddress').value;
+            const notes = document.getElementById('notes').value;
+
+            // Validation
+            if (!patientProfileId) {
+                if (typeof showToast === 'function') {
+                    showToast('Please select a patient profile', 'error');
+                }
+                return;
+            }
+
+            if (!doctorUserId) {
+                if (typeof showToast === 'function') {
+                    showToast('Please select a doctor', 'error');
+                }
+                return;
+            }
+
+            if (!appointmentType) {
+                if (typeof showToast === 'function') {
+                    showToast('Please select appointment type', 'error');
+                }
+                return;
+            }
+
+            if (!appointmentDate) {
+                if (typeof showToast === 'function') {
+                    showToast('Please select appointment date', 'error');
+                }
+                return;
+            }
+
+            if (!appointmentTime) {
+                if (typeof showToast === 'function') {
+                    showToast('Please select appointment time', 'error');
+                }
+                return;
+            }
+
+            if (appointmentType === 'home_visit' && !homeVisitAddress.trim()) {
+                if (typeof showToast === 'function') {
+                    showToast('Please enter home visit address', 'error');
+                }
+                return;
+            }
+
+            try {
+                // Show loading state
+                const submitBtn = document.getElementById('submitBtn');
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Creating...';
+
+                // Prepare payload
+                const payload = {
+                    patientProfileId,
+                    doctorUserId,
+                    appointmentType,
+                    appointmentDate,
+                    appointmentTime,
+                    notes
+                };
+
+                // Add home visit address if applicable
+                if (appointmentType === 'home_visit') {
+                    payload.homeVisitAddress = homeVisitAddress;
+                }
+
+                // Create appointment
+                const response = await createAdminAppointment(payload);
+
+                if (response.success) {
+                    if (typeof showToast === 'function') {
+                        showToast('Appointment created successfully!', 'success');
+                    }
+
+                    // Redirect to appointments page
+                    setTimeout(() => {
+                        window.location.href = 'appointments.html';
+                    }, 1500);
+
+                } else {
+                    throw new Error(response.message || 'Failed to create appointment');
+                }
+
+            } catch (error) {
+                console.error('Failed to create appointment:', error);
+                if (typeof showToast === 'function') {
+                    showToast(error.message || 'Failed to create appointment', 'error');
+                }
+            } finally {
+                // Reset button state
+                const submitBtn = document.getElementById('submitBtn');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Create Appointment';
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
+</body>
+</html>
