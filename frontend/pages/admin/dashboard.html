@@ -100,6 +100,18 @@
                             </a>
                         </div>
                     </div>
+                    <div class="section">
+                        <div class="section-title">Recent Appointments</div>
+                        <div id="recentAppointments" class="notification-list">
+                            <p style="padding: 20px; color: #666;">Loading...</p>
+                        </div>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Recent Lab Results</div>
+                        <div id="recentResults" class="notification-list">
+                            <p style="padding: 20px; color: #666;">Loading...</p>
+                        </div>
+                    </div>
                     </div>
             </div>
         </div>
@@ -149,10 +161,11 @@
                 // Use the new dashboard endpoint
                 const response = await getAdminDashboard();
                 
-                if (response.success) {
-                    updateDashboardStats(response.data);
+                if (response && response.success !== false) {
+                    // sendSuccess spreads data at root level (not nested under .data)
+                    updateDashboardStats(response);
                 } else {
-                    throw new Error(response.message || 'Failed to load dashboard data');
+                    throw new Error((response && response.message) || 'Failed to load dashboard data');
                 }
 
             } catch (error) {
@@ -172,7 +185,7 @@
             document.getElementById('totalUsers').textContent = stats.totalUsers || 0;
             document.getElementById('activeDoctors').textContent = stats.totalDoctors || 0;
             document.getElementById('totalAppointments').textContent = Object.values(stats.appointmentsByStatus || {}).reduce((sum, count) => sum + count, 0);
-            document.getElementById('pendingAppointments').textContent = stats.appointmentsByStatus?.pending || 0;
+            document.getElementById('pendingAppointments').textContent = (stats.appointmentsByStatus && stats.appointmentsByStatus.pending) || 0;
             
             // Update recent appointments if needed
             updateRecentAppointments(recentAppointments);
@@ -187,17 +200,17 @@
             if (!container) return;
             
             if (appointments.length === 0) {
-                container.innerHTML = '<p style="color: #666;">No recent appointments</p>';
+                container.innerHTML = '<p style="padding: 20px; color: #666;">No recent appointments</p>';
                 return;
             }
             
             container.innerHTML = appointments.map(apt => `
-                <div class="recent-item">
-                    <div class="recent-item-info">
-                        <h4>${apt.patientProfileId?.fullName || 'Unknown'}</h4>
-                        <p>${formatAppointmentType(apt.appointmentType)} • ${apt.doctorId?.fullName || 'Unassigned'}</p>
+                <div class="notification-item">
+                    <div class="notification-content">
+                        <div class="notification-title">${(apt.patientProfileId && apt.patientProfileId.fullName) || 'Unknown'}</div>
+                        <div class="notification-message">${formatAppointmentType(apt.appointmentType)} • Dr. ${(apt.doctorUserId && apt.doctorUserId.fullName) || 'Unassigned'}</div>
                     </div>
-                    <div class="recent-item-time">${formatDate(apt.appointmentDate)} • ${formatTime(apt.appointmentTime)}</div>
+                    <div class="notification-time">${formatDate(apt.appointmentDate)} • ${formatTime(apt.appointmentTime)}</div>
                 </div>
             `).join('');
         }
@@ -208,7 +221,7 @@
             if (!container) return;
             
             if (results.length === 0) {
-                container.innerHTML = '<p style="color: #666;">No recent results</p>';
+                container.innerHTML = '<p style="padding: 20px; color: #666;">No recent results</p>';
                 return;
             }
             
@@ -222,6 +235,7 @@
                 </div>
             `).join('');
         }
+        
 
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', initializePage);

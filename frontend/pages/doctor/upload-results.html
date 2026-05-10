@@ -304,6 +304,11 @@
                             </div>
 
                             <div class="form-group">
+                                <label>Test Name *</label>
+                                <input type="text" id="testName" required placeholder="e.g. Blood Test, Lipid Panel, CBC" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:4px;font-size:14px;box-sizing:border-box;">
+                            </div>
+
+                            <div class="form-group">
                                 <label>Upload PDF File</label>
                                 <div class="file-upload" onclick="document.getElementById('fileInput').click()">
                                     <div class="file-upload-icon">📄</div>
@@ -410,19 +415,20 @@
         async function loadAppointmentDetails() {
             try {
                 const response = await getDoctorAppointmentDetails(appointmentId);
-                if (response.success) {
-                    const appointment = response.data.appointment || response.data; // Accommodate variable API structure
+                if (response && response.success !== false) {
+                    // sendSuccess spreads data at root, so appointment is at response.appointment
+                    const appointment = response.appointment || response;
                     const appInfo = document.getElementById('appointmentInfo');
                     appInfo.style.display = 'block';
                     appInfo.innerHTML = `
                         <div class="appointment-details">
-                            <h3 style="margin-top: 0;">${appointment.patientProfileId?.fullName || 'Unknown Patient'}</h3>
+                            <h3 style="margin-top: 0;">${(appointment.patientProfileId && appointment.patientProfileId.fullName) || 'Unknown Patient'}</h3>
                             <p style="margin-bottom: 5px;"><strong>Date:</strong> ${formatDate(appointment.appointmentDate)} at ${formatTime(appointment.appointmentTime)}</p>
                             <p style="margin-bottom: 0;"><strong>Type:</strong> ${formatAppointmentType(appointment.appointmentType)}</p>
                         </div>
                     `;
                 } else {
-                    throw new Error(response.message || 'Failed to load appointment');
+                    throw new Error((response && response.message) || 'Failed to load appointment');
                 }
             } catch (error) {
                 console.error('Failed to load appointment details:', error);
@@ -434,8 +440,9 @@
         async function loadExistingResults() {
             try {
                 const response = await getDoctorAppointmentResults(appointmentId);
-                if (response.success) {
-                    existingResults = response.data || [];
+                if (response && response.success !== false) {
+                    // sendSuccess spreads data at root, so results is at response.results
+                    existingResults = response.results || response.data || [];
 
                     if (existingResults.length > 0) {
                         document.getElementById('replaceWarning').style.display = 'block';

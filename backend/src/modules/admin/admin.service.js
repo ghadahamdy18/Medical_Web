@@ -683,13 +683,13 @@ const getDashboard = async () => {
             .sort({ createdAt: -1 })
             .limit(5)
             .populate('patientProfileId', 'fullName')
-            .populate('doctorId', 'fullName')
+            .populate('doctorUserId', 'fullName')
             .lean(),
         ResultFile.find()
             .sort({ uploadedAt: -1 })
             .limit(5)
             .populate('appointmentId', 'appointmentDate appointmentType')
-            .populate('doctorId', 'fullName')
+            .populate('doctorUserId', 'fullName')
             .lean()
     ]);
 
