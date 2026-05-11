@@ -5,13 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Family Members - Medical Lab</title>
     <link rel="stylesheet" href="../../css/dashboard.css">
-    <style>body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#2c7be5;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.back-link{display:inline-block;margin-bottom:20px;color:#2c7be5;text-decoration:none}.page-header{margin-bottom:25px}.page-header h1{font-size:24px;color:#333}.family-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}.family-card{background:#fff;padding:25px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);position:relative}.family-card.primary{border:2px solid #2c7be5}.primary-badge{position:absolute;top:15px;right:15px;background:#2c7be5;color:#fff;font-size:11px;padding:4px 10px;border-radius:10px}.family-avatar{width:60px;height:60px;background:#e8f0fe;color:#2c7be5;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:15px}.family-name{font-size:18px;font-weight:600;margin-bottom:5px}.family-relation{color:#666;font-size:14px;margin-bottom:15px}.family-details{font-size:13px;color:#666}.family-actions{margin-top:20px;display:flex;gap:10px}.btn-view{background:#2c7be5;color:#fff;border:none;padding:8px 16px;border-radius:4px;cursor:pointer}.btn-primary-action{background:#6c757d;color:#fff;border:none;padding:8px 16px;border-radius:4px;cursor:pointer}</style>
+
+    <style>
+        body{background:#f5f5f5}
+        .dashboard{display:flex;flex-direction:column;min-height:100vh}
+        .dashboard-body{display:flex;flex:1}
+        .sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}
+        .sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}
+        .sidebar-logo h2{color:#2c7be5;font-size:20px}
+        .sidebar-menu{list-style:none;padding:0;margin:0}
+        .sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}
+        .sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}
+        .main-area{flex:1}
+        .top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}
+        .user-info{display:flex;align-items:center;gap:10px}
+        .user-avatar{width:40px;height:40px;background:#2c7be5;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}
+        .user-details{display:flex;flex-direction:column}
+        .user-name{font-weight:600;font-size:14px}
+        .user-role{font-size:12px;color:#666}
+        .content-area{padding:30px}
+        .back-link{display:inline-block;margin-bottom:20px;color:#2c7be5;text-decoration:none}
+        .page-header{margin-bottom:25px}
+        .page-header h1{font-size:24px;color:#333}
+        .page-header p{color:#666}
+        .family-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
+        .family-card{background:#fff;padding:25px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);position:relative}
+        .family-card.primary{border:2px solid #2c7be5}
+        .primary-badge{position:absolute;top:15px;right:15px;background:#2c7be5;color:#fff;font-size:11px;padding:4px 10px;border-radius:10px}
+        .family-avatar{width:60px;height:60px;background:#e8f0fe;color:#2c7be5;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:bold;margin-bottom:15px}
+        .family-name{font-size:18px;font-weight:600;margin-bottom:5px}
+        .family-relation{color:#666;font-size:14px;margin-bottom:15px}
+        .family-details{font-size:13px;color:#666;line-height:1.7}
+        .family-actions{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap}
+        .btn-view{background:#2c7be5;color:#fff;border:none;padding:8px 16px;border-radius:4px;cursor:pointer}
+        .btn-view:hover{background:#1a5fbf}
+        .btn-primary-action{background:#6c757d;color:#fff;border:none;padding:8px 16px;border-radius:4px;cursor:pointer}
+        .empty-message{background:#fff;border-radius:8px;padding:40px;text-align:center;color:#666;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+        .logout-btn{background:transparent;border:1px solid #dc3545;color:#dc3545;padding:8px 16px;border-radius:4px;cursor:pointer}
+        .logout-btn:hover{background:#dc3545;color:#fff}
+    </style>
 </head>
+
 <body>
     <div class="dashboard">
         <div class="dashboard-body">
             <aside class="sidebar">
-                <div class="sidebar-logo"><h2>Medical Lab</h2></div>
+                <div class="sidebar-logo">
+                    <h2>Medical Lab</h2>
+                </div>
+
                 <ul class="sidebar-menu">
                     <li><a href="dashboard.html">Dashboard</a></li>
                     <li><a href="select-profile.html">Select Profile</a></li>
@@ -23,174 +65,226 @@
                     <li><a href="settings.html">Settings</a></li>
                 </ul>
             </aside>
+
             <div class="main-area">
                 <div class="top-bar">
                     <div class="user-info">
-                        <div class="user-avatar" id="userInitials">JP</div>
+                        <div class="user-avatar" id="userInitials">P</div>
                         <div class="user-details">
-                            <span class="user-name" id="userName">John Patient</span>
+                            <span class="user-name" id="userName">Patient</span>
                             <span class="user-role">Patient</span>
                         </div>
                     </div>
+
                     <div class="top-bar-right">
                         <button class="logout-btn" onclick="logoutUser()">Logout</button>
                     </div>
                 </div>
+
                 <div class="content-area">
                     <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+
                     <div class="page-header">
                         <h1>Family Members</h1>
                         <p>Manage your family profiles under one account</p>
                     </div>
-                    <div class="family-grid">
-                        <div class="family-card primary">
-                            <span class="primary-badge">Currently Viewing</span>
-                            <div class="family-avatar">👤</div>
-                            <div class="family-name">John Patient</div>
-                            <div class="family-relation">Self (Primary)</div>
-                            <div class="family-details">
-                                <p>DOB: May 15, 1990</p>
-                                <p>Male</p>
-                            </div>
-                            <div class="family-actions">
-                                <button class="btn-view">View Results</button>
-                                <button class="btn-primary-action">Appointments</button>
-                            </div>
-                        </div>
-                        <div class="family-card">
-                            <div class="family-avatar">👤</div>
-                            <div class="family-name">Jane Patient</div>
-                            <div class="family-relation">Spouse</div>
-                            <div class="family-details">
-                                <p>DOB: March 22, 1985</p>
-                                <p>Female</p>
-                            </div>
-                            <div class="family-actions">
-                                <button class="btn-view">Switch to Profile</button>
-                            </div>
-                        </div>
+
+                    <div class="family-grid" id="familyGrid">
+                        <div class="empty-message">Loading family profiles...</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
     <script src="../../assets/js/api.js"></script>
     <script src="../../assets/js/ui.js"></script>
     <script src="../../assets/js/auth.js"></script>
     <script src="../../assets/js/guards.js"></script>
     <script src="../../assets/js/patient.js"></script>
+
     <script>
-        // Require patient role
         requireRole('patient');
 
-        // Initialize page
+        let profiles = [];
+
+        function getInitials(name) {
+            if (!name) return 'P';
+
+            return String(name)
+                .trim()
+                .split(/\s+/)
+                .map(function (part) {
+                    return part.charAt(0);
+                })
+                .join('')
+                .toUpperCase()
+                .slice(0, 2);
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'Not provided';
+
+            const date = new Date(dateString);
+
+            if (isNaN(date.getTime())) return 'Not provided';
+
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        function formatGender(gender) {
+            if (!gender) return 'Not provided';
+
+            return String(gender).charAt(0).toUpperCase() + String(gender).slice(1);
+        }
+
+        function formatRelationship(profile) {
+            if (profile.isPrimary) return 'Self / Primary';
+
+            return profile.relationshipToPrimary || 'Family Member';
+        }
+
+        function escapeHtml(value) {
+            return String(value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
         async function initializePage() {
             try {
                 const user = getCurrentUser();
+
                 if (!user) {
                     window.location.href = '../../index.html';
                     return;
                 }
 
-                // Update user info in top bar
-                document.getElementById('userName').textContent = user.fullName || user.name || 'Patient';
                 const name = user.fullName || user.name || 'Patient';
-                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
-                document.getElementById('userInitials').textContent = initials;
 
-                // Load profiles from backend
+                document.getElementById('userName').textContent = name;
+                document.getElementById('userInitials').textContent = getInitials(name);
+
                 await loadProfiles();
-
             } catch (error) {
                 console.error('Failed to initialize page:', error);
+
                 if (typeof showToast === 'function') {
                     showToast('Failed to load page', 'error');
                 }
             }
         }
 
-        // Load profiles
         async function loadProfiles() {
+            const familyGrid = document.getElementById('familyGrid');
+
             try {
-                const profiles = await getPatientProfiles();
-                const selectedProfile = getSelectedPatientProfile();
-                
-                const familyGrid = document.querySelector('.family-grid');
+                profiles = await getPatientProfiles();
+
                 if (!profiles || profiles.length === 0) {
-                    familyGrid.innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">No family profiles found</p>';
+                    familyGrid.innerHTML =
+                        '<div class="empty-message">No family profiles found</div>';
                     return;
                 }
 
-                familyGrid.innerHTML = profiles.map(profile => {
-                    const isSelected = selectedProfile && selectedProfile._id === profile._id;
-                    const initials = profile.fullName.split(' ').map(n => n[0]).join('').toUpperCase();
-                    
+                let selectedProfile = getSelectedPatientProfile();
+
+                if (!selectedProfile) {
+                    selectedProfile =
+                        profiles.find(function (profile) {
+                            return profile.isPrimary === true;
+                        }) || profiles[0];
+
+                    saveSelectedPatientProfile(selectedProfile);
+                }
+
+                familyGrid.innerHTML = profiles.map(function (profile) {
+                    const isSelected =
+                        selectedProfile && String(selectedProfile._id) === String(profile._id);
+
+                    const initials = getInitials(profile.fullName);
+
                     return `
                         <div class="family-card ${isSelected ? 'primary' : ''}">
                             ${isSelected ? '<span class="primary-badge">Currently Viewing</span>' : ''}
-                            <div class="family-avatar">${initials}</div>
-                            <div class="family-name">${profile.fullName}</div>
-                            <div class="family-relation">${profile.relation || 'Family Member'}</div>
-                            <div class="family-details">
-                                <p>DOB: ${formatDate(profile.dateOfBirth)}</p>
-                                <p>${profile.gender}</p>
+
+                            <div class="family-avatar">${escapeHtml(initials)}</div>
+
+                            <div class="family-name">${escapeHtml(profile.fullName || 'Unnamed Profile')}</div>
+
+                            <div class="family-relation">
+                                ${escapeHtml(formatRelationship(profile))}
                             </div>
+
+                            <div class="family-details">
+                                <p><strong>DOB:</strong> ${escapeHtml(formatDate(profile.dateOfBirth))}</p>
+                                <p><strong>Gender:</strong> ${escapeHtml(formatGender(profile.gender))}</p>
+                                <p><strong>National ID:</strong> ${escapeHtml(profile.nationalId || 'Not provided')}</p>
+                                <p><strong>Email:</strong> ${escapeHtml(profile.email || 'Not provided')}</p>
+                                <p><strong>Address:</strong> ${escapeHtml(profile.address || 'Not provided')}</p>
+                            </div>
+
                             <div class="family-actions">
-                                ${isSelected ? 
-                                    '<button class="btn-primary-action">Currently Selected</button>' : 
-                                    `<button class="btn-view" onclick="selectProfile('${profile._id}')">Select Profile</button>`
+                                ${
+                                    isSelected
+                                        ? '<button class="btn-primary-action" type="button">Currently Selected</button>'
+                                        : `<button class="btn-view" type="button" onclick="selectProfile('${profile._id}')">Select Profile</button>`
                                 }
                             </div>
                         </div>
                     `;
                 }).join('');
-
             } catch (error) {
                 console.error('Failed to load profiles:', error);
-                const familyGrid = document.querySelector('.family-grid');
-                if (familyGrid) {
-                    familyGrid.innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">Failed to load profiles</p>';
+
+                familyGrid.innerHTML =
+                    '<div class="empty-message">Failed to load family profiles</div>';
+
+                if (typeof showToast === 'function') {
+                    showToast('Failed to load family profiles', 'error');
                 }
             }
         }
 
-        // Select profile
         async function selectProfile(profileId) {
             try {
+                const profile = profiles.find(function (item) {
+                    return String(item._id) === String(profileId);
+                });
+
+                if (!profile) {
+                    throw new Error('Profile not found');
+                }
+
                 await selectPatientProfile(profileId);
-                
-                // Reload profiles to update UI
-                await loadProfiles();
-                
+                saveSelectedPatientProfile(profile);
+
                 if (typeof showToast === 'function') {
                     showToast('Profile selected successfully!', 'success');
                 }
-                
-                // Redirect to dashboard
-                setTimeout(() => {
+
+                await loadProfiles();
+
+                setTimeout(function () {
                     window.location.href = 'dashboard.html';
-                }, 1000);
-                
+                }, 700);
             } catch (error) {
                 console.error('Failed to select profile:', error);
+
                 if (typeof showToast === 'function') {
-                    showToast('Failed to select profile', 'error');
+                    showToast(error.message || 'Failed to select profile', 'error');
+                } else {
+                    alert(error.message || 'Failed to select profile');
                 }
             }
         }
 
-        // Format date helper
-        function formatDate(dateString) {
-            if (!dateString) return 'Unknown';
-            const date = new Date(dateString);
-            return date.toLocaleDateString('en-US', { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-            });
-        }
-
-        // Initialize on page load
         document.addEventListener('DOMContentLoaded', initializePage);
     </script>
 </body>
