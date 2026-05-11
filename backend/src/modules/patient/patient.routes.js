@@ -22,6 +22,7 @@ router.use(role("patient"));
 
 router.get("/dashboard", patientController.getDashboard);
 router.get("/profiles", patientController.getMyProfiles);
+router.get("/doctors", patientController.getAvailableDoctors);
 router.post(
   "/select-profile",
   validateSelectProfile,
