@@ -349,11 +349,26 @@ const getMyResultForDownload = async (userId, resultId) => {
     throw createError("Result not found or access denied", 404);
   }
 
-  const absolutePath = path.resolve(result.filePath);
+  const possiblePaths = [
+    path.resolve(result.filePath),
+    path.resolve(process.cwd(), result.filePath),
+    path.resolve(process.cwd(), "uploads", "results", result.fileName),
+    path.resolve(process.cwd(), "backend", "uploads", "results", result.fileName),
+  ];
 
-  try {
-    await fs.access(absolutePath);
-  } catch {
+  let absolutePath = null;
+
+  for (const filePath of possiblePaths) {
+    try {
+      await fs.access(filePath);
+      absolutePath = filePath;
+      break;
+    } catch {
+      // try next path
+    }
+  }
+
+  if (!absolutePath) {
     throw createError("File not found", 404);
   }
 

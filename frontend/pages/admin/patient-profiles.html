@@ -287,44 +287,67 @@
 
         // Render profiles
         function renderProfiles(profileList) {
-            document.getElementById('profilesLoading').style.display = 'none';
-            
-            if (!profileList || profileList.length === 0) {
-                document.getElementById('profilesEmpty').style.display = 'block';
-                document.getElementById('profilesTable').style.display = 'none';
-                return;
-            }
+    document.getElementById('profilesLoading').style.display = 'none';
 
-            document.getElementById('profilesTable').style.display = 'table';
-            document.getElementById('profilesEmpty').style.display = 'none';
+    if (!profileList || profileList.length === 0) {
+        document.getElementById('profilesEmpty').style.display = 'block';
+        document.getElementById('profilesTable').style.display = 'none';
+        return;
+    }
 
-            const tbody = document.getElementById('profilesBody');
-            tbody.innerHTML = profileList.map(profile => {
-                const isPrimary = profile.isPrimary;
-                const isActive = profile.isActive;
-                const canDeactivate = !isPrimary && isActive;
-                
-                return `
-                    <tr>
-                        <td>${profile.fullName || 'Unknown'}</td>
-                        <td>${profile.userId?.fullName || 'Unknown'}</td>
-                        <td>${profile.relationshipToPrimary || '-'}</td>
-                        <td><span class="primary-badge ${isPrimary ? 'badge-primary' : 'badge-secondary'}">${isPrimary ? 'Primary' : 'Family'}</span></td>
-                        <td><span class="status-badge ${isActive ? 'status-active' : 'status-inactive'}">${isActive ? 'Active' : 'Inactive'}</span></td>
-                        <td>${profile.gender || '-'}</td>
-                        <td>${formatDate(profile.dateOfBirth) || '-'}</td>
-                        <td>${profile.nationalId || '-'}</td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn-sm btn-edit" onclick="openEditProfileModal('${profile._id}')">Edit</button>
-                                ${isPrimary ? `<button class="btn-sm btn-add" onclick="addFamilyProfileForPatient('${profile.userId}')">Add Family</button>` : ''}
-                                ${canDeactivate ? `<button class="btn-sm btn-deactivate" onclick="deactivateProfile('${profile._id}')">Deactivate</button>` : ''}
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        }
+    document.getElementById('profilesTable').style.display = 'table';
+    document.getElementById('profilesEmpty').style.display = 'none';
+
+    const tbody = document.getElementById('profilesBody');
+
+    tbody.innerHTML = profileList.map(profile => {
+        const isPrimary = profile.isPrimary;
+        const isActive = profile.isActive;
+        const canDeactivate = !isPrimary && isActive;
+
+        const primaryAccountId =
+            profile.userId && typeof profile.userId === 'object'
+                ? profile.userId._id
+                : profile.userId;
+
+        const primaryAccountName =
+            profile.userId && typeof profile.userId === 'object'
+                ? profile.userId.fullName
+                : 'Unknown';
+
+        return `
+            <tr>
+                <td>${profile.fullName || 'Unknown'}</td>
+                <td>${primaryAccountName || 'Unknown'}</td>
+                <td>${profile.relationshipToPrimary || '-'}</td>
+                <td><span class="primary-badge ${isPrimary ? 'badge-primary' : 'badge-secondary'}">${isPrimary ? 'Primary' : 'Family'}</span></td>
+                <td><span class="status-badge ${isActive ? 'status-active' : 'status-inactive'}">${isActive ? 'Active' : 'Inactive'}</span></td>
+                <td>${profile.gender || '-'}</td>
+                <td>${formatDate(profile.dateOfBirth) || '-'}</td>
+                <td>${profile.nationalId || '-'}</td>
+                <td>
+                    <div class="action-buttons">
+                        <button class="btn-sm btn-edit" onclick="openEditProfileModal('${profile._id}')">Edit</button>
+
+                        ${isPrimary && primaryAccountId ? `
+    <button
+        class="btn-sm btn-add"
+        type="button"
+        onclick="addFamilyProfileForPatient('${primaryAccountId}')"
+    >
+        Add Family
+    </button>
+` : ''}
+
+                        ${canDeactivate ? `
+                            <button class="btn-sm btn-deactivate" onclick="deactivateProfile('${profile._id}')">Deactivate</button>
+                        ` : ''}
+                    </div>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
 
         // Open edit profile modal
         function openEditProfileModal(profileId) {
@@ -425,8 +448,17 @@
 
         // Add family profile for specific patient
         function addFamilyProfileForPatient(patientId) {
-            navigateToCreatePatientProfile(patientId);
-        }
+    const id = String(patientId || '').trim();
+
+    if (!id || id === 'undefined' || id === 'null' || id === '[object Object]') {
+        handleAdminError(new Error('Patient ID missing'));
+        return;
+    }
+
+    sessionStorage.setItem('selectedPatientUserIdForFamily', id);
+
+    window.location.href = 'create-patient-profile.html?userId=' + encodeURIComponent(id);
+}
 
         // Update pagination controls if needed
         function updatePaginationControls() {
