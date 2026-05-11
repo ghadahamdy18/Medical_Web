@@ -357,56 +357,64 @@
         }
 
         async function loadDashboard() {
-            try {
-                const user = getCurrentUser();
+    try {
+        const user = getCurrentUser();
 
-                if (!user) {
-                    window.location.href = '../../index.html';
-                    return;
-                }
-
-                const userName = user.fullName || user.name || 'Patient';
-                const initials = getInitials(userName);
-
-                document.getElementById('userName').textContent = userName;
-                document.getElementById('patientName').textContent = userName.split(' ')[0];
-                document.getElementById('userInitials').textContent = initials;
-
-                const selectedProfile = await loadProfilesIntoSelector();
-
-                const dashboardResponse = await getPatientDashboard();
-                const dashboardData = normalizeDataResponse(dashboardResponse);
-
-                document.getElementById('totalAppointments').textContent =
-                    dashboardData.totalAppointments || 0;
-
-                document.getElementById('completedTests').textContent =
-                    dashboardData.completedTests || dashboardData.completedAppointments || 0;
-
-                document.getElementById('pendingAppointments').textContent =
-                    dashboardData.pendingAppointments || 0;
-
-                const filters = {};
-
-                if (selectedProfile && selectedProfile._id) {
-                    filters.profileId = selectedProfile._id;
-                }
-
-                const appointmentsResponse = await getPatientAppointments(filters);
-                const appointments = normalizeArrayResponse(appointmentsResponse);
-
-                renderUpcomingAppointments(appointments);
-            } catch (error) {
-                console.error('Failed to load dashboard:', error);
-
-                document.getElementById('upcomingAppointments').innerHTML =
-                    '<p class="empty-message">Failed to load appointments</p>';
-
-                if (typeof showToast === 'function') {
-                    showToast('Failed to load dashboard data', 'error');
-                }
-            }
+        if (!user) {
+            window.location.href = '../../index.html';
+            return;
         }
+
+        const userName = user.fullName || user.name || 'Patient';
+        const initials = getInitials(userName);
+
+        document.getElementById('userName').textContent = userName;
+        document.getElementById('patientName').textContent = userName.split(' ')[0];
+        document.getElementById('userInitials').textContent = initials;
+
+        const selectedProfile = await loadProfilesIntoSelector();
+
+        const filters = {};
+
+        if (selectedProfile && selectedProfile._id) {
+            filters.profileId = selectedProfile._id;
+        }
+
+        const appointmentsResponse = await getPatientAppointments(filters);
+        const appointments = normalizeArrayResponse(appointmentsResponse);
+
+        const totalAppointments = appointments.length;
+
+        const completedTests = appointments.filter(function (apt) {
+            const status = apt.appointmentStatus || apt.status;
+            return status === 'completed';
+        }).length;
+
+        const pendingAppointments = appointments.filter(function (apt) {
+            const status = apt.appointmentStatus || apt.status;
+            return status === 'pending' || status === 'confirmed';
+        }).length;
+
+        document.getElementById('totalAppointments').textContent = totalAppointments;
+        document.getElementById('completedTests').textContent = completedTests;
+        document.getElementById('pendingAppointments').textContent = pendingAppointments;
+
+        renderUpcomingAppointments(appointments);
+    } catch (error) {
+        console.error('Failed to load dashboard:', error);
+
+        document.getElementById('totalAppointments').textContent = '0';
+        document.getElementById('completedTests').textContent = '0';
+        document.getElementById('pendingAppointments').textContent = '0';
+
+        document.getElementById('upcomingAppointments').innerHTML =
+            '<p class="empty-message">Failed to load appointments</p>';
+
+        if (typeof showToast === 'function') {
+            showToast('Failed to load dashboard data', 'error');
+        }
+    }
+}
 
         document.addEventListener('DOMContentLoaded', loadDashboard);
     </script>

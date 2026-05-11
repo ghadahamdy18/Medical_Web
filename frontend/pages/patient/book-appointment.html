@@ -184,33 +184,44 @@
 
         // Load doctors from backend
         async function loadDoctors() {
-            try {
-                // TODO: Backend needs to provide a patient-accessible doctor list endpoint
-                // For now, we'll show the error message
-                const doctorSelect = document.getElementById('doctorSelect');
-                const doctorError = document.getElementById('doctorError');
-                
-                doctorSelect.innerHTML = '<option value="">No doctors available</option>';
-                doctorSelect.disabled = true;
-                doctorError.style.display = 'block';
-                
-                // If backend provides doctor list in future, uncomment:
-                // doctors = await apiGet('/public/doctors'); // or appropriate endpoint
-                // doctorSelect.innerHTML = doctors.map(doctor => 
-                //     `<option value="${doctor._id}">Dr. ${doctor.fullName} - ${doctor.phoneNumber || ''}</option>`
-                // ).join('');
-                // doctorSelect.disabled = false;
+    const doctorSelect = document.getElementById('doctorSelect');
+    const doctorError = document.getElementById('doctorError');
 
-            } catch (error) {
-                console.error('Failed to load doctors:', error);
-                const doctorSelect = document.getElementById('doctorSelect');
-                const doctorError = document.getElementById('doctorError');
-                
-                doctorSelect.innerHTML = '<option value="">Failed to load doctors</option>';
-                doctorSelect.disabled = true;
-                doctorError.style.display = 'block';
-            }
+    try {
+        doctorSelect.innerHTML = '<option value="">Loading doctors...</option>';
+        doctorSelect.disabled = true;
+        doctorError.style.display = 'none';
+
+        const response = await apiGet('/patient/doctors');
+
+        const doctors = Array.isArray(response)
+            ? response
+            : response.data || [];
+
+        if (!doctors.length) {
+            doctorSelect.innerHTML = '<option value="">No active doctors found</option>';
+            doctorSelect.disabled = true;
+            doctorError.textContent = 'No active doctors found. Please contact the lab.';
+            doctorError.style.display = 'block';
+            return;
         }
+
+        doctorSelect.innerHTML =
+            '<option value="">Select doctor</option>' +
+            doctors.map(function (doctor) {
+                return `<option value="${doctor._id}">Dr. ${doctor.fullName}</option>`;
+            }).join('');
+
+        doctorSelect.disabled = false;
+    } catch (error) {
+        console.error('Failed to load doctors:', error);
+
+        doctorSelect.innerHTML = '<option value="">Failed to load doctors</option>';
+        doctorSelect.disabled = true;
+        doctorError.textContent = error.message || 'Failed to load doctors.';
+        doctorError.style.display = 'block';
+    }
+}
 
         // Select visit type
         function selectVisitType(type) {

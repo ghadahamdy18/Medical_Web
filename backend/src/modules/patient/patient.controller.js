@@ -187,6 +187,21 @@ const downloadMyResult = async (req, res, next) => {
   }
 };
 
+
+const getAvailableDoctors = async (req, res, next) => {
+  try {
+    const doctors = await patientService.getAvailableDoctors();
+
+    res.status(200).json({
+      success: true,
+      message: "Doctors fetched successfully",
+      data: doctors,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getDashboard,
   getMyProfiles,
@@ -198,4 +213,6 @@ module.exports = {
   cancelMyAppointment,
   getMyResults,
   downloadMyResult,
+  getAvailableDoctors,
+
 };

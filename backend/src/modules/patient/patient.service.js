@@ -363,6 +363,18 @@ const getMyResultForDownload = async (userId, resultId) => {
   };
 };
 
+
+const getAvailableDoctors = async () => {
+  return User.find({
+    role: "doctor",
+    isActive: true,
+    status: "active",
+  })
+    .select("_id fullName phoneNumber email")
+    .sort({ fullName: 1 })
+    .lean();
+};
+
 module.exports = {
   getDashboard,
   getMyProfiles,
@@ -374,4 +386,5 @@ module.exports = {
   cancelMyAppointment,
   getMyResults,
   getMyResultForDownload,
+  getAvailableDoctors,  
 };
