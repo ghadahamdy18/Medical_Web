@@ -320,32 +320,19 @@
                 <td>${profile.fullName || 'Unknown'}</td>
                 <td>${primaryAccountName || 'Unknown'}</td>
                 <td>${profile.relationshipToPrimary || '-'}</td>
-
-                <td>
-                    <span class="primary-badge ${isPrimary ? 'badge-primary' : 'badge-secondary'}">
-                        ${isPrimary ? 'Primary' : 'Family'}
-                    </span>
-                </td>
-
-                <td>
-                    <span class="status-badge ${isActive ? 'status-active' : 'status-inactive'}">
-                        ${isActive ? 'Active' : 'Inactive'}
-                    </span>
-                </td>
-
+                <td><span class="primary-badge ${isPrimary ? 'badge-primary' : 'badge-secondary'}">${isPrimary ? 'Primary' : 'Family'}</span></td>
+                <td><span class="status-badge ${isActive ? 'status-active' : 'status-inactive'}">${isActive ? 'Active' : 'Inactive'}</span></td>
                 <td>${profile.gender || '-'}</td>
                 <td>${formatDate(profile.dateOfBirth) || '-'}</td>
                 <td>${profile.nationalId || '-'}</td>
-
                 <td>
                     <div class="action-buttons">
-                        <button class="btn-sm btn-edit" onclick="openEditProfileModal('${profile._id}')">
-                            Edit
-                        </button>
+                        <button class="btn-sm btn-edit" onclick="openEditProfileModal('${profile._id}')">Edit</button>
 
-                        ${isPrimary ? `
+                        ${isPrimary && primaryAccountId ? `
     <button
         class="btn-sm btn-add"
+        type="button"
         onclick="addFamilyProfileForPatient('${primaryAccountId}')"
     >
         Add Family
@@ -353,9 +340,7 @@
 ` : ''}
 
                         ${canDeactivate ? `
-                            <button class="btn-sm btn-deactivate" onclick="deactivateProfile('${profile._id}')">
-                                Deactivate
-                            </button>
+                            <button class="btn-sm btn-deactivate" onclick="deactivateProfile('${profile._id}')">Deactivate</button>
                         ` : ''}
                     </div>
                 </td>
@@ -463,18 +448,16 @@
 
         // Add family profile for specific patient
         function addFamilyProfileForPatient(patientId) {
-    const id =
-        patientId && typeof patientId === 'object'
-            ? patientId._id
-            : patientId;
+    const id = String(patientId || '').trim();
 
     if (!id || id === 'undefined' || id === 'null' || id === '[object Object]') {
         handleAdminError(new Error('Patient ID missing'));
         return;
     }
 
-    window.location.href =
-        `create-patient-profile.html?userId=${encodeURIComponent(id)}`;
+    sessionStorage.setItem('selectedPatientUserIdForFamily', id);
+
+    window.location.href = 'create-patient-profile.html?userId=' + encodeURIComponent(id);
 }
 
         // Update pagination controls if needed
