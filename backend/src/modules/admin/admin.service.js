@@ -604,7 +604,7 @@ const getResults = async (query) => {
         filter.testName = { $regex: query.testName, $options: 'i' };
     }
 
-    if (query.isLatest !== undefined) {
+    if (query.isLatest !== undefined && query.isLatest !== '') {
         filter.isLatest = query.isLatest === 'true' || query.isLatest === true;
     }
 
