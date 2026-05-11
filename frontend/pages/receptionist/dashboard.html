@@ -24,9 +24,9 @@
             <div class="main-area">
                 <div class="top-bar">
                     <div class="user-info">
-                        <div class="user-avatar" id="userInitials">R</div>
+                        <div class="user-avatar" id="userInitials"></div>
                         <div class="user-details">
-                            <span class="user-name" id="userName">Reception Desk</span>
+                            <span class="user-name" id="userName"></span>
                             <span class="user-role">Receptionist</span>
                         </div>
                     </div>
@@ -138,19 +138,40 @@
                 // Use the new dashboard endpoint
                 const response = await getReceptionistDashboard();
                 
-                if (response.success) {
-                    updateDashboardStats(response.data.stats);
+                 
+                if (response && response.success !== false) {
+                    // stats is spread at the top level by sendSuccess (not nested under .data)
+                    const stats = response.stats || {};
+                    updateDashboardStats(stats);
+
+           // Fetch appointments for today's list
+                    const appointmentsResponse = await getDoctorAppointments({ limit: 100 });
+                    if (appointmentsResponse && appointmentsResponse.data) {
+                        appointments = appointmentsResponse.data || [];
+                        updateTodayAppointments(appointments);
+                    } else {
+                        // No appointments data returned
+                        appointments = [];
+                        updateTodayAppointments(appointments);
+                    }
                 } else {
-                    throw new Error(response.message || 'Failed to load dashboard data');
+                    
+                    throw new Error((response && response.message) || 'Failed to load dashboard data');
                 }
 
             } catch (error) {
                 console.error('Failed to load dashboard data:', error);
-                if (typeof showToast === 'function') {
-                    showToast('Failed to load dashboard data', 'error');
-                }
+                handleDoctorError(error, 'Failed to load dashboard data');
+                
+                // Reset stats to 0 on error
+                updateDashboardStats({});
+                
+                // Hide loading states
+                document.getElementById('todayAppointmentsLoading').style.display = 'none';
+                document.getElementById('todayAppointmentsEmpty').style.display = 'block';
             }
         }
+        
 
         // Update dashboard stats
         function updateDashboardStats(stats) {
