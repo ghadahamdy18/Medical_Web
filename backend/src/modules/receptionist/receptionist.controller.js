@@ -126,6 +126,17 @@ const getDashboard = async (req, res, next) => {
     }
 };
 
+const getDoctors = async (req, res, next) => {
+    try {
+        const result = await receptionistService.getDoctors(req.user._id);
+        res.status(200).json(result);
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+
 module.exports = {
     createPatient,
     getPatients,
@@ -137,5 +148,6 @@ module.exports = {
     confirmAppointment,
     rescheduleAppointment,
     cancelAppointment,
-    getDashboard
+    getDashboard,
+    getDoctors
 };

@@ -266,6 +266,12 @@ function debounce(func, wait) {
     };
 }
 
+async function getReceptionistDoctors() {
+    return apiRequest('/admin/users?role=receptionist&status=active&limit=100', {
+        method: 'GET'
+    });
+}
+
 // Debounced search function
 const debouncedPatientSearch = debounce(async (searchTerm, callback) => {
     try {
