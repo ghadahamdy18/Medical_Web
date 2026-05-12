@@ -227,22 +227,25 @@
                         <td><span class="status-badge status-${appointment.appointmentStatus}">${formatAppointmentStatus(appointment.appointmentStatus)}</span></td>
                         <td>${creatorName}</td>
                         <td>${appointment.notes || '-'}</td>
-                        <td>
-    <div class="action-buttons">
-    
+    <td>
 
+    <div class="action-buttons">
         ${canComplete ? `<button type="button" class="btn-sm btn-complete" onclick="completeAppointment('${appointment._id}')">
             Complete
         </button>` : ''}
 
-        <button type="button" class="btn-sm btn-results" onclick="viewResults('${appointment._id}')">
-            View Results
-        </button>
+        <a 
+    class="btn-sm btn-results" 
+    href="appointment-results.html?id=${appointment._id}"
+    style="text-decoration: none; display: inline-block;">
+    View Results
+        </a>
 
         ${canUpload ? `<button type="button" class="btn-sm btn-upload" onclick="uploadResult('${appointment._id}')">
             Upload Result
         </button>` : ''}
     </div>
+</td>
 </td>
                     </tr>
                 `;
@@ -254,12 +257,15 @@
 //view results
 
 function viewResults(appointmentId) {
-    if (!appointmentId || appointmentId === 'undefined') {
-        alert('Appointment ID not found');
+    console.log('View Results appointmentId:', appointmentId);
+
+    if (!appointmentId || appointmentId === 'undefined' || appointmentId === 'null') {
+        console.log('Appointments array:', appointments);
+        alert('Appointment ID missing. Check console.');
         return;
     }
 
-    navigateToAppointmentResults(appointmentId);
+    window.location.href = `appointment-results.html?id=${encodeURIComponent(appointmentId)}`;
 }
 
 //upload result

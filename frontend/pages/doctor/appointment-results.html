@@ -113,39 +113,38 @@
 
         // Load results
         async function loadResults() {
-            if (!appointmentId) {
-                showError('No appointment ID provided');
-                return;
-            }
+    if (!appointmentId) {
+        showError('No appointment ID provided');
+        return;
+    }
 
-            try {
-                document.getElementById('resultsLoading').style.display = 'block';
-                document.getElementById('resultsContent').style.display = 'none';
-                document.getElementById('resultsEmpty').style.display = 'none';
-                document.getElementById('resultsError').style.display = 'none';
+    try {
+        document.getElementById('resultsLoading').style.display = 'block';
+        document.getElementById('resultsContent').style.display = 'none';
+        document.getElementById('resultsEmpty').style.display = 'none';
+        document.getElementById('resultsError').style.display = 'none';
 
-                // Get appointment details first
-                const appointmentResponse = await getDoctorAppointmentDetails(appointmentId);
-                if (appointmentResponse.success) {
-                    appointment = appointmentResponse.appointment;
-                    updateAppointmentInfo(appointment);
-                }
+        const appointmentResponse = await getDoctorAppointmentDetails(appointmentId);
 
-                // Get results
-                const response = await getDoctorAppointmentResults(appointmentId);
-                
-                if (response.success) {
-                    results = response.results || [];
-                    renderResults(results);
-                } else {
-                    throw new Error(response.message || 'Failed to load results');
-                }
-
-            } catch (error) {
-                console.error('Failed to load results:', error);
-                showError(error.message || 'Failed to load results');
-            }
+        if (appointmentResponse.success) {
+            appointment = appointmentResponse.appointment;
+            updateAppointmentInfo(appointment);
         }
+
+        const response = await getDoctorAppointmentResults(appointmentId);
+
+        if (response.success) {
+            results = response.results || [];
+            renderResults(results);
+        } else {
+            throw new Error(response.message || 'Failed to load results');
+        }
+
+    } catch (error) {
+        console.error('Failed to load results:', error);
+        showError(error.message || 'Failed to load results');
+    }
+}
 
         // Update appointment info
         function updateAppointmentInfo(apt) {
