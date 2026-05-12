@@ -142,7 +142,13 @@
 
         let patient = null;
         let createdProfile = null;
-        const userId = getQueryParam('userId');
+        const params = new URLSearchParams(window.location.search);
+
+        const userId =
+            params.get('userId') ||
+            params.get('id') ||
+            params.get('patientId') ||
+            sessionStorage.getItem('selectedPatientUserIdForFamily');
 
         // Initialize page
         async function initializePage() {

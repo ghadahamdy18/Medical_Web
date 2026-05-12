@@ -206,52 +206,54 @@
 
         // Load appointments
         async function loadAppointments() {
-            try {
-                document.getElementById('appointmentsLoading').style.display = 'block';
-                document.getElementById('appointmentsTable').style.display = 'none';
-                document.getElementById('appointmentsEmpty').style.display = 'none';
+    try {
+        document.getElementById('appointmentsLoading').style.display = 'block';
+        document.getElementById('appointmentsTable').style.display = 'none';
+        document.getElementById('appointmentsEmpty').style.display = 'none';
 
-                // Build filters
-                const filters = {};
-                const profileId = document.getElementById('profileFilter').value;
-                const status = document.getElementById('statusFilter').value;
-                const dateFilter = document.getElementById('dateFilter').value;
+        const filters = {};
+        const profileId = document.getElementById('profileFilter').value;
+        const status = document.getElementById('statusFilter').value;
+        const dateFilter = document.getElementById('dateFilter').value;
 
-                if (profileId) filters.profileId = profileId;
-                if (status) filters.status = status;
+        if (profileId) filters.profileId = profileId;
+        if (status) filters.status = status;
 
-                // Get appointments from backend
-                appointments = await getPatientAppointments(filters);
+        const response = await getPatientAppointments(filters);
 
-                // Apply date filter if needed
-                let filteredAppointments = appointments;
-                if (dateFilter) {
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
-                    
-                    filteredAppointments = appointments.filter(apt => {
-                        const aptDate = new Date(apt.appointmentDate);
-                        aptDate.setHours(0, 0, 0, 0);
-                        
-                        if (dateFilter === 'upcoming') return aptDate >= today;
-                        if (dateFilter === 'past') return aptDate < today;
-                        if (dateFilter === 'today') return aptDate.getTime() === today.getTime();
-                        return true;
-                    });
-                }
+        appointments = Array.isArray(response)
+            ? response
+            : response.data || [];
 
-                renderAppointments(filteredAppointments);
+        let filteredAppointments = appointments;
 
-            } catch (error) {
-                console.error('Failed to load appointments:', error);
-                document.getElementById('appointmentsLoading').style.display = 'none';
-                document.getElementById('appointmentsEmpty').style.display = 'block';
-                if (typeof showToast === 'function') {
-                    showToast('Failed to load appointments', 'error');
-                }
-            }
+        if (dateFilter) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            filteredAppointments = appointments.filter(function (apt) {
+                const aptDate = new Date(apt.appointmentDate);
+                aptDate.setHours(0, 0, 0, 0);
+
+                if (dateFilter === 'upcoming') return aptDate >= today;
+                if (dateFilter === 'past') return aptDate < today;
+                if (dateFilter === 'today') return aptDate.getTime() === today.getTime();
+
+                return true;
+            });
         }
 
+        renderAppointments(filteredAppointments);
+    } catch (error) {
+        console.error('Failed to load appointments:', error);
+        document.getElementById('appointmentsLoading').style.display = 'none';
+        document.getElementById('appointmentsEmpty').style.display = 'block';
+
+        if (typeof showToast === 'function') {
+            showToast('Failed to load appointments', 'error');
+        }
+    }
+}
         // Render appointments
         function renderAppointments(appointmentList) {
             document.getElementById('appointmentsLoading').style.display = 'none';
@@ -267,18 +269,19 @@
 
             const tbody = document.getElementById('appointmentsBody');
             tbody.innerHTML = appointmentList.map(appointment => {
-                const canReschedule = appointment.status === 'pending' || appointment.status === 'confirmed';
-                const canCancel = appointment.status === 'pending' || appointment.status === 'confirmed';
+                const status = appointment.appointmentStatus || appointment.status;
+                const canReschedule = status === 'pending' || status === 'confirmed';
+                const canCancel = status === 'pending' || status === 'confirmed';
                 
                 return `
                     <tr>
                         <td>${formatDate(appointment.appointmentDate)}</td>
                         <td>${formatTime(appointment.appointmentTime)}</td>
                         <td>${appointment.appointmentType === 'in_lab' ? 'In-Lab Visit' : 'Home Visit'}</td>
-                        <td>${appointment.profileName || 'Unknown'}</td>
-                        <td>${appointment.doctorName || 'Doctor'}</td>
+                        <td>${appointment.patientProfileId?.fullName || 'Unknown'}</td>
+                        <td>${appointment.doctorUserId?.fullName || 'Doctor'}</td>
                         <td>${appointment.notes || '-'}</td>
-                        <td><span class="status-badge status-${appointment.status}">${capitalizeFirst(appointment.status)}</span></td>
+                        <td><span class="status-badge status-${status}">${capitalizeFirst(status)}</span></td>
                         <td>
                             <div class="action-buttons">
                                 ${canReschedule ? `<button class="btn-sm btn-reschedule" onclick="openRescheduleModal('${appointment._id}')">Reschedule</button>` : ''}

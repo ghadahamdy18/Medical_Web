@@ -33,5 +33,5 @@ router.get('/appointments', validation.getAppointmentsValidation, receptionistCo
 router.patch('/appointments/:id/confirm', validation.idParamValidation, receptionistController.confirmAppointment);
 router.patch('/appointments/:id/reschedule', validation.rescheduleAppointmentValidation, receptionistController.rescheduleAppointment);
 router.patch('/appointments/:id/cancel', validation.idParamValidation, receptionistController.cancelAppointment);
-
+router.get('/doctors', receptionistController.getDoctors);
 module.exports = router;

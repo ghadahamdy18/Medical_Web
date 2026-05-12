@@ -99,13 +99,13 @@ function formatAppointmentStatus(status) {
 
 function formatAppointmentType(type) {
     if (!type) return 'Unknown';
-    
+
     const typeMap = {
         'in_lab': 'In-Lab Visit',
         'home_visit': 'Home Visit'
     };
-    
-    return typeMap[type.toLowerCase()] || type.charAt(0).toUpperCase() + status.slice(1);
+
+    return typeMap[type.toLowerCase()] || type.charAt(0).toUpperCase() + type.slice(1);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -264,6 +264,12 @@ function debounce(func, wait) {
         clearTimeout(timeout);
         timeout = setTimeout(later, wait);
     };
+}
+
+async function getReceptionistDoctors() {
+    return apiRequest('/admin/users?role=receptionist&status=active&limit=100', {
+        method: 'GET'
+    });
 }
 
 // Debounced search function

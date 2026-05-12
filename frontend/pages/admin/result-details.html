@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../../css/dashboard.css">
     <style>
         body{background:#f5f5f5}.dashboard{display:flex;flex-direction:column;min-height:100vh}.dashboard-body{display:flex;flex:1}.sidebar{width:250px;background:#fff;border-right:1px solid #e0e0e0;padding:20px 0}.sidebar-logo{padding:0 20px 20px;border-bottom:1px solid #e0e0e0;margin-bottom:20px}.sidebar-logo h2{color:#2c7be5;font-size:20px}.sidebar-menu{list-style:none}.sidebar-menu li a{display:flex;align-items:center;gap:12px;padding:12px 20px;color:#555;text-decoration:none;transition:all .2s}.sidebar-menu li a:hover,.sidebar-menu li a.active{background:#e8f0fe;color:#2c7be5;border-right:3px solid #2c7be5}.main-area{flex:1}.top-bar{background:#fff;padding:15px 30px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}.user-info{display:flex;align-items:center;gap:10px}.user-avatar{width:40px;height:40px;background:#6f42c1;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold}.user-details{display:flex;flex-direction:column}.user-name{font-weight:600;font-size:14px}.user-role{font-size:12px;color:#666}.content-area{padding:30px}.back-link{display:inline-block;margin-bottom:20px;color:#2c7be5;text-decoration:none}.page-header{margin-bottom:25px}.page-header h1{font-size:24px;color:#333}.page-header p{color:#666;max-width:720px}.detail-card{background:#fff;padding:30px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);margin-bottom:20px}.detail-section{margin-bottom:25px}.detail-section:last-child{margin-bottom:0}.detail-section h3{font-size:18px;margin-bottom:15px;color:#333;border-bottom:1px solid #eee;padding-bottom:10px}.detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px}.detail-item{display:flex;flex-direction:column;gap:5px}.detail-label{font-size:12px;color:#666;text-transform:uppercase;font-weight:600}.detail-value{font-size:16px;color:#333}.badge{padding:3px 8px;border-radius:12px;font-size:11px}.badge-latest{background:#28a745;color:#fff}.badge-old{background:#6c757d;color:#fff}.file-info{background:#f8f9fa;padding:15px;border-radius:6px;margin-bottom:15px}.btn{padding:10px 20px;border:none;border-radius:4px;cursor:pointer;font-size:14px}.btn-primary{background:#2c7be5;color:#fff}.btn-primary:hover{background:#1a5fbf}.loading{text-align:center;padding:40px;color:#666}.error{text-align:center;padding:40px;color:#dc3545}
+.file-link{color:#2563eb;text-decoration:none;font-weight:500;display:inline-flex;align-items:center;gap:5px;transition:color .2s}.file-link:hover{color:#1d4ed8;text-decoration:underline}.file-link i{font-size:14px}
     </style>
 </head>
 <body>
@@ -179,8 +180,11 @@
                                 </div>
                             </div>
                             
-                            <div style="margin-top: 30px;">
+                            <div style="margin-top: 30px; display: flex; gap: 10px;">
                                 <button class="btn btn-primary" onclick="backToResults()">Back to Results</button>
+                                <button id="downloadBtn" class="btn btn-secondary" onclick="downloadResult()">
+                                    <i class="fas fa-file-pdf"></i> View / Download PDF
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -283,8 +287,15 @@
             
             document.getElementById('uploadedAt').textContent = formatDateTime(resultData.uploadedAt) || 'Unknown';
 
+            const baseUrl = API_BASE_URL.replace('/api', '');
+            const fileUrl = `${baseUrl}/uploads/results/${resultData.fileName}`;
+
             // File Information
-            document.getElementById('fileName').textContent = resultData.fileName || 'Unknown';
+            document.getElementById('fileName').innerHTML = `
+                <a href="${fileUrl}" target="_blank" class="file-link">
+                    <i class="fas fa-file-pdf"></i> ${resultData.fileName || 'Unknown'}
+                </a>
+            `;
             document.getElementById('fileSize').textContent = formatFileSize(resultData.fileSize || 0);
             document.getElementById('mimeType').textContent = resultData.mimeType || 'Unknown';
 
@@ -320,6 +331,17 @@
         // Back to results
         function backToResults() {
             window.location.href = 'results.html';
+        }
+
+        // Download result
+        function downloadResult() {
+            if (!result || !result.fileName) return;
+            
+            // The API_BASE_URL is usually http://localhost:5001/api
+            // Files are served from http://localhost:5001/uploads/results/
+            const baseUrl = API_BASE_URL.replace('/api', '');
+            const url = `${baseUrl}/uploads/results/${result.fileName}`;
+            window.open(url, '_blank');
         }
 
         // Show error

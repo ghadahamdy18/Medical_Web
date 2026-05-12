@@ -265,7 +265,7 @@
                     <div class="user-info">
                         <div class="user-avatar" id="userInitials">SS</div>
                         <div class="user-details">
-                            <span class="user-name" id="userName">Dr. Sarah Smith</span>
+                            <span class="user-name" id="userName"></span>
                             <span class="user-role">Doctor</span>
                         </div>
                     </div>
@@ -370,6 +370,13 @@
                 document.getElementById('uploadLoading').style.display = 'none';
                 document.getElementById('uploadForm').style.display = 'block';
             }
+            // Update user info in top bar
+            const user = await getCurrentUser();
+            document.getElementById('userName').textContent = user.fullName || user.name || 'Doctor';
+            const name = user.fullName || user.name || 'Doctor';
+            const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+            document.getElementById('userInitials').textContent = initials;
+
         }
 
         // Load all appointments to populate the dropdown

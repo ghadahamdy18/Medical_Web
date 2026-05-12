@@ -114,6 +114,7 @@ const updatePatientProfile = async (profileId, data) => {
     return updatedProfile;
 };
 
+
 const createAppointment = async (data, receptionistId) => {
     const profile = await PatientProfile.findOne({ _id: data.patientProfileId, isActive: true });
     if (!profile) {
@@ -253,6 +254,21 @@ const getDashboard = async () => {
     };
 };
 
+
+//get doctors
+const getDoctors = async () => {
+    const doctors = await User.find({
+        role: 'doctor',
+        status: 'active'
+    })
+    .select('_id fullName phoneNumber email role status')
+    .lean();
+
+    return {
+        data: doctors
+    };
+};
+
 module.exports = {
     createPatient,
     getPatients,
@@ -264,5 +280,6 @@ module.exports = {
     confirmAppointment,
     rescheduleAppointment,
     cancelAppointment,
-    getDashboard
+    getDashboard,
+    getDoctors
 };

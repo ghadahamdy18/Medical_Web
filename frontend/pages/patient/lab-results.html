@@ -128,73 +128,104 @@
 
         // Load results
         async function loadResults() {
-            try {
-                const container = document.getElementById('resultsContainer');
-                container.innerHTML = '<div class="loading">Loading lab results...</div>';
+    try {
+        const container = document.getElementById('resultsContainer');
+        container.innerHTML = '<div class="loading">Loading lab results...</div>';
 
-                // Build filters
-                const filters = {};
-                const profileId = document.getElementById('profileFilter').value;
-                if (profileId) filters.profileId = profileId;
+        const filters = {};
+        const profileId = document.getElementById('profileFilter').value;
+        if (profileId) filters.profileId = profileId;
 
-                // Get results from backend
-                results = await getPatientResults(filters);
+        const response = await getPatientResults(filters);
 
-                renderResults(results);
+        results = Array.isArray(response)
+            ? response
+            : response.data || [];
 
-            } catch (error) {
-                console.error('Failed to load results:', error);
-                const container = document.getElementById('resultsContainer');
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <h3>Failed to load results</h3>
-                        <p>Please try again later</p>
-                    </div>
-                `;
-                if (typeof showToast === 'function') {
-                    showToast('Failed to load lab results', 'error');
-                }
-            }
+        renderResults(results);
+    } catch (error) {
+        console.error('Failed to load results:', error);
+
+        document.getElementById('resultsContainer').innerHTML = `
+            <div class="empty-state">
+                <h3>Failed to load results</h3>
+                <p>Please try again later</p>
+            </div>
+        `;
+
+        if (typeof showToast === 'function') {
+            showToast('Failed to load lab results', 'error');
         }
+    }
+}
 
         // Render results
         function renderResults(resultsList) {
-            const container = document.getElementById('resultsContainer');
-            
-            if (!resultsList || resultsList.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <h3>No lab results found</h3>
-                        <p>Results will appear here once your appointments are completed and doctors upload test results.</p>
-                    </div>
-                `;
-                return;
-            }
+    const container = document.getElementById('resultsContainer');
 
-            container.innerHTML = `
-                <div class="results-list">
-                    ${resultsList.map(result => `
-                        <div class="result-card">
-                            <div class="result-info">
-                                <div class="result-icon">📄</div>
-                                <div class="result-details">
-                                    <h3>${result.testName || 'Lab Test Result'}</h3>
-                                    <p>File: ${result.fileName || 'result.pdf'}</p>
-                                    <p>Uploaded: ${formatDate(result.uploadedAt)}</p>
-                                    <p>Appointment: ${formatDate(result.appointmentDate)} • ${formatTime(result.appointmentTime)}</p>
-                                    <p>Type: ${result.appointmentType === 'in_lab' ? 'In-Lab Visit' : 'Home Visit'} • Status: ${capitalizeFirst(result.appointmentStatus || 'completed')}</p>
-                                </div>
-                            </div>
-                            <div class="result-actions">
-                                <button class="btn-download" onclick="downloadResult('${result._id}', '${result.fileName || `result-${result._id}.pdf`}')" id="download-${result._id}">
-                                    Download PDF
-                                </button>
+    if (!resultsList || resultsList.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <h3>No lab results found</h3>
+                <p>Results will appear here once your appointments are completed and doctors upload test results.</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = `
+        <div class="results-list">
+            ${resultsList.map(result => {
+                const appointment = result.appointmentId || {};
+
+                return `
+                    <div class="result-card">
+                        <div class="result-info">
+                            <div class="result-icon">📄</div>
+
+                            <div class="result-details">
+                                <h3>${result.testName || 'Lab Test Result'}</h3>
+
+                                <p>File: ${result.fileName || 'result.pdf'}</p>
+
+                                <p>Uploaded: ${formatDate(result.uploadedAt)}</p>
+
+                                <p>
+                                    Appointment:
+                                    ${formatDate(appointment.appointmentDate)}
+                                    •
+                                    ${formatTime(appointment.appointmentTime)}
+                                </p>
+
+                                <p>
+                                    Type:
+                                    ${appointment.appointmentType === 'in_lab'
+                                        ? 'In-Lab Visit'
+                                        : 'Home Visit'}
+                                    •
+                                    Status:
+                                    ${capitalizeFirst(
+                                        appointment.appointmentStatus || 'completed'
+                                    )}
+                                </p>
                             </div>
                         </div>
-                    `).join('')}
-                </div>
-            `;
-        }
+
+                        <div class="result-actions">
+                            <button
+                                class="btn-download"
+                                onclick="downloadResult('${result._id}', '${result.fileName || `result-${result._id}.pdf`}')"
+                                id="download-${result._id}"
+                            >
+                                Download PDF
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    `;
+}
 
         // Download result
         async function downloadResult(resultId, fileName) {
