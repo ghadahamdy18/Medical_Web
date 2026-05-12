@@ -91,7 +91,6 @@
                                         <th>Patient</th>
                                         <th>Type</th>
                                         <th>Status</th>
-                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="todayAppointmentsBody">
@@ -238,7 +237,6 @@
                             <td><span class="status-badge status-${appointment.appointmentStatus}">${formatAppointmentStatus(appointment.appointmentStatus)}</span></td>
                             <td>
                                 <div class="action-buttons">
-                                    <button class="btn-sm btn-view" onclick="viewDetails('${appointment._id}')">View</button>
                                     ${canComplete ? `<button class="btn-sm btn-complete" onclick="completeAppointment('${appointment._id}')">Complete</button>` : ''}
                                     ${canUpload ? `<button class="btn-sm btn-upload" onclick="uploadResult('${appointment._id}')">Upload</button>` : ''}
                                 </div>

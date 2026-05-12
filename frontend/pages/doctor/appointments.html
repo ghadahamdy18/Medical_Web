@@ -106,6 +106,7 @@
     <script src="../../assets/js/guards.js"></script>
     <script src="../../assets/js/doctor.js"></script>
     <script>
+        
         // Require doctor role
         requireRole('doctor');
 
@@ -175,6 +176,18 @@
             }
         }
 
+        //function to get appointment id
+        function getAppointmentId(appointment) {
+            return (
+                appointment._id ||
+                appointment.id ||
+                appointment.appointmentId ||
+                appointment.appointment?._id ||
+                appointment.appointment?.id
+            );
+        }
+
+
         // Render appointments
         function renderAppointments(appointmentList) {
             document.getElementById('appointmentsLoading').style.display = 'none';
@@ -182,6 +195,7 @@
             if (!appointmentList || appointmentList.length === 0) {
                 document.getElementById('appointmentsEmpty').style.display = 'block';
                 document.getElementById('appointmentsTable').style.display = 'none';
+
                 return;
             }
 
@@ -200,6 +214,8 @@
                 const patientGender = patient.gender || '-';
                 const patientDOB = patient.dateOfBirth ? formatDate(patient.dateOfBirth) : '-';
                 const creatorName = creator.fullName || '-';
+                const appointmentId = getAppointmentId(appointment);
+                const resultsUrl = `appointment-results.html?appointmentId=${appointmentId}`;
 
                 return `
                     <tr>
@@ -212,55 +228,49 @@
                         <td>${creatorName}</td>
                         <td>${appointment.notes || '-'}</td>
                         <td>
-                            <div class="action-buttons">
-                                <button class="btn-sm btn-view" onclick="viewDetails('${appointment._id}')">View Details</button>
-                                ${canComplete ? `<button class="btn-sm btn-complete" onclick="completeAppointment('${appointment._id}')">Complete</button>` : ''}
-                                <button class="btn-sm btn-results" onclick="viewResults('${appointment._id}')">View Results</button>
-                                ${canUpload ? `<button class="btn-sm btn-upload" onclick="uploadResult('${appointment._id}')">Upload Result</button>` : ''}
-                            </div>
-                        </td>
+    <div class="action-buttons">
+    
+
+        ${canComplete ? `<button type="button" class="btn-sm btn-complete" onclick="completeAppointment('${appointment._id}')">
+            Complete
+        </button>` : ''}
+
+        <button type="button" class="btn-sm btn-results" onclick="viewResults('${appointment._id}')">
+            View Results
+        </button>
+
+        ${canUpload ? `<button type="button" class="btn-sm btn-upload" onclick="uploadResult('${appointment._id}')">
+            Upload Result
+        </button>` : ''}
+    </div>
+</td>
                     </tr>
                 `;
             }).join('');
         }
 
-        // View appointment details
-        function viewDetails(appointmentId) {
-            navigateToAppointmentDetails(appointmentId);
-        }
+    
 
-        // View appointment results
-        function viewResults(appointmentId) {
-            navigateToAppointmentResults(appointmentId);
-        }
+//view results
 
-        // Upload result
-        function uploadResult(appointmentId) {
-            navigateToUploadResults(appointmentId);
-        }
+function viewResults(appointmentId) {
+    if (!appointmentId || appointmentId === 'undefined') {
+        alert('Appointment ID not found');
+        return;
+    }
 
-        // Complete appointment
-        async function completeAppointment(appointmentId) {
-            if (!confirm('Are you sure you want to mark this appointment as completed?')) {
-                return;
-            }
+    navigateToAppointmentResults(appointmentId);
+}
 
-            try {
-                const response = await completeDoctorAppointment(appointmentId);
-                
-                if (response.success) {
-                    handleDoctorSuccess('Appointment completed successfully!');
-                    await loadAppointments(); // Refresh the list
-                } else {
-                    throw new Error(response.message || 'Failed to complete appointment');
-                }
+//upload result
+function uploadResult(appointmentId) {
+    if (!appointmentId || appointmentId === 'undefined') {
+        alert('Appointment ID not found');
+        return;
+    }
 
-            } catch (error) {
-                console.error('Failed to complete appointment:', error);
-                handleDoctorError(error, 'Failed to complete appointment');
-            }
-        }
-
+    navigateToUploadResults(appointmentId);
+}
         // Update pagination controls if needed
         function updatePaginationControls() {
             if (!pagination) return;

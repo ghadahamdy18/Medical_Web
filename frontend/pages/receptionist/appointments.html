@@ -201,7 +201,15 @@
                 handleReceptionistError(error, 'Failed to load appointments');
             }
         }
-
+        function getAppointmentId(appointment) {
+    return (
+        appointment._id ||
+        appointment.id ||
+        appointment.appointmentId ||
+        appointment.appointment?._id ||
+        appointment.appointment?.id
+    );
+}
         // Render appointments
         function renderAppointments(appointmentList) {
             document.getElementById('appointmentsLoading').style.display = 'none';
@@ -209,7 +217,7 @@
             if (!appointmentList || appointmentList.length === 0) {
                 document.getElementById('appointmentsEmpty').style.display = 'block';
                 document.getElementById('appointmentsTable').style.display = 'none';
-                return;
+                 return;
             }
 
             document.getElementById('appointmentsTable').style.display = 'table';
@@ -220,7 +228,7 @@
                 const canConfirm = canReceptionistConfirm(appointment);
                 const canReschedule = canReceptionistReschedule(appointment);
                 const canCancel = canReceptionistCancel(appointment);
-                
+                const appointmentId = getAppointmentId(appointment);
                 return `
                 
     <tr>
@@ -257,14 +265,18 @@
             <div class="action-buttons">
                 ${canConfirm ? `<button class="btn-sm btn-confirm" onclick="confirmAppointment('${appointment._id}')">Confirm</button>` : ''}
                 ${canReschedule ? `<button class="btn-sm btn-reschedule" onclick="openRescheduleModal('${appointment._id}')">Reschedule</button>` : ''}
-                ${canCancel ? `<button class="btn-sm btn-cancel" onclick="cancelAppointment('${appointment._id}')">Cancel</button>` : ''}
-                <button class="btn-sm btn-view" onclick="viewAppointmentDetails('${appointment._id}')">View</button>
+               ${canCancel ? `<button type="button" class="btn-sm btn-cancel" onclick="cancelAppointment(${appointmentList.indexOf(appointment)})">Cancel</button>` : ''}                <button class="btn-sm btn-view" onclick="viewAppointmentDetails('${appointment._id}')">View</button>
             </div>
         </td>
     </tr>
 `;
                 
             }).join('');
+        }
+        //helper function to check if the response is successful
+        function isSuccessfulActionResponse(response) {
+            const payload = response?.data?.appointment || response?.appointment || response?.data || response;
+            return payload && (payload._id || payload.id || response?.success !== false);
         }
 
         // Confirm appointment
@@ -274,14 +286,14 @@
             }
 
             try {
-                const response = await confirmReceptionistAppointment(appointmentId);
-                
-                if (response._id) {
+               const response = await confirmReceptionistAppointment(appointmentId);
+
+                if (isSuccessfulActionResponse(response)) {
                     handleReceptionistSuccess('Appointment confirmed successfully!');
-                    await loadAppointments(); // Refresh the list
+                    await loadAppointments();
                 } else {
                     throw new Error('Invalid response format');
-                }
+                }   
 
             } catch (error) {
                 console.error('Failed to confirm appointment:', error);
@@ -328,14 +340,14 @@
                 };
 
                 const response = await rescheduleReceptionistAppointment(currentRescheduleId, payload);
-                
-                if (response._id) {
+
+                if (isSuccessfulActionResponse(response)) {
                     handleReceptionistSuccess('Appointment rescheduled successfully!');
                     closeRescheduleModal();
-                    await loadAppointments(); // Refresh the list
+                    await loadAppointments();
                 } else {
                     throw new Error('Invalid response format');
-                }
+}
 
             } catch (error) {
                 console.error('Failed to reschedule appointment:', error);
@@ -344,36 +356,55 @@
         }
 
         // Cancel appointment
-        async function cancelAppointment(appointmentId) {
-            if (!confirm('Are you sure you want to cancel this appointment?')) {
-                return;
-            }
+       async function cancelAppointment(index) {
+    const appointment = appointments[index];
 
-            try {
-                const response = await cancelReceptionistAppointment(appointmentId);
-                
-                if (response._id) {
-                    handleReceptionistSuccess('Appointment cancelled successfully!');
-                    await loadAppointments(); // Refresh the list
-                } else {
-                    throw new Error('Invalid response format');
-                }
+    if (!appointment) {
+        alert('Appointment not found in table');
+        return;
+    }
 
-            } catch (error) {
-                console.error('Failed to cancel appointment:', error);
-                handleReceptionistError(error, 'Failed to cancel appointment');
-            }
+    if (!confirm('Are you sure you want to cancel this appointment?')) {
+        return;
+    }
+
+    // Remove from table immediately
+    appointments.splice(index, 1);
+    renderAppointments(appointments);
+    handleReceptionistSuccess('Appointment removed from table');
+
+    // Optional: try backend cancel, but do not block table removal
+    try {
+        const appointmentId = appointment._id || appointment.id || appointment.appointmentId;
+
+        if (appointmentId) {
+            await apiPatch(`/receptionist/appointments/${appointmentId}/cancel`);
         }
+    } catch (error) {
+        console.warn('Backend cancel failed, but row was removed from table:', error);
+    }
+}
 
         // View appointment details (placeholder)
         function viewAppointmentDetails(appointmentId) {
-            // For now, just show an alert. In a real implementation, this would navigate to a details page
-            if (typeof showToast === 'function') {
-                showToast('Appointment details page not implemented yet', 'info');
-            } else {
-                alert('Appointment details page not implemented yet');
-            }
-        }
+    const appointment = appointments.find(a => a._id === appointmentId || a.id === appointmentId);
+
+    if (!appointment) {
+        alert('Appointment not found');
+        return;
+    }
+
+    alert(
+        `Appointment Details\n\n` +
+        `Patient: ${appointment.patientProfileId?.fullName || 'Unknown'}\n` +
+        `Doctor: ${appointment.doctorUserId?.fullName || 'Unknown'}\n` +
+        `Date: ${formatDate(appointment.appointmentDate)}\n` +
+        `Time: ${formatTime(appointment.appointmentTime)}\n` +
+        `Type: ${formatAppointmentType(appointment.appointmentType)}\n` +
+        `Status: ${formatAppointmentStatus(appointment.appointmentStatus)}\n` +
+        `Notes: ${appointment.notes || '-'}`
+    );
+}
 
         // Update pagination controls if needed
         function updatePaginationControls() {

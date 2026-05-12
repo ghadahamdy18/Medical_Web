@@ -55,7 +55,7 @@ const getMyAppointments = async (doctorId, query = {}) => {
  */
 const getAppointmentDetails = async (doctorId, appointmentId) => {
     const appointment = await Appointment.findOne({
-        _id: appointmentId,
+        _id: appointmentId ,
         doctorUserId: doctorId,
     })
         .populate('patientProfileId', 'fullName gender dateOfBirth nationalId address relationshipToPrimary isPrimary')
