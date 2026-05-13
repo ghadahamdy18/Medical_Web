@@ -38,15 +38,18 @@ const getMyAppointments = async (doctorId, query = {}) => {
         Appointment.countDocuments(filter),
     ]);
 
-    return {
-        data: appointments,
-        pagination: {
-            total,
-            page,
-            limit,
-            totalPages: Math.ceil(total / limit),
-        },
-    };
+   return {
+    data: appointments.map(appointment => ({
+        ...appointment,
+        _id: appointment._id.toString()
+    })),
+    pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+    },
+};
 };
 
 /**
@@ -55,7 +58,7 @@ const getMyAppointments = async (doctorId, query = {}) => {
  */
 const getAppointmentDetails = async (doctorId, appointmentId) => {
     const appointment = await Appointment.findOne({
-        _id: appointmentId,
+        _id: appointmentId ,
         doctorUserId: doctorId,
     })
         .populate('patientProfileId', 'fullName gender dateOfBirth nationalId address relationshipToPrimary isPrimary')

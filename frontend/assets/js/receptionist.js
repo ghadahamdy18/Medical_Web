@@ -99,13 +99,13 @@ function formatAppointmentStatus(status) {
 
 function formatAppointmentType(type) {
     if (!type) return 'Unknown';
-    
+
     const typeMap = {
         'in_lab': 'In-Lab Visit',
         'home_visit': 'Home Visit'
     };
-    
-    return typeMap[type.toLowerCase()] || type.charAt(0).toUpperCase() + status.slice(1);
+
+    return typeMap[type.toLowerCase()] || type.charAt(0).toUpperCase() + type.slice(1);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

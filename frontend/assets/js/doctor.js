@@ -65,7 +65,13 @@ async function uploadDoctorResult(appointmentId, formData) {
 // ─────────────────────────────────────────────────────────────────────────────
 function getAppointmentIdFromQuery() {
     const params = new URLSearchParams(window.location.search);
-    return params.get('id');
+    const appointmentId = params.get('id');
+
+    if (!appointmentId || appointmentId === 'undefined' || appointmentId === 'null') {
+        return null;
+    }
+
+    return appointmentId;
 }
 
 function getTestNameFromQuery() {
@@ -152,8 +158,14 @@ function navigateToAppointmentDetails(appointmentId) {
     window.location.href = `appointment-details.html?id=${appointmentId}`;
 }
 
+
 function navigateToAppointmentResults(appointmentId) {
-    window.location.href = `appointment-results.html?id=${appointmentId}`;
+    if (!appointmentId || appointmentId === 'undefined' || appointmentId === 'null') {
+        alert('Appointment ID missing');
+        return;
+    }
+
+    window.location.href = `appointment-results.html?id=${encodeURIComponent(appointmentId)}`;
 }
 
 function navigateToUploadResults(appointmentId, testName) {
