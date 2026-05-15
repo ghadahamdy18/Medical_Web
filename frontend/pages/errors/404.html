@@ -14,12 +14,10 @@
         .btn-home { background: #0f766e; color: #fff; padding: 15px 30px; border-radius: 8px; text-decoration: none; }
         .btn-back { background: #6c757d; color: #fff; padding: 15px 30px; border-radius: 8px; text-decoration: none; }
 
-        .content-area { padding: 30px; position: relative; overflow: hidden; background: radial-gradient(circle at 15% 18%, rgba(56, 189, 248, 0.24), transparent 32%), radial-gradient(circle at 88% 10%, rgba(15, 118, 110, 0.22), transparent 30%), linear-gradient(135deg, #dff5f5 0%, #d7f0f2 45%, #e8fafa 100%); }
-        .content-area::before { content: ""; position: absolute; width: 600px; height: 600px; border: 4px solid rgba(15, 118, 110, 0.22); border-radius: 50%; top: -250px; right: -180px; pointer-events: none; z-index: 0; animation: waveUpDown 9s ease-in-out infinite; }
-        .content-area::after { content: ""; position: absolute; width: 500px; height: 500px; border: 4px solid rgba(37, 99, 235, 0.16); border-radius: 50%; bottom: -210px; left: -160px; pointer-events: none; z-index: 0; animation: waveDownUp 11s ease-in-out infinite; }
+        .content-area { padding: 30px; position: relative; overflow: hidden; background: radial-gradient(circle at 80% 12%, rgba(15, 118, 110, 0.035), transparent 34%), radial-gradient(circle at 18% 78%, rgba(37, 99, 235, 0.025), transparent 38%), linear-gradient(135deg, #f7fafc 0%, #f3f7f9 45%, #eef4f7 100%); }
+        .content-area::before { content: ""; position: absolute; width: 780px; height: 780px; border: 1px solid rgba(15, 118, 110, 0.045); border-radius: 50%; top: -260px; right: -160px; pointer-events: none; z-index: 0; }
+        .content-area::after { content: ""; position: absolute; width: 680px; height: 680px; border: 1px solid rgba(37, 99, 235, 0.035); border-radius: 50%; bottom: -360px; left: -240px; pointer-events: none; z-index: 0; }
         .content-area > * { position: relative; z-index: 1; }
-        @keyframes waveUpDown { 0% { transform: translateY(0); } 50% { transform: translateY(28px); } 100% { transform: translateY(0); } }
-        @keyframes waveDownUp { 0% { transform: translateY(0); } 50% { transform: translateY(-28px); } 100% { transform: translateY(0); } }
 </style>
 </head>
 <body>
