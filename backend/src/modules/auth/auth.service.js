@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const TokenBlacklist = require('../../models/tokenBlacklist.model.js');
+const crypto = require('crypto');
+const sendEmail = require('../../utils/email.js');
 
 const User = require('../../models/user.model.js');
 const PatientProfile = require('../../models/patientProfile.model.js');
@@ -230,6 +232,99 @@ const updateProfile = async (userId, payload) => {
     return sanitizeUser(user);
 };
 
+const forgotPassword = async ({ email }) => {
+    const normalizedEmail = email.toLowerCase().trim();
+
+    const user = await User.findOne({ email: normalizedEmail }).select(
+        '+passwordResetToken +passwordResetExpires'
+    );
+
+    if (!user) {
+        throw createError('This email is not assigned', 404);
+    }
+
+    if (!user.canLogin()) {
+        throw createError('Account is inactive, blocked, or archived', 403);
+    }
+
+    const resetToken = crypto.randomBytes(32).toString('hex');
+
+    const hashedToken = crypto
+        .createHash('sha256')
+        .update(resetToken)
+        .digest('hex');
+
+    user.passwordResetToken = hashedToken;
+    user.passwordResetExpires = new Date(Date.now() + 15 * 60 * 1000);
+
+    await user.save({ validateBeforeSave: false });
+
+    const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/reset-password.html?token=${resetToken}`;
+
+    const html = `
+        <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+            <h2>Medical Lab Password Reset</h2>
+            <p>Hello ${user.fullName},</p>
+            <p>You requested to reset your password.</p>
+            <p>Click the button below to create a new password:</p>
+            <p>
+                <a href="${resetUrl}" 
+                   style="display:inline-block;padding:12px 18px;background:#0f766e;color:#ffffff;text-decoration:none;border-radius:8px;">
+                   Reset Password
+                </a>
+            </p>
+            <p>This link will expire in 15 minutes.</p>
+            <p>If you did not request this, please ignore this email.</p>
+        </div>
+    `;
+
+    try {
+        await sendEmail({
+            to: user.email,
+            subject: 'Reset your Medical Lab password',
+            html,
+            text: `Reset your password using this link: ${resetUrl}`,
+        });
+
+        return {
+            message: 'Password reset link sent to your email',
+        };
+    } catch (error) {
+        user.passwordResetToken = null;
+        user.passwordResetExpires = null;
+        await user.save({ validateBeforeSave: false });
+
+        throw createError('Failed to send reset email', 500);
+    }
+};
+
+const resetPassword = async ({ token, newPassword }) => {
+    const hashedToken = crypto
+        .createHash('sha256')
+        .update(token)
+        .digest('hex');
+
+    const user = await User.findOne({
+        passwordResetToken: hashedToken,
+        passwordResetExpires: { $gt: new Date() },
+    }).select('+passwordResetToken +passwordResetExpires +password');
+
+    if (!user) {
+        throw createError('Invalid or expired reset token', 400);
+    }
+
+    user.password = newPassword;
+    user.passwordResetToken = null;
+    user.passwordResetExpires = null;
+    user.mustChangePassword = false;
+
+    await user.save();
+
+    return {
+        message: 'Password reset successfully',
+    };
+};
+
 module.exports = {
     registerPatient,
     login,
@@ -237,4 +332,6 @@ module.exports = {
     getMe,
     updateProfile,
     logout,
+    forgotPassword,
+    resetPassword,
 };

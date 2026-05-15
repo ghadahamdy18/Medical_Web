@@ -8,12 +8,26 @@ const {
     loginValidation,
     changePasswordValidation,
     updateProfileValidation,
+    forgotPasswordValidation,
+    resetPasswordValidation,
 } = require('./auth.validation.js');
 
 const authMiddleware = require('../../middlewares/auth.middleware.js');
 
 router.post('/register', registerPatientValidation, authController.registerPatient);
 router.post('/login', loginValidation, authController.login);
+
+router.post(
+    '/forgot-password',
+    forgotPasswordValidation,
+    authController.forgotPassword
+);
+
+router.post(
+    '/reset-password',
+    resetPasswordValidation,
+    authController.resetPassword
+);
 
 router.get('/me', authMiddleware, authController.getMe);
 router.patch(

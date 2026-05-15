@@ -27,11 +27,11 @@ const registerPatientValidation = validate(
         email: Joi.string().trim().email().allow('', null).optional(),
         password: Joi.string().min(6).max(100).required(),
         confirmPassword: Joi.string()
-          .valid(Joi.ref('password'))
-          .required()
-          .messages({
-            'any.only': 'Confirm password must match password',
-          }),
+            .valid(Joi.ref('password'))
+            .required()
+            .messages({
+                'any.only': 'Confirm password must match password',
+            }),
         gender: Joi.string().valid('male', 'female').optional(),
         dateOfBirth: Joi.date().max('now').optional(),
         nationalId: Joi.string().trim().allow('', null).optional(),
@@ -66,9 +66,30 @@ const updateProfileValidation = validate(
     }).min(1)
 );
 
+const forgotPasswordValidation = validate(
+    Joi.object({
+        email: Joi.string().trim().email().required(),
+    })
+);
+
+const resetPasswordValidation = validate(
+    Joi.object({
+        token: Joi.string().trim().required(),
+        newPassword: Joi.string().min(6).max(100).required(),
+        confirmPassword: Joi.string()
+            .valid(Joi.ref('newPassword'))
+            .required()
+            .messages({
+                'any.only': 'Confirm password must match new password',
+            }),
+    })
+);
+
 module.exports = {
     registerPatientValidation,
     loginValidation,
     changePasswordValidation,
     updateProfileValidation,
+    forgotPasswordValidation,
+    resetPasswordValidation,
 };

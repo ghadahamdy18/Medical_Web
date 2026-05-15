@@ -8,7 +8,7 @@
     <style>
         .result-detail { max-width: 900px; margin: 0 auto; }
         .result-header { background: #fff; border-radius: 8px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px; }
-        .result-id { color: #666; font-size: 14px; margin-bottom: 10px; }
+        .result-id { color: #64748b; font-size: 14px; margin-bottom: 10px; }
         .result-title { font-size: 28px; font-weight: 600; margin-bottom: 15px; }
         .result-meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
         .meta-item { display: flex; flex-direction: column; }
@@ -19,13 +19,20 @@
         .results-table { background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow: hidden; }
         .results-table table { width: 100%; }
         .test-name { font-weight: 600; }
-        .test-value { font-size: 18px; font-weight: bold; color: #2c7be5; }
+        .test-value { font-size: 18px; font-weight: bold; color: #0f766e; }
         .test-range { color: #999; font-size: 12px; }
         .test-status { padding: 4px 10px; border-radius: 12px; font-size: 12px; }
         .status-normal { background: #d4edda; color: #155724; }
         .status-abnormal { background: #f8d7da; color: #721c24; }
         .result-actions { display: flex; gap: 15px; margin-top: 20px; }
-    </style>
+
+        .content-area { padding: 30px; position: relative; overflow: hidden; background: radial-gradient(circle at 15% 18%, rgba(56, 189, 248, 0.24), transparent 32%), radial-gradient(circle at 88% 10%, rgba(15, 118, 110, 0.22), transparent 30%), linear-gradient(135deg, #dff5f5 0%, #d7f0f2 45%, #e8fafa 100%); }
+        .content-area::before { content: ""; position: absolute; width: 600px; height: 600px; border: 4px solid rgba(15, 118, 110, 0.22); border-radius: 50%; top: -250px; right: -180px; pointer-events: none; z-index: 0; animation: waveUpDown 9s ease-in-out infinite; }
+        .content-area::after { content: ""; position: absolute; width: 500px; height: 500px; border: 4px solid rgba(37, 99, 235, 0.16); border-radius: 50%; bottom: -210px; left: -160px; pointer-events: none; z-index: 0; animation: waveDownUp 11s ease-in-out infinite; }
+        .content-area > * { position: relative; z-index: 1; }
+        @keyframes waveUpDown { 0% { transform: translateY(0); } 50% { transform: translateY(28px); } 100% { transform: translateY(0); } }
+        @keyframes waveDownUp { 0% { transform: translateY(0); } 50% { transform: translateY(-28px); } 100% { transform: translateY(0); } }
+</style>
 </head>
 <body>
     <div class="main-content">

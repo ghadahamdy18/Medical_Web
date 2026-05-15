@@ -86,12 +86,14 @@ app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads'), {
 // Applies only after authentication when a valid token is provided.
 // Public auth routes like login/register still work normally.
 app.use('/api', async (req, res, next) => {
-  const publicRoutes = [
+  const publicRoutePrefixes = [
     '/api/auth/login',
     '/api/auth/register',
+    '/api/auth/forgot-password',
+    '/api/auth/reset-password'
   ];
 
-  if (publicRoutes.includes(req.originalUrl)) {
+  if (publicRoutePrefixes.some(route => req.originalUrl.startsWith(route))) {
     return next();
   }
 
